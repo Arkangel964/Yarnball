@@ -17,6 +17,10 @@ Vector2D &Vector2D::normalize() {
     return *this;
 }
 
+float Vector2D::length() {
+    return sqrtf(x * x + y * y);
+}
+
 
 //member operator func
 Vector2D Vector2D::operator*(float scalar) const {

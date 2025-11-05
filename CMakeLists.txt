@@ -61,6 +61,7 @@ add_executable(8552Game src/main.cpp
         src/scene/SceneType.h
         src/ecs/system/MainMenuSystem.h
         src/ecs/system/MainMenuSystem.cpp
+        src/ecs/system/PhysicsSystem.h
 )
 
 target_link_libraries(8552Game

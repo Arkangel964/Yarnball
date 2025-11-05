@@ -10,34 +10,27 @@
 
 #include "Component.h"
 #include "Entity.h"
+#include "PhysicsSystem.h"
 
 class KeyboardInputSystem {
 public:
     void update(const std::vector<std::unique_ptr<Entity>>& entities, const SDL_Event& event) {
+        static Vector2D *currentInput = nullptr;
         for (auto& entity : entities) {
-            if (entity->hasComponent<PlayerTag>() && entity->hasComponent<Velocity>()) {
-                auto& velocity = entity->getComponent<Velocity>();
+            if (entity->hasComponent<PlayerTag>() && entity->hasComponent<RigidBody>()) {
                 if (event.type == SDL_EVENT_KEY_DOWN) {
                     switch (event.key.key) {
                         case SDLK_W:
-                            velocity.direction.y = -1;
-                            velocity.oldDirection.y = -1;
-                            velocity.oldDirection.x = 0;
+                            currentInput = new Vector2D(0, -1);
                             break;
                         case SDLK_S:
-                            velocity.direction.y = 1;
-                            velocity.oldDirection.y = 1;
-                            velocity.oldDirection.x = 0;
+                            currentInput = new Vector2D(0, 1);
                             break;
                         case SDLK_A:
-                            velocity.direction.x = -1;
-                            velocity.oldDirection.x = -1;
-                            velocity.oldDirection.y = 0;
+                            currentInput = new Vector2D(-1, 0);
                             break;
                         case SDLK_D:
-                            velocity.direction.x = 1;
-                            velocity.oldDirection.x = 1;
-                            velocity.oldDirection.y = 0;
+                            currentInput = new Vector2D(1, 0);
                             break;
                         default:
                             break;
@@ -47,22 +40,19 @@ public:
                 if (event.type == SDL_EVENT_KEY_UP) {
                     switch (event.key.key) {
                         case SDLK_W:
-                            velocity.direction.y = 0;
-                            break;
                         case SDLK_S:
-                            velocity.direction.y = 0;
-                            break;
                         case SDLK_A:
-                            velocity.direction.x = 0;
-                            break;
                         case SDLK_D:
-                            velocity.direction.x = 0;
+                            delete currentInput;
+                            currentInput = nullptr;
                             break;
                         default:
                             break;
                     };
                 };
             };
+            if (currentInput)
+                PhysicsSystem::addImpulse(*entity, *currentInput, 240);
         };
     };
 };

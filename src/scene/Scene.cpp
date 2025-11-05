@@ -65,7 +65,8 @@ Scene::Scene(SceneType sceneType, const char* sceneName, const char* mapPath, co
     //Create the player
     auto& player(world.createEntity());
     auto& playerTransform(player.addComponent<Transform>(Vector2D(0,0), 0.0f, 1.0f));
-    player.addComponent<Velocity>(Vector2D(0,0), Vector2D(0,0), 240.0f);
+//    player.addComponent<Velocity>(Vector2D(0,0), Vector2D(0,0), 240.0f);
+    player.addComponent<RigidBody>(240.0f, 240.0f);
     player.addComponent<Health>(Game::gameState.playerHealth);
 
     Animation anim = AssetManager::getAnimation("player");

@@ -21,6 +21,7 @@
 #include "RenderSystem.h"
 #include "SpawnTimerSystem.h"
 #include "scene/SceneType.h"
+#include "PhysicsSystem.h"
 
 class World {
     Map map;
@@ -37,6 +38,7 @@ class World {
     DestructionSystem destructionSystem;
     EventResponseSystem eventResponseSystem{*this};
     MainMenuSystem mainMenuSystem;
+    PhysicsSystem physicsSystem;
 public:
     World() = default;
 
@@ -45,6 +47,7 @@ public:
             mainMenuSystem.update(event);
         } else {
             keyboardInputSystem.update(entities, event);
+            physicsSystem.update(entities);
             movementSystem.update(entities, deltaTime);
             collisionSystem.update(*this);
             animationSystem.update(entities, deltaTime);
