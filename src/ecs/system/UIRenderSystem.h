@@ -20,7 +20,7 @@ class UIRenderSystem {
                 auto transform = e->getComponent<Transform>();
                 auto sprite = e->getComponent<Sprite>();
 
-                if (sprite.renderLayer != RenderLayer::UI) continue;
+                if (sprite.renderLayer != RenderLayer::UI) continue; // filter out world
 
                 // no converting from world space to screen space
                 sprite.dst.x = transform.position.x;
