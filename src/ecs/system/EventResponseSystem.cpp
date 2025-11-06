@@ -8,35 +8,60 @@
 
 EventResponseSystem::EventResponseSystem(World &world) {
     //subscriptions
-    world.getEventManager().subscribe([this, &world](const BaseEvent& e) {
+    world.getEventManager().subscribe([this, &world](const BaseEvent &e) {
         if (e.type != EventType::Collision) return;
-        const auto& collision = static_cast<const CollisionEvent&>(e); //cast base type to collision type
+        const auto &collision = static_cast<const CollisionEvent &>(e); //cast base type to collision type
 
         onCollision(collision, "item", world);
         onCollision(collision, "wall", world);
         onCollision(collision, "projectile", world);
     });
 
-    world.getEventManager().subscribe([this, &world](const BaseEvent& e) {
+    world.getEventManager().subscribe([this, &world](const BaseEvent &e) {
         if (e.type != EventType::PlayerAction) return;
-        const auto& playerAction = static_cast<const PlayerActionEvent&>(e); //cast base type to collision type
+        const auto &playerAction = static_cast<const PlayerActionEvent &>(e); //cast base type to collision type
 
         //TODO onPlayerAction
     });
+
+    world.getEventManager().subscribe([this, &world](const BaseEvent &e) {
+        if (e.type != EventType::MouseInteraction) return;
+        const auto &mouseInteractionEvent = static_cast<const MouseInteractionEvent &>(e);
+        onMouseInteraction(mouseInteractionEvent);
+    });
+}
+
+void EventResponseSystem::onMouseInteraction(const MouseInteractionEvent &e) {
+    if (!e.entity->hasComponent<Clickable>()) return;
+
+    auto &clickable = e.entity->getComponent<Clickable>();
+
+    switch (e.state) {
+        case MouseInteractionState::Pressed:
+            clickable.onPressed();
+            break;
+        case MouseInteractionState::Released:
+            clickable.onReleased();
+            break;
+        case MouseInteractionState::Cancel:
+            clickable.onCancel();
+            break;
+        default:
+            break;
+    }
 }
 
 void EventResponseSystem::onCollision(const CollisionEvent &e, const char *otherTag, World &world) {
-    Entity* player = nullptr;
-    Entity* other = nullptr;
+    Entity *player = nullptr;
+    Entity *other = nullptr;
 
     if (!getCollisionEntities(e, otherTag, player, other)) return;
 
     if (std::string(otherTag) == "item") {
-
         if (e.state != CollisionState::Enter) return;
         other->destroy();
 
-        for (auto& entity : world.getEntities()) {
+        for (auto &entity: world.getEntities()) {
             if (!entity->hasComponent<SceneState>()) continue;
 
             //scene state
@@ -47,19 +72,16 @@ void EventResponseSystem::onCollision(const CollisionEvent &e, const char *other
             }
         }
     } else if (std::string(otherTag) == "wall") {
-
         if (e.state != CollisionState::Stay) return;
 
-        auto& t = player->getComponent<Transform>();
+        auto &t = player->getComponent<Transform>();
         t.position = t.oldPosition;
-
     } else if (std::string(otherTag) == "projectile") {
-
         if (e.state != CollisionState::Enter) return;
 
         //this logic is simple and direct
         //ideally we would only operate on data in an update function (hinting at transient entities)
-        auto& health = player->getComponent<Health>();
+        auto &health = player->getComponent<Health>();
         health.currentHealth--;
 
         Game::gameState.playerHealth = health.currentHealth;
@@ -69,17 +91,17 @@ void EventResponseSystem::onCollision(const CollisionEvent &e, const char *other
             player->destroy();
             Game::onSceneChangeRequest("gameover");
         }
-
     }
 }
 
 
-bool EventResponseSystem::getCollisionEntities(const CollisionEvent &e, const char *otherTag, Entity *&player, Entity *&other) {
+bool EventResponseSystem::getCollisionEntities(const CollisionEvent &e, const char *otherTag, Entity *&player,
+                                               Entity *&other) {
     if (e.entityA == nullptr || e.entityB == nullptr) return false;
     if (!(e.entityA->hasComponent<Collider>() && e.entityB->hasComponent<Collider>())) return false;
 
-    auto& colA = e.entityA->getComponent<Collider>();
-    auto& colB = e.entityB->getComponent<Collider>();
+    auto &colA = e.entityA->getComponent<Collider>();
+    auto &colB = e.entityB->getComponent<Collider>();
 
     if (colA.tag == "player" && colB.tag == otherTag) {
         player = e.entityA;
@@ -90,4 +112,3 @@ bool EventResponseSystem::getCollisionEntities(const CollisionEvent &e, const ch
     }
     return player && other;
 }
-

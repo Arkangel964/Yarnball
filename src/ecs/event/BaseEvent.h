@@ -47,9 +47,9 @@ enum class MouseInteractionState {
 };
 
 struct MouseInteractionEvent : BaseEvent {
-  Entity* player = nullptr;
+  Entity* entity = nullptr;
   MouseInteractionState state{};
-  MouseInteractionEvent(Entity* player, MouseInteractionState state) : player(player), state(state) {
+  MouseInteractionEvent(Entity* player, MouseInteractionState state) : entity(player), state(state) {
     type = EventType::MouseInteraction;
   }
 };
