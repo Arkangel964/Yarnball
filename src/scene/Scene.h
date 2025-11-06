@@ -27,7 +27,16 @@ class Scene {
     private:
     std::string name;
     SceneType type;
-    void createProjectile(Vector2D pos, Vector2D dir, float speed);
+    // void createProjectile(Vector2D pos, Vector2D dir, float speed);
+
+    void initMainMenu(int windowWidth, int windowHeight);
+    void initGameplay(const char* mapPath, int windowWidth, int windowHeight);
+
+    Entity& createSettingsOverlay(int windowWidth, int windowHeight);
+    Entity& createCogButton(int windowWidth, int windowHeight, Entity& overlay);
+    void createSettingUIComponents(Entity& overlay);
+    void toggleSettingsOverlayVisibility(Entity& overlay);
+
 };
 
 #endif //TUTORIAL1_SCENE_H
