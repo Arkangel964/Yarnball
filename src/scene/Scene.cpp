@@ -100,7 +100,9 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
         //create our projectile (bird)
         auto &e(world.createDeferredEntity());
         e.addComponent<Transform>(Vector2D(t.position.x, t.position.y), 0.0f, 1.0f);
-        e.addComponent<Velocity>(Vector2D(0, -1), Vector2D(0, -1), 100.0f);
+//        e.addComponent<Velocity>(Vector2D(0, -1), Vector2D(0, -1), 100.0f);
+        e.addComponent<RigidBody>(100.0f, 0.25f);
+        PhysicsSystem::addImpulse(e, Vector2D(0, -1), 100.0f);
 
         Animation anim = AssetManager::getAnimation("enemy");
         e.addComponent<Animation>(anim);
@@ -115,6 +117,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
         c.rect.h = dest.h;
 
         e.addComponent<ProjectileTag>();
+        e.addComponent<DestroyOnStop>();
     });
 
     //add scene state

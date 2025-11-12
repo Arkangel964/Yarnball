@@ -27,6 +27,10 @@ public:
                 if (velocity.speed > 0.0f) {
                     velocity.speed = max(0.0f, velocity.speed - rigidBody.friction);
                     velocity.speed = velocity.speed;
+                } else {
+                    if (entity->hasComponent<DestroyOnStop>()) {
+                        entity->destroy();
+                    }
                 }
             } else {
                 auto& impulse = entity->getComponent<Impulse>();

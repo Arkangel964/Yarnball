@@ -50,9 +50,9 @@ public:
                             break;
                     };
                 };
+                if (currentInput)
+                    PhysicsSystem::addImpulse(*entity, *currentInput, 240);
             };
-            if (currentInput)
-                PhysicsSystem::addImpulse(*entity, *currentInput, 240);
         };
     };
 };

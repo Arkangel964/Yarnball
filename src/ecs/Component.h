@@ -105,5 +105,6 @@ struct Children {
 
 struct PlayerTag{};
 struct ProjectileTag{};
+struct DestroyOnStop{};
 
 #endif //TUTORIAL1_COMPONENT_H
