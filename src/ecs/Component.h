@@ -11,6 +11,7 @@
 #include <unordered_map>
 
 #include "AnimationClip.h"
+#include "Entity.h"
 
 using namespace std;
 
@@ -28,15 +29,24 @@ struct Velocity {
     float speed{};
 };
 
+// UI rendering
+enum class RenderLayer {
+    World,
+    UI,
+};
+
 struct Sprite {
     SDL_Texture* texture = nullptr;
     SDL_FRect src{};
     SDL_FRect dst{};
+    RenderLayer renderLayer = RenderLayer::World;
+    bool visible;
 };
 
 struct Collider {
     string tag;
     SDL_FRect rect{};
+    bool enabled = true;
 };
 
 struct Animation {
@@ -68,7 +78,23 @@ struct Health {
     int currentHealth{};
 };
 
+struct Clickable {
+    std::function<void()> onPressed{};
+    std::function<void()> onReleased{};
+    std::function<void()> onCancel{};
+    bool pressed = false;
+};
+
+struct Parent {
+    Entity* parent = nullptr;
+};
+
+struct Children {
+    std::vector<Entity*> children{};
+};
+
 struct PlayerTag{};
 struct ProjectileTag{};
+
 
 #endif //TUTORIAL1_COMPONENT_H

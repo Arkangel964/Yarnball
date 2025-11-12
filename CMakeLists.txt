@@ -61,6 +61,10 @@ add_executable(8552Game src/main.cpp
         src/scene/SceneType.h
         src/ecs/system/MainMenuSystem.h
         src/ecs/system/MainMenuSystem.cpp
+        src/utils/RenderUtils.h
+        src/ecs/system/UIRenderSystem.h
+        src/ecs/system/MouseInputSystem.h
+        src/ecs/system/MouseInputSystem.cpp
 )
 
 target_link_libraries(8552Game
