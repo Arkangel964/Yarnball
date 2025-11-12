@@ -33,6 +33,8 @@ public:
                 sprite.dst.x = transform.position.x - camera.view.x;
                 sprite.dst.y = transform.position.y - camera.view.y;
 
+                if (sprite.renderLayer != RenderLayer::World) continue; // filter out UI
+
                 //if the entity has animation, update the src rect
                 if (entity->hasComponent<Animation>()) {
                     auto& anim = entity->getComponent<Animation>();

@@ -17,9 +17,11 @@
 #include "event/EventManager.h"
 #include "KeyboardInputSystem.h"
 #include "MainMenuSystem.h"
+#include "MouseInputSystem.h"
 #include "MovementSystem.h"
 #include "RenderSystem.h"
 #include "SpawnTimerSystem.h"
+#include "UIRenderSystem.h"
 #include "scene/SceneType.h"
 #include "PhysicsSystem.h"
 
@@ -39,6 +41,8 @@ class World {
     EventResponseSystem eventResponseSystem{*this};
     MainMenuSystem mainMenuSystem;
     PhysicsSystem physicsSystem;
+    UIRenderSystem uiRenderSystem;
+    MouseInputSystem mouseInputSystem;
 public:
     World() = default;
 
@@ -55,6 +59,9 @@ public:
             spawnTimerSystem.update(entities, deltaTime);
             destructionSystem.update(entities);
         }
+
+        mouseInputSystem.update(*this, event);
+
         synchronizeEntities();
         cleanup();
     };
@@ -67,6 +74,7 @@ public:
             }
         }
         renderSystem.render(entities);
+        uiRenderSystem.render(entities);
     };
 
     Entity& createEntity() {
