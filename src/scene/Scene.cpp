@@ -112,7 +112,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
         SDL_FRect dest(t.position.x, t.position.y, 32, 32);
         e.addComponent<Sprite>(tex, animSrc, dest);
 
-        Collider c = e.addComponent<Collider>("projectile");
+        auto &c = e.addComponent<Collider>("projectile");
         c.rect.w = dest.w;
         c.rect.h = dest.h;
 

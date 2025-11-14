@@ -12,9 +12,11 @@ EventResponseSystem::EventResponseSystem(World &world) {
         if (e.type != EventType::Collision) return;
         const auto &collision = static_cast<const CollisionEvent &>(e); //cast base type to collision type
 
-        onCollision(collision, "item", world);
-        onCollision(collision, "wall", world);
-        onCollision(collision, "projectile", world);
+        onCollision(collision, "player", "item", world);
+        onCollision(collision, "player", "wall", world);
+        onCollision(collision, "player", "projectile", world);
+        onCollision(collision, "projectile", "wall", world);
+        onCollision(collision, "projectile", "projectile", world);
     });
 
     world.getEventManager().subscribe([this, &world](const BaseEvent &e) {
@@ -51,12 +53,19 @@ void EventResponseSystem::onMouseInteraction(const MouseInteractionEvent &e) {
     }
 }
 
-void EventResponseSystem::onCollision(const CollisionEvent &e, const char *otherTag, World &world) {
-    Entity *player = nullptr;
+void EventResponseSystem::onCollision(const CollisionEvent &e, const char *mainTag, const char *otherTag, World &world) {
+    Entity *main = nullptr;
     Entity *other = nullptr;
 
-    if (!getCollisionEntities(e, otherTag, player, other)) return;
+    if (!getCollisionEntities(e, mainTag, otherTag, main, other)) return;
 
+    if (std::string(mainTag) == "player")
+        onPlayerCollision(e, main, other, otherTag, world);
+    else if (std::string(mainTag) == "projectile")
+        onProjectileCollision(e, main, other, otherTag, world);
+}
+
+void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* player, Entity* other, const char *otherTag, World &world) {
     if (std::string(otherTag) == "item") {
         if (e.state != CollisionState::Enter) return;
         other->destroy();
@@ -94,21 +103,40 @@ void EventResponseSystem::onCollision(const CollisionEvent &e, const char *other
     }
 }
 
+void EventResponseSystem::onProjectileCollision(const CollisionEvent &e, Entity* projectile, Entity* other, const char *otherTag, World &world) {
+    if (std::string(otherTag) == "wall") {
+        if (e.state != CollisionState::Stay) return;
+        // Prevent further movement
+        auto &t = projectile->getComponent<Transform>();
+        t.position = t.oldPosition;
+        // Bounce off wall
+        // TODO: Bouncing
+        cout << "[Collision] Projectile hit wall" << std::endl;
+    } else if (std::string(otherTag) == "projectile") {
+        if (e.state != CollisionState::Stay) return;
+        // Prevent further movement
+        auto &t1 = projectile->getComponent<Transform>();
+        t1.position = t1.oldPosition;
+        auto &t2 = other->getComponent<Transform>();
+        t2.position = t2.oldPosition;
+        // TODO: Bounce both
+        cout << "[Collision] Projectile hit other projectile" << std::endl;
+    }
+}
 
-bool EventResponseSystem::getCollisionEntities(const CollisionEvent &e, const char *otherTag, Entity *&player,
-                                               Entity *&other) {
+bool EventResponseSystem::getCollisionEntities(const CollisionEvent &e, const char *mainTag, const char *otherTag, Entity *&main, Entity *&other) {
     if (e.entityA == nullptr || e.entityB == nullptr) return false;
     if (!(e.entityA->hasComponent<Collider>() && e.entityB->hasComponent<Collider>())) return false;
 
     auto &colA = e.entityA->getComponent<Collider>();
     auto &colB = e.entityB->getComponent<Collider>();
 
-    if (colA.tag == "player" && colB.tag == otherTag) {
-        player = e.entityA;
+    if (colA.tag == mainTag && colB.tag == otherTag) {
+        main = e.entityA;
         other = e.entityB;
-    } else if (colA.tag == otherTag && colB.tag == "player") {
-        player = e.entityB;
+    } else if (colA.tag == otherTag && colB.tag == mainTag) {
+        main = e.entityB;
         other = e.entityA;
     }
-    return player && other;
+    return main && other;
 }

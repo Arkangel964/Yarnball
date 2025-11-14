@@ -28,13 +28,18 @@ void CollisionSystem::update(World& world) {
         //update the collider position
         auto entityA = collidables[i];
         auto& colA = entityA->getComponent<Collider>();
+        if (!colA.enabled) {
+            continue;
+        }
 
         //check the collider collision
         //inner loop
         for (size_t j = i+1; j < collidables.size(); j++) {
             auto entityB = collidables[j];
             auto& colB = entityB->getComponent<Collider>();
-
+            if (!colB.enabled) {
+                continue;
+            }
             if (Collision::AABB(colA, colB)) {
                 //std::cout << colA.tag << " hit " << colB.tag << std::endl;
                 CollisionKey key = makeKey(entityA, entityB);
