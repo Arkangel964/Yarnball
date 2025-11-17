@@ -7,6 +7,8 @@
 #include "tinyxml2.h"
 
 std::unordered_map<std::string, Animation> AssetManager::animations;
+SDL_AudioSpec AssetManager::deviceSpec{};
+SDL_AudioDeviceID AssetManager::audioDevice = 0;
 
 void AssetManager::loadAnimation(const std::string& clipName, const char* path) {
     Animation animation = loadAnimationFromXML(path);

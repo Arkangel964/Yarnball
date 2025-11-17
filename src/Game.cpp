@@ -63,36 +63,22 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
 
     if (SDL_InitSubSystem(SDL_INIT_AUDIO)) {
         std::cout << "Audio Subsystem initialized..." << std::endl;
-        /* Audio Testing stuff */
-        //Getting playback device
-        SDL_AudioDeviceID audioDevice = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
+        audioDevice = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
         if (audioDevice == 0) {
             std::cout << "Audio device could not be opened." << std::endl;
-            exit(-1);
         }
-        SDL_AudioSpec deviceSpec;
         SDL_GetAudioDeviceFormat(audioDevice, &deviceSpec, NULL);
-        //Loading WAV file
-        SDL_AudioSpec wavSpec{};
-        Uint8* wavBuffer = nullptr;
-        Uint32 wavBufferSize = 0;
-        if(!SDL_LoadWAV("../asset/audio/pianos.wav", &wavSpec, &wavBuffer, &wavBufferSize)) {
-            std::cout << "Failed to load wav" << std::endl;
-            exit(-1);
-        }
-        //Binding audio stream to device and playing WAV over it
-        SDL_AudioStream* audio_stream = SDL_CreateAudioStream(&wavSpec, &deviceSpec);
-        SDL_BindAudioStream(audioDevice, audio_stream);
-        SDL_PutAudioStreamData(audio_stream, wavBuffer, wavBufferSize);
-        SDL_free(wavBuffer);
     } else {
         std::cout << "Audio Subsystem could not be initialized." << std::endl;
         isRunning = false;
     }
-    
+
     //load assets
     AssetManager::loadAnimation("player", "../asset/animations/bull_animations.xml");
     AssetManager::loadAnimation("enemy", "../asset/animations/bird_animations.xml");
+
+    //load audio device
+    AssetManager::loadAudioDevice(audioDevice, deviceSpec);
 
     //init game data/state
     gameState.playerHealth = 5;
@@ -107,6 +93,7 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
 
     //resolve scene callback
     onSceneChangeRequest = [&](string sceneName) {
+
         if (sceneManager.currentScene->getName() == "level2" && sceneName == "level2"){
             std::cout << "You win!" << std::endl;
             isRunning = false;
@@ -161,6 +148,7 @@ void Game::destroy() {
     TextureManager::clean();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    SDL_CloseAudioDevice(audioDevice);
     SDL_Quit();
     std::cout << "Game has been cleaned up." << std::endl;
 }

@@ -36,6 +36,8 @@ public:
     }
 
     SDL_Renderer *renderer = nullptr;
+    SDL_AudioDeviceID audioDevice;
+    SDL_AudioSpec deviceSpec;
 
     SceneManager sceneManager;
     static function<void(string)> onSceneChangeRequest;

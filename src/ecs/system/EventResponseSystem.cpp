@@ -60,6 +60,8 @@ void EventResponseSystem::onCollision(const CollisionEvent &e, const char *other
     if (std::string(otherTag) == "item") {
         if (e.state != CollisionState::Enter) return;
         other->destroy();
+        auto& sfxEntity(world.createEntity());
+        sfxEntity.addComponent<SoundEffect>("../asset/audio/ding.wav");
 
         for (auto &entity: world.getEntities()) {
             if (!entity->hasComponent<SceneState>()) continue;

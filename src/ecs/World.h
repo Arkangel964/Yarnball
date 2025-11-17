@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "AnimationSystem.h"
+#include "AudioSystem.h"
 #include "CameraSystem.h"
 #include "Map.h"
 #include "CollisionSystem.h"
@@ -41,6 +42,7 @@ class World {
     MainMenuSystem mainMenuSystem;
     UIRenderSystem uiRenderSystem;
     MouseInputSystem mouseInputSystem;
+    AudioSystem audioSystem;
 public:
     World() = default;
 
@@ -57,6 +59,7 @@ public:
             destructionSystem.update(entities);
         }
 
+        audioSystem.update(*this);
         mouseInputSystem.update(*this, event);
 
         synchronizeEntities();

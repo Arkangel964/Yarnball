@@ -43,6 +43,16 @@ struct Sprite {
     bool visible;
 };
 
+struct SoundEffect {
+    const char* path = nullptr;
+};
+
+struct Music {
+    const char* path = nullptr;
+    float playTime = 0.0f;
+    bool shouldLoop = true;
+};
+
 struct Collider {
     string tag;
     SDL_FRect rect{};

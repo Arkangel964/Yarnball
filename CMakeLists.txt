@@ -65,6 +65,8 @@ add_executable(8552Game src/main.cpp
         src/ecs/system/UIRenderSystem.h
         src/ecs/system/MouseInputSystem.h
         src/ecs/system/MouseInputSystem.cpp
+        src/ecs/system/AudioSystem.h
+        src/ecs/system/AudioSystem.cpp
 )
 
 target_link_libraries(8552Game
