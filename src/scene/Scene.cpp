@@ -74,24 +74,43 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     cam.addComponent<Camera>(camView, world.getMap().width * 32, world.getMap().height * 32);
 
 
-    //Create the player
-    auto &player(world.createEntity());
-    auto &playerTransform(player.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f));
-    player.addComponent<Velocity>(Vector2D(0, 0), Vector2D(0, 0), 240.0f);
-    player.addComponent<Health>(Game::gameState.playerHealth);
+    //Create the player1
+    auto &player1(world.createEntity());
+    auto &player1Transform(player1.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f));
+    player1.addComponent<Velocity>(Vector2D(0, 0), Vector2D(0, 0), 240.0f);
+    player1.addComponent<Health>(Game::gameState.playerHealth);
 
     Animation anim = AssetManager::getAnimation("player");
-    player.addComponent<Animation>(anim);
+    player1.addComponent<Animation>(anim);
 
     SDL_Texture *tex = TextureManager::load("../asset/animations/bull_anim.png");
-    SDL_FRect playerSrc = anim.clips[anim.currentClip].frameIndices[0];
-    SDL_FRect playerDst{playerTransform.position.x, playerTransform.position.y, 64, 64};
-    player.addComponent<Sprite>(tex, playerSrc, playerDst);
-    auto &playerCollider = player.addComponent<Collider>("player");
-    playerCollider.rect.w = playerDst.w;
-    playerCollider.rect.h = playerDst.h;
+    SDL_FRect player1Src = anim.clips[anim.currentClip].frameIndices[0];
+    SDL_FRect player1Dst{player1Transform.position.x, player1Transform.position.y, 64, 64};
+    player1.addComponent<Sprite>(tex, player1Src, player1Dst);
+    auto &player1Collider = player1.addComponent<Collider>("player");
+    player1Collider.rect.w = player1Dst.w;
+    player1Collider.rect.h = player1Dst.h;
 
-    player.addComponent<Player1Tag>();
+    player1.addComponent<Player1Tag>();
+
+    //Create the player2
+    auto &player2(world.createEntity());
+    auto &player2Transform(player2.addComponent<Transform>(Vector2D(0, 66), 0.0f, 1.0f));
+    player2.addComponent<Velocity>(Vector2D(0, 0), Vector2D(0, 0), 240.0f);
+    player2.addComponent<Health>(Game::gameState.playerHealth);
+
+    anim = AssetManager::getAnimation("player");
+    player2.addComponent<Animation>(anim);
+
+    tex = TextureManager::load("../asset/animations/bull_anim.png");
+    SDL_FRect player2Src = anim.clips[anim.currentClip].frameIndices[0];
+    SDL_FRect player2Dst{player2Transform.position.x, player2Transform.position.y, 64, 64};
+    player2.addComponent<Sprite>(tex, player2Src, player2Dst);
+    auto &player2Collider = player2.addComponent<Collider>("player");
+    player2Collider.rect.w = player2Dst.w;
+    player2Collider.rect.h = player2Dst.h;
+
+    player2.addComponent<Player2Tag>();
 
     auto &spawner(world.createEntity());
     Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight - 5), 0.0f, 1.0f);

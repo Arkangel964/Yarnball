@@ -94,6 +94,7 @@ struct Children {
 };
 
 struct Player1Tag{};
+struct Player2Tag{};
 struct ProjectileTag{};
 
 
