@@ -24,7 +24,7 @@ public:
 
                 //state system
                 std::string newClip;
-                if (entity->hasComponent<PlayerTag>()) {
+                if (entity->hasComponent<Player1Tag>()) {
                     if (vel.direction.x > 0.0f) {
                         newClip = "walk_right";
                     } else if (vel.direction.x < 0.0f) {

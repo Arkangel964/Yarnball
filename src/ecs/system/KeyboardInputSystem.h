@@ -15,7 +15,7 @@ class KeyboardInputSystem {
 public:
     void update(const std::vector<std::unique_ptr<Entity>>& entities, const SDL_Event& event) {
         for (auto& entity : entities) {
-            if (entity->hasComponent<PlayerTag>() && entity->hasComponent<Velocity>()) {
+            if (entity->hasComponent<Player1Tag>() && entity->hasComponent<Velocity>()) {
                 auto& velocity = entity->getComponent<Velocity>();
                 if (event.type == SDL_EVENT_KEY_DOWN) {
                     switch (event.key.key) {

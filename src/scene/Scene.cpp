@@ -91,7 +91,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     playerCollider.rect.w = playerDst.w;
     playerCollider.rect.h = playerDst.h;
 
-    player.addComponent<PlayerTag>();
+    player.addComponent<Player1Tag>();
 
     auto &spawner(world.createEntity());
     Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight - 5), 0.0f, 1.0f);

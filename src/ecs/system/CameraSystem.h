@@ -19,7 +19,7 @@ class CameraSystem {
 
         //find player
         for (auto& e : entities) {
-            if (e->hasComponent<PlayerTag>()) {
+            if (e->hasComponent<Player1Tag>()) {
                 playerEntity = e.get();
                 break;
             }
