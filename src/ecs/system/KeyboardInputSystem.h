@@ -84,8 +84,8 @@ public:
                             break;
                         default:
                             break;
-                    };
-                };
+                    }
+                }
 
                 if (event.type == SDL_EVENT_KEY_UP) {
                     switch (event.key.key) {
