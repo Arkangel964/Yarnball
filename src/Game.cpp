@@ -31,8 +31,8 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
     }
 
     //initialize SDL library
-    if (SDL_InitSubSystem(SDL_INIT_VIDEO) == 1) {
-        std::cout << "Subsystem initialized..." << std::endl;
+    if (SDL_InitSubSystem(SDL_INIT_VIDEO)) {
+        std::cout << "Video Subsystem initialized..." << std::endl;
         window = SDL_CreateWindow(title, width, height, flags);
         if (window) {
             std::cout << "Window created..." << std::endl;
@@ -57,10 +57,39 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
         g = rand() % 255;
         b = rand() % 255;
     } else {
-        std::cout << "Subsystem could not be initialized." << std::endl;
+        std::cout << "Video Subsystem could not be initialized." << std::endl;
         isRunning = false;
     }
 
+    if (SDL_InitSubSystem(SDL_INIT_AUDIO)) {
+        std::cout << "Audio Subsystem initialized..." << std::endl;
+        /* Audio Testing stuff */
+        //Getting playback device
+        SDL_AudioDeviceID audioDevice = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
+        if (audioDevice == 0) {
+            std::cout << "Audio device could not be opened." << std::endl;
+            exit(-1);
+        }
+        SDL_AudioSpec deviceSpec;
+        SDL_GetAudioDeviceFormat(audioDevice, &deviceSpec, NULL);
+        //Loading WAV file
+        SDL_AudioSpec wavSpec{};
+        Uint8* wavBuffer = nullptr;
+        Uint32 wavBufferSize = 0;
+        if(!SDL_LoadWAV("../asset/audio/pianos.wav", &wavSpec, &wavBuffer, &wavBufferSize)) {
+            std::cout << "Failed to load wav" << std::endl;
+            exit(-1);
+        }
+        //Binding audio stream to device and playing WAV over it
+        SDL_AudioStream* audio_stream = SDL_CreateAudioStream(&wavSpec, &deviceSpec);
+        SDL_BindAudioStream(audioDevice, audio_stream);
+        SDL_PutAudioStreamData(audio_stream, wavBuffer, wavBufferSize);
+        SDL_free(wavBuffer);
+    } else {
+        std::cout << "Audio Subsystem could not be initialized." << std::endl;
+        isRunning = false;
+    }
+    
     //load assets
     AssetManager::loadAnimation("player", "../asset/animations/bull_animations.xml");
     AssetManager::loadAnimation("enemy", "../asset/animations/bird_animations.xml");
