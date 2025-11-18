@@ -115,7 +115,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player2.addComponent<Player2Tag>();
 
     auto &spawner(world.createEntity());
-    Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight - 5), 0.0f, 1.0f);
+    Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight / 2), 0.0f, 1.0f);
     spawner.addComponent<TimedSpawner>(2.0f, [this, t] {
         //create our projectile (bird)
         auto &e(world.createDeferredEntity());
