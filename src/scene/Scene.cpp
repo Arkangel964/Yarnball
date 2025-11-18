@@ -77,6 +77,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     //Create the player1
     auto &player1(world.createEntity());
     auto &player1Transform(player1.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f));
+    player1Transform.oldPosition = player1Transform.position;
     player1.addComponent<RigidBody>(240.0f, 240.0f);
     player1.addComponent<Health>(Game::gameState.playerHealth);
 
@@ -96,6 +97,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     //Create the player2
     auto &player2(world.createEntity());
     auto &player2Transform(player2.addComponent<Transform>(Vector2D(0, 64), 0.0f, 1.0f));
+    player2Transform.oldPosition = player2Transform.position;
     player2.addComponent<RigidBody>(240.0f, 240.0f);
     player2.addComponent<Health>(Game::gameState.playerHealth);
 
@@ -113,7 +115,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player2.addComponent<Player2Tag>();
 
     auto &spawner(world.createEntity());
-    Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight - 5), 0.0f, 1.0f);
+    Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight / 2), 0.0f, 1.0f);
     spawner.addComponent<TimedSpawner>(2.0f, [this, t] {
         //create our projectile (bird)
         auto &e(world.createDeferredEntity());

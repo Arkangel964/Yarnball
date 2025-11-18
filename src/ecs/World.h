@@ -22,6 +22,7 @@
 #include "RenderSystem.h"
 #include "SpawnTimerSystem.h"
 #include "UIRenderSystem.h"
+#include "event/AudioEventQueue.h"
 #include "scene/SceneType.h"
 #include "PhysicsSystem.h"
 
@@ -43,6 +44,8 @@ class World {
     PhysicsSystem physicsSystem;
     UIRenderSystem uiRenderSystem;
     MouseInputSystem mouseInputSystem;
+    AudioEventQueue audioEventQueue;
+
 public:
     World() = default;
 
@@ -61,6 +64,7 @@ public:
         }
 
         mouseInputSystem.update(*this, event);
+        audioEventQueue.process();
 
         synchronizeEntities();
         cleanup();
@@ -112,6 +116,10 @@ public:
 
     EventManager& getEventManager() {
         return eventManager;
+    }
+
+    AudioEventQueue& getAudioEventQueue() {
+        return audioEventQueue;
     }
 
     Map& getMap() {

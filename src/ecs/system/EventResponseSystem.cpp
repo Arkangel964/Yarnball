@@ -70,6 +70,7 @@ void EventResponseSystem::onCollision(const CollisionEvent &e, const char *mainT
 void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* player, Entity* other, const char *otherTag, World &world) {
     if (std::string(otherTag) == "item") {
         if (e.state != CollisionState::Enter) return;
+        world.getAudioEventQueue().push(std::make_unique<AudioEvent>("collect"));
         other->destroy();
 
         for (auto &entity: world.getEntities()) {
