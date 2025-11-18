@@ -77,7 +77,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     //Create the player1
     auto &player1(world.createEntity());
     auto &player1Transform(player1.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f));
-    player1.addComponent<Velocity>(Vector2D(0, 0), Vector2D(0, 0), 240.0f);
+    player1.addComponent<RigidBody>(240.0f, 240.0f);
     player1.addComponent<Health>(Game::gameState.playerHealth);
 
     Animation anim = AssetManager::getAnimation("player");
@@ -96,7 +96,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     //Create the player2
     auto &player2(world.createEntity());
     auto &player2Transform(player2.addComponent<Transform>(Vector2D(0, 64), 0.0f, 1.0f));
-    player2.addComponent<Velocity>(Vector2D(0, 0), Vector2D(0, 0), 240.0f);
+    player2.addComponent<RigidBody>(240.0f, 240.0f);
     player2.addComponent<Health>(Game::gameState.playerHealth);
 
     anim = AssetManager::getAnimation("player");
@@ -118,7 +118,9 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
         //create our projectile (bird)
         auto &e(world.createDeferredEntity());
         e.addComponent<Transform>(Vector2D(t.position.x, t.position.y), 0.0f, 1.0f);
-        e.addComponent<Velocity>(Vector2D(0, -1), Vector2D(0, -1), 100.0f);
+//        e.addComponent<Velocity>(Vector2D(0, -1), Vector2D(0, -1), 100.0f);
+        e.addComponent<RigidBody>(100.0f, 0.25f);
+        PhysicsSystem::addImpulse(e, Vector2D(0, -1), 100.0f);
 
         Animation anim = AssetManager::getAnimation("enemy");
         e.addComponent<Animation>(anim);
@@ -128,11 +130,12 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
         SDL_FRect dest(t.position.x, t.position.y, 32, 32);
         e.addComponent<Sprite>(tex, animSrc, dest);
 
-        Collider c = e.addComponent<Collider>("projectile");
+        auto &c = e.addComponent<Collider>("projectile");
         c.rect.w = dest.w;
         c.rect.h = dest.h;
 
         e.addComponent<ProjectileTag>();
+        e.addComponent<DestroyOnStop>();
     });
 
     //add scene state

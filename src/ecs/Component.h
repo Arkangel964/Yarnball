@@ -22,11 +22,21 @@ struct Transform {
     Vector2D oldPosition{};
 };
 
+struct Impulse {
+    Vector2D direction{};
+    float force{};
+};
+
 //direction and speed
 struct Velocity {
     Vector2D direction{};
     Vector2D oldDirection{};
     float speed{};
+};
+
+struct RigidBody {
+    float maxSpeed{};   // Cap speed to a specific value
+    float friction{};   // Apply decay per frame to slow entities down
 };
 
 // UI rendering
@@ -96,6 +106,6 @@ struct Children {
 struct Player1Tag{};
 struct Player2Tag{};
 struct ProjectileTag{};
-
+struct DestroyOnStop{};
 
 #endif //TUTORIAL1_COMPONENT_H
