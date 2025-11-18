@@ -5,6 +5,7 @@
 
 #include "Game.h"
 #include "World.h"
+#include "Collision.h"
 
 EventResponseSystem::EventResponseSystem(World &world) {
     //subscriptions
@@ -107,20 +108,40 @@ void EventResponseSystem::onProjectileCollision(const CollisionEvent &e, Entity*
     if (std::string(otherTag) == "wall") {
         if (e.state != CollisionState::Stay) return;
         // Prevent further movement
-        auto &t = projectile->getComponent<Transform>();
-        t.position = t.oldPosition;
-        // Bounce off wall
-        // TODO: Bouncing
-        cout << "[Collision] Projectile hit wall" << std::endl;
+        auto &projectileTransform = projectile->getComponent<Transform>();
+        auto &projectileCollider = projectile->getComponent<Collider>();
+        auto &wallCollider = other->getComponent<Collider>();
+        // Bounce off wallCollider
+        Vector2D normal = Collision::getAABBCollisionNormal(projectileCollider, wallCollider);
+        // Reflections
+        auto &projectileVelocity = projectile->getComponent<Velocity>();
+        Vector2D reflected = projectileVelocity.direction - 2 * Vector2D::dot(projectileVelocity.direction, normal) * normal;
+        projectileVelocity.oldDirection = projectileVelocity.direction;
+        projectileVelocity.direction = reflected.normalize();
+        projectileTransform.position = projectileTransform.oldPosition;
     } else if (std::string(otherTag) == "projectile") {
         if (e.state != CollisionState::Stay) return;
         // Prevent further movement
-        auto &t1 = projectile->getComponent<Transform>();
-        t1.position = t1.oldPosition;
-        auto &t2 = other->getComponent<Transform>();
-        t2.position = t2.oldPosition;
-        // TODO: Bounce both
-        cout << "[Collision] Projectile hit other projectile" << std::endl;
+        auto &projectileACollider = projectile->getComponent<Collider>();
+        auto &projectileAVelocity = projectile->getComponent<Velocity>();
+        auto &projectileATransform = projectile->getComponent<Transform>();
+        auto &projectileBCollider = other->getComponent<Collider>();
+        auto &projectileBVelocity = other->getComponent<Velocity>();
+        auto &projectileBTransform = other->getComponent<Transform>();
+        // Get respective normals
+        Vector2D normalAB = Collision::getAABBCollisionNormal(projectileACollider, projectileBCollider);
+        Vector2D normalBA = Collision::getAABBCollisionNormal(projectileBCollider, projectileACollider);
+        // Reflect projectile A's velocity
+        Vector2D projectileAReflected = projectileAVelocity.direction - 2 * Vector2D::dot(projectileAVelocity.direction, normalAB) * normalAB;
+        projectileAVelocity.oldDirection = projectileAVelocity.direction;
+        projectileAVelocity.direction = projectileAReflected.normalize();
+        // Reflect projectile B's velocity
+        Vector2D projectileBReflected = projectileBVelocity.direction - 2 * Vector2D::dot(projectileBVelocity.direction, normalBA) * normalBA;
+        projectileBVelocity.oldDirection = projectileBVelocity.direction;
+        projectileBVelocity.direction = projectileBReflected.normalize();
+        // Keep the original positions/prevent entity penetration
+        projectileATransform.position = projectileATransform.oldPosition;
+        projectileBTransform.position = projectileBTransform.oldPosition;
     }
 }
 

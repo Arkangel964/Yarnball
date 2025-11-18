@@ -17,26 +17,26 @@ Vector2D &Vector2D::normalize() {
     return *this;
 }
 
-float Vector2D::length() {
+float Vector2D::length() const {
     return sqrtf(x * x + y * y);
 }
 
 
 //member operator func
 Vector2D Vector2D::operator*(float scalar) const {
-    return Vector2D(x * scalar, y * scalar);
+    return {x * scalar, y * scalar};
 }
 
 Vector2D Vector2D::operator/(float scalar) const {
-    return Vector2D(x / scalar, y / scalar);
+    return {x / scalar, y / scalar};
 }
 
 Vector2D Vector2D::operator+(const Vector2D vec) const {
-    return Vector2D(x + vec.x, y + vec.y);
+    return {x + vec.x, y + vec.y};
 }
 
 Vector2D Vector2D::operator-(const Vector2D vec) const {
-    return Vector2D(x - vec.x, y - vec.y);
+    return {x - vec.x, y - vec.y};
 }
 
 Vector2D& Vector2D::operator*=(float scalar) {
@@ -79,9 +79,13 @@ bool Vector2D::operator!=(const Vector2D vec) const {
 
 //non-member operator func
 Vector2D operator*(float scalar, Vector2D& vec) {
-    return Vector2D(vec.x * scalar, vec.y * scalar);
+    return {vec.x * scalar, vec.y * scalar};
 }
 
 Vector2D operator/(float scalar, Vector2D& vec) {
-    return Vector2D(vec.x / scalar, vec.y / scalar);
+    return {vec.x / scalar, vec.y / scalar};
+}
+
+float Vector2D::dot(Vector2D vec1, Vector2D vec2) {
+    return vec1.x * vec2.x + vec1.y * vec2.y;
 }
