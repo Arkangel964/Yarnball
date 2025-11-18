@@ -12,7 +12,8 @@ if(WIN32)
     include_directories(
             ${SDL3_PATH}/include
             ${SDL3_IMAGE_PATH}/include
-            ${SDL3_MMIXER_PATH}/include
+            ${SDL3_TTF_PATH}/include
+            ${SDL3_MIXER_PATH}/include
             ${PROJECT_SOURCE_DIR}/src
             ${PROJECT_SOURCE_DIR}/src/utils
             ${PROJECT_SOURCE_DIR}/src/ecs
@@ -70,11 +71,14 @@ add_executable(8552Game src/main.cpp
         src/ecs/system/UIRenderSystem.h
         src/ecs/system/MouseInputSystem.h
         src/ecs/system/MouseInputSystem.cpp
+        src/manager/AudioManager.h
+        src/manager/AudioManager.cpp
 )
 
 target_link_libraries(8552Game
         SDL3
         SDL3_image
+        SDL3_ttf
         SDL3_mixer
 )
 
