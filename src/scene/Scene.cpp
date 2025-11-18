@@ -77,6 +77,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     //Create the player1
     auto &player1(world.createEntity());
     auto &player1Transform(player1.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f));
+    player1Transform.oldPosition = player1Transform.position;
     player1.addComponent<RigidBody>(240.0f, 240.0f);
     player1.addComponent<Health>(Game::gameState.playerHealth);
 
@@ -96,6 +97,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     //Create the player2
     auto &player2(world.createEntity());
     auto &player2Transform(player2.addComponent<Transform>(Vector2D(0, 64), 0.0f, 1.0f));
+    player2Transform.oldPosition = player2Transform.position;
     player2.addComponent<RigidBody>(240.0f, 240.0f);
     player2.addComponent<Health>(Game::gameState.playerHealth);
 
