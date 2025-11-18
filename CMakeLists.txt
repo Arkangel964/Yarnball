@@ -100,4 +100,9 @@ if(WIN32)
             "${SDL3_TTF_PATH}/bin/SDL3_ttf.dll"
             $<TARGET_FILE_DIR:${PROJECT_NAME}>
     )
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${SDL3_MIXER_PATH}/bin/SDL3_mixer.dll"
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>
+    )
 endif()
