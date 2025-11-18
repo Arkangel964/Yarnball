@@ -93,7 +93,8 @@ struct Children {
     std::vector<Entity*> children{};
 };
 
-struct PlayerTag{};
+struct Player1Tag{};
+struct Player2Tag{};
 struct ProjectileTag{};
 
 
