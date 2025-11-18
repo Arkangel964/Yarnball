@@ -52,6 +52,14 @@ public:
         return *component;
     }
 
+    template<typename T> void removeComponent() {
+        // Remove the component from the array and memory
+        delete static_cast<T*>(componentArray[getComponentTypeID<T>()]);
+        componentArray[getComponentTypeID<T>()] = nullptr;
+        // Update the bitset to false so that it is removed entirely
+        componentBitSet[getComponentTypeID<T>()] = false;
+    }
+
     template<typename T> T& getComponent() {
         auto ptr(componentArray[getComponentTypeID<T>()]);
         return *static_cast<T*>(ptr);

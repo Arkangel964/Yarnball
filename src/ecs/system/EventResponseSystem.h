@@ -17,8 +17,10 @@ public:
     EventResponseSystem(World& world);
 private:
     //collisions
-    void onCollision(const CollisionEvent& e, const char* otherTag, World& world);
-    bool getCollisionEntities(const CollisionEvent& e, const char* otherTag, Entity*& player, Entity*& other);
+    void onCollision(const CollisionEvent &e, const char *mainTag, const char *otherTag, World &world);
+    bool getCollisionEntities(const CollisionEvent &e, const char *mainTag, const char *otherTag, Entity *&main, Entity *&other);
+    void onPlayerCollision(const CollisionEvent &e, Entity *player, Entity *other, const char *otherTag, World &world);
+    void onProjectileCollision(const CollisionEvent &e, Entity *projectile, Entity *other, const char *otherTag, World &world);
 
     //player action
     void onPlayerAction(const PlayerActionEvent& e,
