@@ -16,6 +16,7 @@ EventResponseSystem::EventResponseSystem(World &world) {
         onCollision(collision, "player", "item", world);
         onCollision(collision, "player", "wall", world);
         onCollision(collision, "player", "projectile", world);
+        onCollision(collision, "player", "player", world);
         onCollision(collision, "projectile", "wall", world);
         onCollision(collision, "projectile", "projectile", world);
     });
@@ -86,6 +87,14 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
 
         auto &t = player->getComponent<Transform>();
         t.position = t.oldPosition;
+    } else if (std::string(otherTag) == "player") {
+        if (e.state != CollisionState::Stay) return;
+
+        auto &t1 = player->getComponent<Transform>();
+        t1.position = t1.oldPosition;
+
+        auto &t2 = other->getComponent<Transform>();
+        t2.position = t2.oldPosition;
     } else if (std::string(otherTag) == "projectile") {
         if (e.state != CollisionState::Enter) return;
 
