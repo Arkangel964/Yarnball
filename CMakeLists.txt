@@ -8,9 +8,11 @@ if(WIN32)
     set(SDL3_PATH "${PROJECT_SOURCE_DIR}/libs/sdl3")
     set(SDL3_IMAGE_PATH "${PROJECT_SOURCE_DIR}/libs/sdl3-image")
     set(SDL3_TTF_PATH "${PROJECT_SOURCE_DIR}/libs/sdl3-ttf")
+    set(SDL3_MIXER_PATH "${PROJECT_SOURCE_DIR}/libs/sdl3-mixer")
     include_directories(
             ${SDL3_PATH}/include
             ${SDL3_IMAGE_PATH}/include
+            ${SDL3_MMIXER_PATH}/include
             ${PROJECT_SOURCE_DIR}/src
             ${PROJECT_SOURCE_DIR}/src/utils
             ${PROJECT_SOURCE_DIR}/src/ecs
@@ -21,6 +23,7 @@ if(WIN32)
             ${SDL3_PATH}/lib
             ${SDL3_IMAGE_PATH}/lib
             ${SDL3_TTF_PATH}/lib
+            ${SDL3_MIXER_PATH}/lib
     )
 endif()
 
@@ -72,6 +75,7 @@ add_executable(8552Game src/main.cpp
 target_link_libraries(8552Game
         SDL3
         SDL3_image
+        SDL3_mixer
 )
 
 if(WIN32)
