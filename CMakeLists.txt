@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 if(WIN32)
     set(SDL3_PATH "${PROJECT_SOURCE_DIR}/libs/sdl3")
     set(SDL3_IMAGE_PATH "${PROJECT_SOURCE_DIR}/libs/sdl3-image")
+    set(SDL3_TTF_PATH "${PROJECT_SOURCE_DIR}/libs/sdl3-ttf")
     include_directories(
             ${SDL3_PATH}/include
             ${SDL3_IMAGE_PATH}/include
@@ -19,6 +20,7 @@ if(WIN32)
     link_directories(
             ${SDL3_PATH}/lib
             ${SDL3_IMAGE_PATH}/lib
+            ${SDL3_TTF_PATH}/lib
     )
 endif()
 
@@ -82,5 +84,10 @@ if(WIN32)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${SDL3_IMAGE_PATH}/bin/SDL3_image.dll"
         $<TARGET_FILE_DIR:${PROJECT_NAME}>
+    )
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${SDL3_TTF_PATH}/bin/SDL3_ttf.dll"
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>
     )
 endif()
