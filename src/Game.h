@@ -7,6 +7,7 @@
 #include <SDL3/SDL.h>
 
 #include "World.h"
+#include "manager/AudioManager.h"
 #include "manager/SceneManager.h"
 
 using namespace std;
@@ -38,6 +39,7 @@ public:
     SDL_Renderer *renderer = nullptr;
 
     SceneManager sceneManager;
+    AudioManager audioManager;
     static function<void(string)> onSceneChangeRequest;
     static GameState gameState;
 

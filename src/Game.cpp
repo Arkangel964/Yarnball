@@ -61,6 +61,11 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
         isRunning = false;
     }
 
+    //load audio
+    audioManager.loadAudio("theme", "../asset/audio/switch_with_me.ogg");
+    audioManager.loadAudio("collect", "../asset/audio/coin.ogg");
+
+
     //load assets
     AssetManager::loadAnimation("player", "../asset/animations/bull_animations.xml");
     AssetManager::loadAnimation("enemy", "../asset/animations/bird_animations.xml");
@@ -73,8 +78,13 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
     sceneManager.loadScene(SceneType::Gameplay,"level1", "../asset/map.tmx", width, height);
     sceneManager.loadScene(SceneType::Gameplay,"level2", "../asset/map2.tmx", width, height);
 
+    //start music
+    audioManager.playMusic("theme");
+
     //start level 1
     sceneManager.changeSceneDeferred("mainmenu");
+
+
 
     //resolve scene callback
     onSceneChangeRequest = [&](string sceneName) {
