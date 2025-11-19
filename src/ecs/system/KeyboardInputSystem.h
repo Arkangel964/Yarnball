@@ -33,6 +33,9 @@ public:
             }
         }
 
+        if(pressedKeys.empty())
+            return;
+
         // std::cout << "Pressed Keys: ";
         // for (const auto& key: pressedKeys) {
         //     std::cout << key << " ";
