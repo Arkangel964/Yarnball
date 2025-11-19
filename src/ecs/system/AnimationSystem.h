@@ -27,17 +27,41 @@ public:
                     if (entity->hasComponent<Velocity>()) {
                         auto& vel = entity->getComponent<Velocity>();
                         if (vel.direction.x > 0.0f) {
-                            newClip = "walk_right";
+                            if (vel.direction.y < 0.0f) {
+                                newClip = "walk_right_up";
+                            } else if (vel.direction.y > 0.0f) {
+                                newClip = "walk_right_down";
+                            } else {
+                                newClip = "walk_right";
+                            }
                         } else if (vel.direction.x < 0.0f) {
-                            newClip = "walk_left";
+                            if (vel.direction.y < 0.0f) {
+                                newClip = "walk_left_up";
+                            } else if (vel.direction.y > 0.0f) {
+                                newClip = "walk_left_down";
+                            } else {
+                                newClip = "walk_left";
+                            }
                         } else if (vel.direction.y > 0.0f) {
                             newClip = "walk_down";
                         } else if (vel.direction.y < 0.0f) {
                             newClip = "walk_up";
                         } else if (vel.oldDirection.x > 0.0f) {
-                            newClip = "idle_right";
+                            if (vel.oldDirection.y < 0.0f) {
+                                newClip = "idle_right_up";
+                            } else if (vel.oldDirection.y > 0.0f) {
+                                newClip = "idle_right_down";
+                            } else {
+                                newClip = "idle_right";
+                            }
                         } else if (vel.oldDirection.x < 0.0f) {
-                            newClip = "idle_left";
+                            if (vel.oldDirection.y < 0.0f) {
+                                newClip = "idle_left_up";
+                            } else if (vel.oldDirection.y > 0.0f) {
+                                newClip = "idle_left_down";
+                            } else {
+                                newClip = "idle_left";
+                            }
                         } else if (vel.oldDirection.y > 0.0f) {
                             newClip = "idle_down";
                         } else if (vel.oldDirection.y < 0.0f) {

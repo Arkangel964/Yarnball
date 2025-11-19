@@ -23,20 +23,16 @@ public:
                     if (event.type == SDL_EVENT_KEY_DOWN) {
                         switch (event.key.key) {
                         case SDLK_W:
-                            player1Input.x = 0;
                             player1Input.y = -1;
                             break;
                         case SDLK_S:
-                            player1Input.x = 0;
                             player1Input.y = 1;
                             break;
                         case SDLK_A:
                             player1Input.x = -1;
-                            player1Input.y = 0;
                             break;
                         case SDLK_D:
                             player1Input.x = 1;
-                            player1Input.y = 0;
                             break;
                         default:
                             break;
@@ -47,10 +43,11 @@ public:
                         switch (event.key.key) {
                         case SDLK_W:
                         case SDLK_S:
+                            player1Input.y = 0;
+                            break;
                         case SDLK_A:
                         case SDLK_D:
                             player1Input.x = 0;
-                            player1Input.y = 0;
                             break;
                         default:
                             break;
@@ -64,20 +61,16 @@ public:
                     if (event.type == SDL_EVENT_KEY_DOWN) {
                         switch (event.key.key) {
                         case SDLK_UP:
-                            player2Input.x = 0;
                             player2Input.y = -1;
                             break;
                         case SDLK_DOWN:
-                            player2Input.x = 0;
                             player2Input.y = 1;
                             break;
                         case SDLK_LEFT:
                             player2Input.x = -1;
-                            player2Input.y = 0;
                             break;
                         case SDLK_RIGHT:
                             player2Input.x = 1;
-                            player2Input.y = 0;
                             break;
                         default:
                             break;
@@ -88,10 +81,11 @@ public:
                         switch (event.key.key) {
                         case SDLK_UP:
                         case SDLK_DOWN:
+                            player2Input.y = 0;
+                            break;
                         case SDLK_LEFT:
                         case SDLK_RIGHT:
                             player2Input.x = 0;
-                            player2Input.y = 0;
                             break;
                         default:
                             break;
