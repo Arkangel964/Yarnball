@@ -33,11 +33,11 @@ public:
             }
         }
 
-        std::cout << "Pressed Keys: ";
-        for (const auto& key: pressedKeys) {
-            std::cout << key << " ";
-        }
-        std::cout << std::endl;
+        // std::cout << "Pressed Keys: ";
+        // for (const auto& key: pressedKeys) {
+        //     std::cout << key << " ";
+        // }
+        // std::cout << std::endl;
 
         for (auto& entity : entities) {
             if (entity->hasComponent<Keybinds>() && entity->hasComponent<RigidBody>()) {
