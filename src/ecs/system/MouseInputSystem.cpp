@@ -7,8 +7,7 @@
 #include "World.h"
 
 void MouseInputSystem::update(World &world, const std::vector<SDL_Event>& events) {
-    for (const auto& event: events)
-    {
+    for (const auto& event: events) {
         if (event.type != SDL_EVENT_MOUSE_MOTION &&
             event.type != SDL_EVENT_MOUSE_BUTTON_DOWN &&
             event.type != SDL_EVENT_MOUSE_BUTTON_UP)

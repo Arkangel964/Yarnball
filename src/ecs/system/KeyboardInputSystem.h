@@ -20,6 +20,10 @@ public:
         for (auto& entity : entities) {
             if (entity->hasComponent<Player1Tag>() && entity->hasComponent<RigidBody>()) {
                 for (const auto& event: events) {
+                    if (event.type != SDL_EVENT_KEY_DOWN &&
+                        event.type != SDL_EVENT_KEY_UP)
+                        continue;
+
                     if (event.type == SDL_EVENT_KEY_DOWN) {
                         switch (event.key.key) {
                         case SDLK_W:
@@ -58,6 +62,10 @@ public:
                     PhysicsSystem::addImpulse(*entity, player1Input, 240);
             } else if (entity->hasComponent<Player2Tag>() && entity->hasComponent<RigidBody>()) {
                 for (const auto& event: events) {
+                    if (event.type != SDL_EVENT_KEY_DOWN &&
+                        event.type != SDL_EVENT_KEY_UP)
+                        continue;
+
                     if (event.type == SDL_EVENT_KEY_DOWN) {
                         switch (event.key.key) {
                         case SDLK_UP:
