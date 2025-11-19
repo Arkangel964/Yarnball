@@ -9,6 +9,7 @@
 
 #include "Component.h"
 #include "Entity.h"
+#include "TextureManager.h"
 
 
 class PreRenderSystem {
@@ -17,7 +18,7 @@ class PreRenderSystem {
         for (auto& entity : entities) {
             if (entity->hasComponent<Label>() && entity->getComponent<Label>().dirty) {
                 // update label texture
-
+                TextureManager::updateLabel(entity->getComponent<Label>());
             }
         }
     }
