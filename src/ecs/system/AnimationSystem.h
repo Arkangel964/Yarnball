@@ -24,8 +24,7 @@ public:
                 //state system
                 std::string newClip;
                 if (entity->hasComponent<Player1Tag>() || entity->hasComponent<Player2Tag>()) {
-                    if (entity->hasComponent<Velocity>())
-                    {
+                    if (entity->hasComponent<Velocity>()) {
                         auto& vel = entity->getComponent<Velocity>();
                         if (vel.direction.x > 0.0f) {
                             newClip = "walk_right";

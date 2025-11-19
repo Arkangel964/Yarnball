@@ -47,8 +47,8 @@ public:
         pendingScene = name;
     }
 
-    void update(const float dt, const SDL_Event& event) {
-        if (currentScene) currentScene->update(dt, event);
+    void update(const float dt, const std::vector<SDL_Event>& events) {
+        if (currentScene) currentScene->update(dt, events);
         if (!pendingScene.empty()) {
             changeScene(pendingScene);
             pendingScene.clear();

@@ -50,7 +50,8 @@ private:
     bool isRunning = false;
 
     SDL_Window* window = nullptr;
-    SDL_Event event;
+    //SDL_Event event;
+    std::vector<SDL_Event> events;
 
 
     //sdl stores color channels as 8-bit unsigned
