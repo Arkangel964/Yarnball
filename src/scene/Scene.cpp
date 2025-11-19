@@ -84,7 +84,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     Animation anim = AssetManager::getAnimation("player");
     player1.addComponent<Animation>(anim);
 
-    SDL_Texture *tex = TextureManager::load("../asset/animations/bull_anim.png");
+    SDL_Texture *tex = TextureManager::load("../asset/animations/cat_brown_anim.png");
     SDL_FRect player1Src = anim.clips[anim.currentClip].frameIndices[0];
     SDL_FRect player1Dst{player1Transform.position.x, player1Transform.position.y, 32, 32};
     player1.addComponent<Sprite>(tex, player1Src, player1Dst);
@@ -104,7 +104,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     anim = AssetManager::getAnimation("player");
     player2.addComponent<Animation>(anim);
 
-    tex = TextureManager::load("../asset/animations/bull_anim.png");
+    tex = TextureManager::load("../asset/animations/cat_grey_anim.png");
     SDL_FRect player2Src = anim.clips[anim.currentClip].frameIndices[0];
     SDL_FRect player2Dst{player2Transform.position.x, player2Transform.position.y, 32, 32};
     player2.addComponent<Sprite>(tex, player2Src, player2Dst);
