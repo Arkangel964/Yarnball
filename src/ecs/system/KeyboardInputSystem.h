@@ -4,6 +4,7 @@
 
 #ifndef TUTORIAL1_KEYBOARDINPUTSYSTEM_H
 #define TUTORIAL1_KEYBOARDINPUTSYSTEM_H
+#include <iostream>
 #include <memory>
 #include <vector>
 #include <SDL3/SDL_events.h>
@@ -13,95 +14,49 @@
 #include "PhysicsSystem.h"
 
 class KeyboardInputSystem {
+private:
+    std::vector<SDL_Keycode> pressedKeys;
+
 public:
     void update(const std::vector<std::unique_ptr<Entity>>& entities, const std::vector<SDL_Event>& events) {
-        static Vector2D player1Input(0, 0);
-        static Vector2D player2Input(0, 0);
+        for (const auto& event: events) {
+            if (event.type == SDL_EVENT_KEY_DOWN) {
+                auto it = std::find(pressedKeys.begin(), pressedKeys.end(), event.key.key);
+                if (it == pressedKeys.end()) {
+                    pressedKeys.push_back(event.key.key);
+                }
+            } else if (event.type == SDL_EVENT_KEY_UP) {
+                auto it = std::find(pressedKeys.begin(), pressedKeys.end(), event.key.key);
+                if (it != pressedKeys.end()) {
+                    pressedKeys.erase(it);
+                }
+            }
+        }
+
+        std::cout << "Pressed Keys: ";
+        for (const auto& key: pressedKeys) {
+            std::cout << key << " ";
+        }
+        std::cout << std::endl;
+
         for (auto& entity : entities) {
-            if (entity->hasComponent<Player1Tag>() && entity->hasComponent<RigidBody>()) {
-                for (const auto& event: events) {
-                    if (event.type != SDL_EVENT_KEY_DOWN &&
-                        event.type != SDL_EVENT_KEY_UP)
-                        continue;
-
-                    if (event.type == SDL_EVENT_KEY_DOWN) {
-                        switch (event.key.key) {
-                        case SDLK_W:
-                            player1Input.y = -1;
-                            break;
-                        case SDLK_S:
-                            player1Input.y = 1;
-                            break;
-                        case SDLK_A:
-                            player1Input.x = -1;
-                            break;
-                        case SDLK_D:
-                            player1Input.x = 1;
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-
-                    if (event.type == SDL_EVENT_KEY_UP) {
-                        switch (event.key.key) {
-                        case SDLK_W:
-                        case SDLK_S:
-                            player1Input.y = 0;
-                            break;
-                        case SDLK_A:
-                        case SDLK_D:
-                            player1Input.x = 0;
-                            break;
-                        default:
-                            break;
-                        }
+            if (entity->hasComponent<Keybinds>() && entity->hasComponent<RigidBody>()) {
+                auto& keybinds = entity->getComponent<Keybinds>();
+                Vector2D playerInput{0, 0};
+                for (const auto& key: pressedKeys) {
+                    if (key == keybinds.up) {
+                        playerInput.y = -1;
+                    } else if (key == keybinds.down) {
+                        playerInput.y = 1;
+                    } else if (key == keybinds.left) {
+                        playerInput.x = -1;
+                    } else if (key == keybinds.right) {
+                        playerInput.x = 1;
                     }
                 }
-                if (player1Input != Vector2D())
-                    PhysicsSystem::addImpulse(*entity, player1Input, 240);
-            } else if (entity->hasComponent<Player2Tag>() && entity->hasComponent<RigidBody>()) {
-                for (const auto& event: events) {
-                    if (event.type != SDL_EVENT_KEY_DOWN &&
-                        event.type != SDL_EVENT_KEY_UP)
-                        continue;
 
-                    if (event.type == SDL_EVENT_KEY_DOWN) {
-                        switch (event.key.key) {
-                        case SDLK_UP:
-                            player2Input.y = -1;
-                            break;
-                        case SDLK_DOWN:
-                            player2Input.y = 1;
-                            break;
-                        case SDLK_LEFT:
-                            player2Input.x = -1;
-                            break;
-                        case SDLK_RIGHT:
-                            player2Input.x = 1;
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-
-                    if (event.type == SDL_EVENT_KEY_UP) {
-                        switch (event.key.key) {
-                        case SDLK_UP:
-                        case SDLK_DOWN:
-                            player2Input.y = 0;
-                            break;
-                        case SDLK_LEFT:
-                        case SDLK_RIGHT:
-                            player2Input.x = 0;
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-                if (player2Input != Vector2D())
-                    PhysicsSystem::addImpulse(*entity, player2Input, 240);
+                if (playerInput != Vector2D())
+                    PhysicsSystem::addImpulse(*entity, playerInput, 240);
             }
         }
     }

@@ -92,6 +92,8 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player1Collider.rect.w = player1Dst.w;
     player1Collider.rect.h = player1Dst.h;
 
+    player1.addComponent<Keybinds>(SDLK_W, SDLK_S, SDLK_A, SDLK_D);
+
     player1.addComponent<Player1Tag>();
 
     //Create the player2
@@ -111,6 +113,8 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     auto &player2Collider = player2.addComponent<Collider>("player");
     player2Collider.rect.w = player2Dst.w;
     player2Collider.rect.h = player2Dst.h;
+
+    player2.addComponent<Keybinds>(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT);
 
     player2.addComponent<Player2Tag>();
 
