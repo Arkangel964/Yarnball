@@ -4,6 +4,7 @@
 
 #ifndef TUTORIAL1_VECTOR2D_H
 #define TUTORIAL1_VECTOR2D_H
+#include <iostream>
 
 class Vector2D {
     public:
@@ -45,4 +46,10 @@ class Vector2D {
 
     static float dot(Vector2D vec1, Vector2D vec2);
 };
+
+inline std::ostream& operator<<(std::ostream& os, Vector2D vec) {
+    os << "(" << static_cast<int>(vec.x) << ", " << static_cast<int>(vec.y) << ")";
+    return os;
+}
+
 #endif //TUTORIAL1_VECTOR2D_H

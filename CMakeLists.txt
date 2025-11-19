@@ -75,6 +75,7 @@ add_executable(8552Game src/main.cpp
         src/manager/AudioManager.h
         src/manager/AudioManager.cpp
         src/ecs/event/AudioEventQueue.h
+        src/ecs/system/HUDSystem.h
 )
 
 target_link_libraries(8552Game

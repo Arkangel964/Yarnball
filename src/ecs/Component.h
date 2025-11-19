@@ -6,6 +6,7 @@
 #define TUTORIAL1_COMPONENT_H
 #include <functional>
 #include <SDL3/SDL_render.h>
+#include "SDL3_ttf/SDL_ttf.h"
 #include "../utils/Vector2D.h"
 #include <string>
 #include <unordered_map>
@@ -101,6 +102,24 @@ struct Parent {
 
 struct Children {
     std::vector<Entity*> children{};
+};
+
+enum class LabelType {
+    PlayerPosition,
+    Lives,
+    Yarnballs
+};
+
+struct Label {
+    std::string text{};
+    TTF_Font* font = nullptr;
+    SDL_Color color{};
+    LabelType type = LabelType::PlayerPosition;
+    std::string textureCacheKey{};
+    SDL_Texture* texture = nullptr;
+    SDL_Rect dst{};
+    bool visible = true;
+    bool dirty = false;
 };
 
 struct Player1Tag{};
