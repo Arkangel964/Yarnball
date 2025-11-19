@@ -10,6 +10,8 @@
 #include "Component.h"
 #include "Entity.h"
 
+#define TOLERANCE 0.001f
+
 //State system: Deciding which clip to use
 //Check if the animation has been switched
 //Playback system: advances the animation
@@ -26,45 +28,45 @@ public:
                 if (entity->hasComponent<Player1Tag>() || entity->hasComponent<Player2Tag>()) {
                     if (entity->hasComponent<Velocity>()) {
                         auto& vel = entity->getComponent<Velocity>();
-                        if (vel.direction.x > 0.0f) {
-                            if (vel.direction.y < -0.001f) {
+                        if (vel.direction.x > TOLERANCE) {
+                            if (vel.direction.y < TOLERANCE*-1) {
                                 newClip = "walk_right_up";
-                            } else if (vel.direction.y > 0.001f) {
+                            } else if (vel.direction.y > TOLERANCE) {
                                 newClip = "walk_right_down";
                             } else {
                                 newClip = "walk_right";
                             }
-                        } else if (vel.direction.x < 0.0f) {
-                            if (vel.direction.y < -0.001f) {
+                        } else if (vel.direction.x < TOLERANCE*-1) {
+                            if (vel.direction.y < TOLERANCE*-1) {
                                 newClip = "walk_left_up";
-                            } else if (vel.direction.y > 0.001f) {
+                            } else if (vel.direction.y > TOLERANCE) {
                                 newClip = "walk_left_down";
                             } else {
                                 newClip = "walk_left";
                             }
-                        } else if (vel.direction.y > 0.0f) {
+                        } else if (vel.direction.y > TOLERANCE) {
                             newClip = "walk_down";
-                        } else if (vel.direction.y < 0.0f) {
+                        } else if (vel.direction.y < TOLERANCE*-1) {
                             newClip = "walk_up";
-                        } else if (vel.oldDirection.x > 0.0f) {
-                            if (vel.oldDirection.y < -0.001f) {
+                        } else if (vel.oldDirection.x > TOLERANCE) {
+                            if (vel.oldDirection.y < TOLERANCE*-1) {
                                 newClip = "idle_right_up";
-                            } else if (vel.oldDirection.y > 0.001f) {
+                            } else if (vel.oldDirection.y > TOLERANCE) {
                                 newClip = "idle_right_down";
                             } else {
                                 newClip = "idle_right";
                             }
-                        } else if (vel.oldDirection.x < 0.0f) {
-                            if (vel.oldDirection.y < -0.001f) {
+                        } else if (vel.oldDirection.x < TOLERANCE*-1) {
+                            if (vel.oldDirection.y < TOLERANCE*-1) {
                                 newClip = "idle_left_up";
-                            } else if (vel.oldDirection.y > 0.001f) {
+                            } else if (vel.oldDirection.y > TOLERANCE) {
                                 newClip = "idle_left_down";
                             } else {
                                 newClip = "idle_left";
                             }
-                        } else if (vel.oldDirection.y > 0.0f) {
+                        } else if (vel.oldDirection.y > TOLERANCE) {
                             newClip = "idle_down";
-                        } else if (vel.oldDirection.y < 0.0f) {
+                        } else if (vel.oldDirection.y < TOLERANCE*-1) {
                             newClip = "idle_up";
                         } else {
                             newClip = "idle_right";
