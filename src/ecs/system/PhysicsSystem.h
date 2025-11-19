@@ -30,6 +30,9 @@ public:
                 } else {
                     if (entity->hasComponent<DestroyOnStop>()) {
                         entity->destroy();
+                    } else
+                    {
+                        velocity.direction = {0, 0};
                     }
                 }
             } else {
