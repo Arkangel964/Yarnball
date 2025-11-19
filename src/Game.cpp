@@ -93,7 +93,6 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
     sceneManager.changeSceneDeferred("mainmenu");
 
 
-
     //resolve scene callback
     onSceneChangeRequest = [&](string sceneName) {
         if (sceneManager.currentScene->getName() == "level2" && sceneName == "level2"){
