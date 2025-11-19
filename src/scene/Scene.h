@@ -37,7 +37,7 @@ class Scene {
     void createSettingUIComponents(Entity& overlay);
     void toggleSettingsOverlayVisibility(Entity& overlay);
 
-    Entity& createPlayerPosLabel(bool isPlayer1);
+    Entity& createPlayerPosLabel(Entity& entity);
 
 };
 

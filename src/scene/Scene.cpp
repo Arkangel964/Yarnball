@@ -93,6 +93,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player1Collider.rect.h = player1Dst.h;
 
     player1.addComponent<Player1Tag>();
+    createPlayerPosLabel(player1);
 
     //Create the player2
     auto &player2(world.createEntity());
@@ -113,6 +114,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player2Collider.rect.h = player2Dst.h;
 
     player2.addComponent<Player2Tag>();
+    createPlayerPosLabel(player2);
 
     auto &spawner(world.createEntity());
     Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight / 2), 0.0f, 1.0f);
@@ -143,9 +145,6 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     //add scene state
     auto &state(world.createEntity());
     state.addComponent<SceneState>();
-
-    createPlayerPosLabel(true);
-    createPlayerPosLabel(false);
 };
 
 Entity &Scene::createSettingsOverlay(int windowWidth, int windowHeight) {
@@ -247,11 +246,11 @@ void Scene::toggleSettingsOverlayVisibility(Entity &overlay) {
     }
 };
 
-Entity& Scene::createPlayerPosLabel(bool isPlayer1) {
+Entity& Scene::createPlayerPosLabel(Entity& entity) {
     auto& playerPosLabel(world.createEntity());
     Label label;
 
-    if (isPlayer1) {
+    if (entity.hasComponent<Player1Tag>()) {
         label = {
             "Player 1 label",
             AssetManager::getFont("arial"),
@@ -272,7 +271,7 @@ Entity& Scene::createPlayerPosLabel(bool isPlayer1) {
     TextureManager::loadLabel(label);
     playerPosLabel.addComponent<Label>(label);
 
-    if (isPlayer1) {
+    if (entity.hasComponent<Player1Tag>()) {
         playerPosLabel.addComponent<Transform>(Vector2D(10, 10), 0.0f, 1.0f);
     } else {
         playerPosLabel.addComponent<Transform>(Vector2D(590, 10), 0.0f, 1.0f);
