@@ -17,7 +17,7 @@ public:
     static SDL_Texture* load(const char* path);
 
     //floating point rects = FRect
-    static void draw(SDL_Texture* texture, SDL_FRect src, SDL_FRect dst);
+    static void draw(SDL_Texture* texture, const SDL_FRect* src, const SDL_FRect* dst);
 
     static void clean();
 };

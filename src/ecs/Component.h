@@ -117,7 +117,7 @@ struct Label {
     LabelType type = LabelType::PlayerPosition;
     std::string textureCacheKey{};
     SDL_Texture* texture = nullptr;
-    SDL_Rect dst{};
+    SDL_FRect dst{};
     bool visible = true;
     bool dirty = false;
 };
