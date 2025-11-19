@@ -29,15 +29,15 @@ public:
                     if (entity->hasComponent<Velocity>()) {
                         auto& vel = entity->getComponent<Velocity>();
                         if (vel.direction.x > TOLERANCE) {
-                            if (vel.direction.y < TOLERANCE*-1) {
+                            if (vel.direction.y < -TOLERANCE) {
                                 newClip = "walk_right_up";
                             } else if (vel.direction.y > TOLERANCE) {
                                 newClip = "walk_right_down";
                             } else {
                                 newClip = "walk_right";
                             }
-                        } else if (vel.direction.x < TOLERANCE*-1) {
-                            if (vel.direction.y < TOLERANCE*-1) {
+                        } else if (vel.direction.x < -TOLERANCE) {
+                            if (vel.direction.y < -TOLERANCE) {
                                 newClip = "walk_left_up";
                             } else if (vel.direction.y > TOLERANCE) {
                                 newClip = "walk_left_down";
@@ -46,18 +46,18 @@ public:
                             }
                         } else if (vel.direction.y > TOLERANCE) {
                             newClip = "walk_down";
-                        } else if (vel.direction.y < TOLERANCE*-1) {
+                        } else if (vel.direction.y < -TOLERANCE) {
                             newClip = "walk_up";
                         } else if (vel.oldDirection.x > TOLERANCE) {
-                            if (vel.oldDirection.y < TOLERANCE*-1) {
+                            if (vel.oldDirection.y < -TOLERANCE) {
                                 newClip = "idle_right_up";
                             } else if (vel.oldDirection.y > TOLERANCE) {
                                 newClip = "idle_right_down";
                             } else {
                                 newClip = "idle_right";
                             }
-                        } else if (vel.oldDirection.x < TOLERANCE*-1) {
-                            if (vel.oldDirection.y < TOLERANCE*-1) {
+                        } else if (vel.oldDirection.x < -TOLERANCE) {
+                            if (vel.oldDirection.y < -TOLERANCE) {
                                 newClip = "idle_left_up";
                             } else if (vel.oldDirection.y > TOLERANCE) {
                                 newClip = "idle_left_down";
@@ -66,7 +66,7 @@ public:
                             }
                         } else if (vel.oldDirection.y > TOLERANCE) {
                             newClip = "idle_down";
-                        } else if (vel.oldDirection.y < TOLERANCE*-1) {
+                        } else if (vel.oldDirection.y < -TOLERANCE) {
                             newClip = "idle_up";
                         } else {
                             newClip = "idle_right";
