@@ -28,5 +28,5 @@ void GameObject::update(float deltaTime) {
 }
 
 void GameObject::draw() {
-    TextureManager::draw(texture, srcRect, destRect);
+    TextureManager::draw(texture, &srcRect, &destRect);
 }

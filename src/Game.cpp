@@ -50,6 +50,11 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
             std::cout << "Renderer could not be created." << std::endl;
             return;
         }
+
+        if (TTF_Init() != 1) {
+            std::cout << "TTF_Init failed." << std::endl;
+        }
+
         isRunning = true;
         //color initialization and randomization seeding
         srand(time(NULL));
@@ -60,6 +65,9 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
         std::cout << "Subsystem could not be initialized." << std::endl;
         isRunning = false;
     }
+
+    // load font
+    AssetManager::loadFont("arial", "../asset/fonts/arial.ttf", 16);
 
     //load audio
     audioManager.loadAudio("theme", "../asset/audio/switch_with_me.ogg");

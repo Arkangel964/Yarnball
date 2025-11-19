@@ -143,6 +143,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     //add scene state
     auto &state(world.createEntity());
     state.addComponent<SceneState>();
+    createPlayer1PosLabel();
 };
 
 Entity &Scene::createSettingsOverlay(int windowWidth, int windowHeight) {
@@ -243,3 +244,19 @@ void Scene::toggleSettingsOverlayVisibility(Entity &overlay) {
         }
     }
 };
+
+Entity& Scene::createPlayer1PosLabel() {
+    auto& player1PosLabel(world.createEntity());
+    Label label = {
+        "Test string",
+        AssetManager::getFont("arial"),
+        {255, 255, 255, 255},
+        LabelType::PlayerPosition,
+        "player1Pos"
+    };
+
+    TextureManager::loadLabel(label);
+    player1PosLabel.addComponent<Label>(label);
+    player1PosLabel.addComponent<Transform>(Vector2D(10, 10), 0.0f, 1.0f);
+    return player1PosLabel;
+}
