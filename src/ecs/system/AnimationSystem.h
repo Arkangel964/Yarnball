@@ -18,29 +18,34 @@ class AnimationSystem {
 public:
     void update(const std::vector<std::unique_ptr<Entity>>& entities, float dt) {
         for (auto& entity : entities) {
-            if (entity->hasComponent<Animation>() && entity->hasComponent<Velocity>()) {
+            if (entity->hasComponent<Animation>()) {
                 auto& anim = entity->getComponent<Animation>();
-                auto& vel = entity->getComponent<Velocity>();
 
                 //state system
                 std::string newClip;
                 if (entity->hasComponent<Player1Tag>() || entity->hasComponent<Player2Tag>()) {
-                    if (vel.direction.x > 0.0f) {
-                        newClip = "walk_right";
-                    } else if (vel.direction.x < 0.0f) {
-                        newClip = "walk_left";
-                    } else if (vel.direction.y > 0.0f) {
-                        newClip = "walk_down";
-                    } else if (vel.direction.y < 0.0f) {
-                        newClip = "walk_up";
-                    } else if (vel.oldDirection.x > 0.0f) {
-                        newClip = "idle_right";
-                    } else if (vel.oldDirection.x < 0.0f) {
-                        newClip = "idle_left";
-                    } else if (vel.oldDirection.y > 0.0f) {
-                        newClip = "idle_down";
-                    } else if (vel.oldDirection.y < 0.0f) {
-                        newClip = "idle_up";
+                    if (entity->hasComponent<Velocity>())
+                    {
+                        auto& vel = entity->getComponent<Velocity>();
+                        if (vel.direction.x > 0.0f) {
+                            newClip = "walk_right";
+                        } else if (vel.direction.x < 0.0f) {
+                            newClip = "walk_left";
+                        } else if (vel.direction.y > 0.0f) {
+                            newClip = "walk_down";
+                        } else if (vel.direction.y < 0.0f) {
+                            newClip = "walk_up";
+                        } else if (vel.oldDirection.x > 0.0f) {
+                            newClip = "idle_right";
+                        } else if (vel.oldDirection.x < 0.0f) {
+                            newClip = "idle_left";
+                        } else if (vel.oldDirection.y > 0.0f) {
+                            newClip = "idle_down";
+                        } else if (vel.oldDirection.y < 0.0f) {
+                            newClip = "idle_up";
+                        } else {
+                            newClip = "idle_right";
+                        }
                     } else {
                         newClip = "idle_right";
                     }
