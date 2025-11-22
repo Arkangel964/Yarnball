@@ -95,7 +95,8 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player1.addComponent<Keybinds>(SDLK_W, SDLK_S, SDLK_A, SDLK_D);
 
     player1.addComponent<Player1Tag>();
-    createPlayerPosLabel(player1);
+    //createPlayerPosLabel(player1);
+    createPlayerTitleLabel(player1);
 
     //Create the player2
     auto &player2(world.createEntity());
@@ -118,7 +119,8 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player2.addComponent<Keybinds>(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT);
 
     player2.addComponent<Player2Tag>();
-    createPlayerPosLabel(player2);
+    //createPlayerPosLabel(player2);
+    createPlayerTitleLabel(player2);
 
     auto &spawner(world.createEntity());
     Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight / 2), 0.0f, 1.0f);
@@ -250,35 +252,72 @@ void Scene::toggleSettingsOverlayVisibility(Entity &overlay) {
     }
 };
 
-Entity& Scene::createPlayerPosLabel(Entity& entity) {
+Entity &Scene::createPlayerTitleLabel(Entity &entity) {
     auto& playerPosLabel(world.createEntity());
     Label label;
 
     if (entity.hasComponent<Player1Tag>()) {
         label = {
-            "Player 1 label",
-            AssetManager::getFont("arial"),
+            "Player 1 title",
+            AssetManager::getFont("fira"),
             {255, 255, 255, 255},
-            LabelType::PlayerPosition,
-            "player1Pos"
+            LabelType::PlayerTitle,
+            "player1Title"
         };
+
     } else {
+
         label = {
-            "Player 2 label",
-            AssetManager::getFont("arial"),
+            "Player 2 title",
+            AssetManager::getFont("fira"),
             {255, 255, 255, 255},
-            LabelType::PlayerPosition,
-            "player2Pos"
+            LabelType::PlayerTitle,
+            "player2Title"
         };
+
     }
 
     TextureManager::loadLabel(label);
     playerPosLabel.addComponent<Label>(label);
-
     if (entity.hasComponent<Player1Tag>()) {
         playerPosLabel.addComponent<Transform>(Vector2D(10, 10), 0.0f, 1.0f);
     } else {
-        playerPosLabel.addComponent<Transform>(Vector2D(590, 10), 0.0f, 1.0f);
+        playerPosLabel.addComponent<Transform>(Vector2D(695, 10), 0.0f, 1.0f);
     }
     return playerPosLabel;
+
 }
+
+
+// Entity& Scene::createPlayerPosLabel(Entity& entity) {
+//     auto& playerPosLabel(world.createEntity());
+//     Label label;
+//
+//     if (entity.hasComponent<Player1Tag>()) {
+//         label = {
+//             "Player 1 label",
+//             AssetManager::getFont("arial"),
+//             {255, 255, 255, 255},
+//             LabelType::PlayerPosition,
+//             "player1Pos"
+//         };
+//     } else {
+//         label = {
+//             "Player 2 label",
+//             AssetManager::getFont("arial"),
+//             {255, 255, 255, 255},
+//             LabelType::PlayerPosition,
+//             "player2Pos"
+//         };
+//     }
+//
+//     TextureManager::loadLabel(label);
+//     playerPosLabel.addComponent<Label>(label);
+//
+//     if (entity.hasComponent<Player1Tag>()) {
+//         playerPosLabel.addComponent<Transform>(Vector2D(10, 10), 0.0f, 1.0f);
+//     } else {
+//         playerPosLabel.addComponent<Transform>(Vector2D(590, 10), 0.0f, 1.0f);
+//     }
+//     return playerPosLabel;
+// }

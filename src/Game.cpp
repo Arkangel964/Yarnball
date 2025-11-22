@@ -66,8 +66,9 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
         isRunning = false;
     }
 
-    // load font
-    AssetManager::loadFont("arial", "../asset/fonts/arial.ttf", 16);
+    // load fonts
+    AssetManager::loadFont("fira", "../asset/fonts/fira.ttf", HUDSystem::getTitleSize());
+    AssetManager::loadFont("arial", "../asset/fonts/arial.ttf", HUDSystem::getFontSize());
 
     //load audio
     audioManager.loadAudio("theme", "../asset/audio/switch_with_me.ogg");

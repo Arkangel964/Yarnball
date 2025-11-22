@@ -12,7 +12,15 @@
 #include "Entity.h"
 
 class HUDSystem {
+    static constexpr float TITLE_SIZE = 20.0;
+    static constexpr float FONT_SIZE = 20.0;
     public:
+    static float getTitleSize() {
+        return TITLE_SIZE;
+    }
+    static float getFontSize() {
+        return FONT_SIZE;
+    }
     void update(const std::vector<std::unique_ptr<Entity>>& entities) {
 
         Entity* player1Entity = nullptr;
@@ -41,16 +49,30 @@ class HUDSystem {
                 auto& label = e.get()->getComponent<Label>();
 
                 // update player position label
-                if (label.type == LabelType::PlayerPosition) {
+                // if (label.type == LabelType::PlayerPosition) {
+                //     std::stringstream ss;
+                //     if (label.textureCacheKey == "player1Pos") {
+                //         ss << "Player 1 position: " << player1Transform.position;
+                //     } else if (label.textureCacheKey == "player2Pos") {
+                //         ss << "Player 2 position: " << player2Transform.position;
+                //     }
+                //     label.text = ss.str();
+                //     // we want to have an alternative system to update texture after this point,
+                //     // as this is quite expensive
+                //     label.dirty = true;
+                // }
+
+                if (label.type == LabelType::PlayerTitle) {
+                    std::cout << "here" << std::endl;
                     std::stringstream ss;
-                    if (label.textureCacheKey == "player1Pos") {
-                        ss << "Player 1 position: " << player1Transform.position;
-                    } else if (label.textureCacheKey == "player2Pos") {
-                        ss << "Player 2 position: " << player2Transform.position;
+                    if (label.textureCacheKey == "player1Title") {
+                        ss << "Kitty 1";
+
+                    } else if (label.textureCacheKey == "player2Title") {
+                        ss << "Kitty 2";
                     }
+
                     label.text = ss.str();
-                    // we want to have an alternative system to update texture after this point,
-                    // as this is quite expensive
                     label.dirty = true;
                 }
 

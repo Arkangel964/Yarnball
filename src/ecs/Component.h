@@ -112,16 +112,17 @@ struct Children {
 };
 
 enum class LabelType {
-    PlayerPosition,
+    // PlayerPosition,
     Lives,
-    Yarnballs
+    Yarnballs,
+    PlayerTitle
 };
 
 struct Label {
     std::string text{};
     TTF_Font* font = nullptr;
     SDL_Color color{};
-    LabelType type = LabelType::PlayerPosition;
+    LabelType type = LabelType::PlayerTitle;
     std::string textureCacheKey{};
     SDL_Texture* texture = nullptr;
     SDL_FRect dst{};
