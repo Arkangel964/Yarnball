@@ -12,8 +12,8 @@ class Scene {
     public:
     Scene(SceneType sceneType, const char* sceneName, const char* mapPath, int windowWidth, int windowHeight);
 
-    void update(const float dt, const SDL_Event& e) {
-        world.update(dt, e, type);
+    void update(const float dt, const std::vector<SDL_Event>& events) {
+        world.update(dt, events, type);
     }
 
     void render() {

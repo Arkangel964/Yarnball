@@ -67,7 +67,7 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
 
 
     //load assets
-    AssetManager::loadAnimation("player", "../asset/animations/bull_animations.xml");
+    AssetManager::loadAnimation("player", "../asset/animations/cat_animations.xml");
     AssetManager::loadAnimation("enemy", "../asset/animations/bird_animations.xml");
 
     //init game data/state
@@ -108,20 +108,27 @@ void Game::handleEvents() {
     //SDL listens to the OS for input events and adds them to an event queue
     //SDL_Event event;
 
-    //check for next event, if an event is available it pops from queue and store in event
-    SDL_PollEvent(&event);
-
-    switch (event.type) {
-        case SDL_EVENT_QUIT: //usually triggered when user closes window
-            isRunning = false;
-            break;
-        default:
-            break;
+    //get all events in the event queue
+    SDL_Event event;
+    while (SDL_PollEvent(&event) && isRunning)
+    {
+        switch (event.type) {
+            case SDL_EVENT_QUIT: //usually triggered when user closes window
+                isRunning = false;
+                break;
+            default:
+                // add event to vector
+                events.push_back(event);
+                break;
+        }
     }
 }
 
 void Game::update() {
-    sceneManager.update(deltaTime, event);
+    sceneManager.update(deltaTime, events);
+
+    // remember to clear out te old events
+    events.clear();
 }
 
 void Game::render() {
