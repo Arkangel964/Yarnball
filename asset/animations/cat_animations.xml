@@ -1,0 +1,138 @@
+<animations>
+    <walk_down>
+        <frame x="0" y="128" w="32" h="32" />
+        <frame x="32" y="128" w="32" h="32" />
+        <frame x="64" y="128" w="32" h="32" />
+        <frame x="96" y="128" w="32" h="32" />
+    </walk_down>
+    <walk_up>
+        <frame x="0" y="160" w="32" h="32" />
+        <frame x="32" y="160" w="32" h="32" />
+        <frame x="64" y="160" w="32" h="32" />
+        <frame x="96" y="160" w="32" h="32" />
+    </walk_up>
+    <walk_right>
+        <frame x="0" y="192" w="32" h="32" />
+        <frame x="32" y="192" w="32" h="32" />
+        <frame x="64" y="192" w="32" h="32" />
+        <frame x="96" y="192" w="32" h="32" />
+        <frame x="128" y="192" w="32" h="32" />
+        <frame x="160" y="192" w="32" h="32" />
+        <frame x="192" y="192" w="32" h="32" />
+        <frame x="224" y="192" w="32" h="32" />
+    </walk_right>
+    <walk_left>
+        <frame x="0" y="224" w="32" h="32" />
+        <frame x="32" y="224" w="32" h="32" />
+        <frame x="64" y="224" w="32" h="32" />
+        <frame x="96" y="224" w="32" h="32" />
+        <frame x="128" y="224" w="32" h="32" />
+        <frame x="160" y="224" w="32" h="32" />
+        <frame x="192" y="224" w="32" h="32" />
+        <frame x="224" y="224" w="32" h="32" />
+    </walk_left>
+    <walk_left_down>
+        <frame x="0" y="256" w="32" h="32" />
+        <frame x="32" y="256" w="32" h="32" />
+        <frame x="64" y="256" w="32" h="32" />
+        <frame x="96" y="256" w="32" h="32" />
+        <frame x="128" y="256" w="32" h="32" />
+        <frame x="160" y="256" w="32" h="32" />
+    </walk_left_down>
+    <walk_right_down>
+        <frame x="0" y="288" w="32" h="32" />
+        <frame x="32" y="288" w="32" h="32" />
+        <frame x="64" y="288" w="32" h="32" />
+        <frame x="96" y="288" w="32" h="32" />
+        <frame x="128" y="288" w="32" h="32" />
+        <frame x="160" y="288" w="32" h="32" />
+    </walk_right_down>
+    <walk_right_up>
+        <frame x="0" y="320" w="32" h="32" />
+        <frame x="32" y="320" w="32" h="32" />
+        <frame x="64" y="320" w="32" h="32" />
+        <frame x="96" y="320" w="32" h="32" />
+        <frame x="128" y="320" w="32" h="32" />
+        <frame x="160" y="320" w="32" h="32" />
+    </walk_right_up>
+    <walk_left_up>
+        <frame x="0" y="352" w="32" h="32" />
+        <frame x="32" y="352" w="32" h="32" />
+        <frame x="64" y="352" w="32" h="32" />
+        <frame x="96" y="352" w="32" h="32" />
+        <frame x="128" y="352" w="32" h="32" />
+        <frame x="160" y="352" w="32" h="32" />
+    </walk_left_up>
+    <idle_down>
+        <frame x="0" y="1408" w="32" h="32" />
+        <frame x="32" y="1408" w="32" h="32" />
+        <frame x="64" y="1408" w="32" h="32" />
+        <frame x="96" y="1408" w="32" h="32" />
+        <frame x="128" y="1408" w="32" h="32" />
+        <frame x="160" y="1408" w="32" h="32" />
+        <frame x="192" y="1408" w="32" h="32" />
+        <frame x="224" y="1408" w="32" h="32" />
+        <frame x="256" y="1408" w="32" h="32" />
+    </idle_down>
+    <idle_up>
+        <frame x="0" y="1440" w="32" h="32" />
+        <frame x="32" y="1440" w="32" h="32" />
+        <frame x="64" y="1440" w="32" h="32" />
+        <frame x="96" y="1440" w="32" h="32" />
+        <frame x="128" y="1440" w="32" h="32" />
+    </idle_up>
+    <idle_left>
+        <frame x="0" y="1472" w="32" h="32" />
+        <frame x="32" y="1472" w="32" h="32" />
+        <frame x="64" y="1472" w="32" h="32" />
+        <frame x="96" y="1472" w="32" h="32" />
+        <frame x="128" y="1472" w="32" h="32" />
+        <frame x="160" y="1472" w="32" h="32" />
+        <frame x="192" y="1472" w="32" h="32" />
+    </idle_left>
+    <idle_right>
+        <frame x="0" y="1504" w="32" h="32" />
+        <frame x="32" y="1504" w="32" h="32" />
+        <frame x="64" y="1504" w="32" h="32" />
+        <frame x="96" y="1504" w="32" h="32" />
+        <frame x="128" y="1504" w="32" h="32" />
+        <frame x="160" y="1504" w="32" h="32" />
+        <frame x="192" y="1504" w="32" h="32" />
+    </idle_right>
+    <idle_left_down>
+        <frame x="0" y="1536" w="32" h="32" />
+        <frame x="32" y="1536" w="32" h="32" />
+        <frame x="64" y="1536" w="32" h="32" />
+        <frame x="96" y="1536" w="32" h="32" />
+        <frame x="128" y="1536" w="32" h="32" />
+        <frame x="160" y="1536" w="32" h="32" />
+        <frame x="192" y="1536" w="32" h="32" />
+        <frame x="224" y="1536" w="32" h="32" />
+        <frame x="256" y="1536" w="32" h="32" />
+    </idle_left_down>
+    <idle_right_down>
+        <frame x="0" y="1568" w="32" h="32" />
+        <frame x="32" y="1568" w="32" h="32" />
+        <frame x="64" y="1568" w="32" h="32" />
+        <frame x="96" y="1568" w="32" h="32" />
+        <frame x="128" y="1568" w="32" h="32" />
+        <frame x="160" y="1568" w="32" h="32" />
+        <frame x="192" y="1568" w="32" h="32" />
+        <frame x="224" y="1568" w="32" h="32" />
+        <frame x="256" y="1568" w="32" h="32" />
+    </idle_right_down>
+    <idle_right_up>
+        <frame x="0" y="1600" w="32" h="32" />
+        <frame x="32" y="1600" w="32" h="32" />
+        <frame x="64" y="1600" w="32" h="32" />
+        <frame x="96" y="1600" w="32" h="32" />
+        <frame x="128" y="1600" w="32" h="32" />
+    </idle_right_up>
+    <idle_left_up>
+        <frame x="0" y="1632" w="32" h="32" />
+        <frame x="32" y="1632" w="32" h="32" />
+        <frame x="64" y="1632" w="32" h="32" />
+        <frame x="96" y="1632" w="32" h="32" />
+        <frame x="128" y="1632" w="32" h="32" />
+    </idle_left_up>
+</animations>

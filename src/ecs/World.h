@@ -53,11 +53,11 @@ class World {
 public:
     World() = default;
 
-    void update(float deltaTime, const SDL_Event &event, SceneType sceneType) {
+    void update(float deltaTime, const std::vector<SDL_Event>& events, SceneType sceneType) {
         if (sceneType == SceneType::MainMenu) {
-            mainMenuSystem.update(event);
+            mainMenuSystem.update(events);
         } else {
-            keyboardInputSystem.update(entities, event);
+            keyboardInputSystem.update(entities, events);
             physicsSystem.update(entities);
             movementSystem.update(entities, deltaTime);
             collisionSystem.update(*this);
@@ -68,7 +68,7 @@ public:
             hudSystem.update(entities);
         }
 
-        mouseInputSystem.update(*this, event);
+        mouseInputSystem.update(*this, events);
         audioEventQueue.process();
 
         preRenderSystem.update(entities); // needs to be last before sync and cleanup

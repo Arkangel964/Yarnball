@@ -80,6 +80,13 @@ struct TimedSpawner {
     float timer{};
 };
 
+struct Keybinds {
+    SDL_Keycode up{};
+    SDL_Keycode down{};
+    SDL_Keycode left{};
+    SDL_Keycode right{};
+};
+
 //Game state for the current scene
 struct SceneState {
     int coinsCollected = 0;

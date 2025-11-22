@@ -84,13 +84,15 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     Animation anim = AssetManager::getAnimation("player");
     player1.addComponent<Animation>(anim);
 
-    SDL_Texture *tex = TextureManager::load("../asset/animations/bull_anim.png");
+    SDL_Texture *tex = TextureManager::load("../asset/animations/cat_brown_anim.png");
     SDL_FRect player1Src = anim.clips[anim.currentClip].frameIndices[0];
     SDL_FRect player1Dst{player1Transform.position.x, player1Transform.position.y, 32, 32};
     player1.addComponent<Sprite>(tex, player1Src, player1Dst);
     auto &player1Collider = player1.addComponent<Collider>("player");
     player1Collider.rect.w = player1Dst.w;
     player1Collider.rect.h = player1Dst.h;
+
+    player1.addComponent<Keybinds>(SDLK_W, SDLK_S, SDLK_A, SDLK_D);
 
     player1.addComponent<Player1Tag>();
     createPlayerPosLabel(player1);
@@ -105,13 +107,15 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     anim = AssetManager::getAnimation("player");
     player2.addComponent<Animation>(anim);
 
-    tex = TextureManager::load("../asset/animations/bull_anim.png");
+    tex = TextureManager::load("../asset/animations/cat_grey_anim.png");
     SDL_FRect player2Src = anim.clips[anim.currentClip].frameIndices[0];
     SDL_FRect player2Dst{player2Transform.position.x, player2Transform.position.y, 32, 32};
     player2.addComponent<Sprite>(tex, player2Src, player2Dst);
     auto &player2Collider = player2.addComponent<Collider>("player");
     player2Collider.rect.w = player2Dst.w;
     player2Collider.rect.h = player2Dst.h;
+
+    player2.addComponent<Keybinds>(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT);
 
     player2.addComponent<Player2Tag>();
     createPlayerPosLabel(player2);
