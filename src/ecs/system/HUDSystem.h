@@ -12,7 +12,7 @@
 #include "Entity.h"
 
 class HUDSystem {
-    static constexpr float TITLE_SIZE = 20.0;
+    static constexpr float TITLE_SIZE = 25.0;
     static constexpr float FONT_SIZE = 20.0;
     public:
     static float getTitleSize() {
@@ -41,35 +41,32 @@ class HUDSystem {
 
         if (!player1Entity || !player2Entity) return;
 
-        auto& player1Transform = player1Entity->getComponent<Transform>();
-        auto& player2Transform = player2Entity->getComponent<Transform>();
+        auto& player1Health = player1Entity->getComponent<Health>();
+        auto& player2Health = player2Entity->getComponent<Health>();
 
         for (auto& e : entities) {
             if (e->hasComponent<Label>()) {
                 auto& label = e.get()->getComponent<Label>();
-
-                // update player position label
-                // if (label.type == LabelType::PlayerPosition) {
-                //     std::stringstream ss;
-                //     if (label.textureCacheKey == "player1Pos") {
-                //         ss << "Player 1 position: " << player1Transform.position;
-                //     } else if (label.textureCacheKey == "player2Pos") {
-                //         ss << "Player 2 position: " << player2Transform.position;
-                //     }
-                //     label.text = ss.str();
-                //     // we want to have an alternative system to update texture after this point,
-                //     // as this is quite expensive
-                //     label.dirty = true;
-                // }
+                std::stringstream ss;
 
                 if (label.type == LabelType::PlayerTitle) {
-                    std::cout << "here" << std::endl;
-                    std::stringstream ss;
                     if (label.textureCacheKey == "player1Title") {
                         ss << "Kitty 1";
 
                     } else if (label.textureCacheKey == "player2Title") {
                         ss << "Kitty 2";
+                    }
+
+                    label.text = ss.str();
+                    label.dirty = true;
+                }
+
+                if (label.type == LabelType::Lives) {
+                    if (label.textureCacheKey == "player1Lives") {
+                        ss << "Lives: " << player1Health.currentHealth;
+
+                    } else if (label.textureCacheKey == "player2Lives") {
+                        ss << "Lives: " << player2Health.currentHealth;
                     }
 
                     label.text = ss.str();

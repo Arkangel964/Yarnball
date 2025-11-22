@@ -95,8 +95,8 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player1.addComponent<Keybinds>(SDLK_W, SDLK_S, SDLK_A, SDLK_D);
 
     player1.addComponent<Player1Tag>();
-    //createPlayerPosLabel(player1);
     createPlayerTitleLabel(player1);
+    createPlayerLivesLabel(player1);
 
     //Create the player2
     auto &player2(world.createEntity());
@@ -119,8 +119,8 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player2.addComponent<Keybinds>(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT);
 
     player2.addComponent<Player2Tag>();
-    //createPlayerPosLabel(player2);
     createPlayerTitleLabel(player2);
+    createPlayerLivesLabel(player2);
 
     auto &spawner(world.createEntity());
     Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight / 2), 0.0f, 1.0f);
@@ -253,7 +253,7 @@ void Scene::toggleSettingsOverlayVisibility(Entity &overlay) {
 };
 
 Entity &Scene::createPlayerTitleLabel(Entity &entity) {
-    auto& playerPosLabel(world.createEntity());
+    auto& playerTitleLabel(world.createEntity());
     Label label;
 
     if (entity.hasComponent<Player1Tag>()) {
@@ -278,46 +278,60 @@ Entity &Scene::createPlayerTitleLabel(Entity &entity) {
     }
 
     TextureManager::loadLabel(label);
-    playerPosLabel.addComponent<Label>(label);
+    playerTitleLabel.addComponent<Label>(label);
     if (entity.hasComponent<Player1Tag>()) {
-        playerPosLabel.addComponent<Transform>(Vector2D(10, 10), 0.0f, 1.0f);
+        playerTitleLabel.addComponent<Transform>(Vector2D(10, 10), 0.0f, 1.0f);
     } else {
-        playerPosLabel.addComponent<Transform>(Vector2D(695, 10), 0.0f, 1.0f);
+        playerTitleLabel.addComponent<Transform>(Vector2D(690, 10), 0.0f, 1.0f);
     }
-    return playerPosLabel;
+    return playerTitleLabel;
 
 }
 
+Entity& Scene::createPlayerLivesLabel(Entity& entity) {
 
-// Entity& Scene::createPlayerPosLabel(Entity& entity) {
-//     auto& playerPosLabel(world.createEntity());
-//     Label label;
-//
-//     if (entity.hasComponent<Player1Tag>()) {
-//         label = {
-//             "Player 1 label",
-//             AssetManager::getFont("arial"),
-//             {255, 255, 255, 255},
-//             LabelType::PlayerPosition,
-//             "player1Pos"
-//         };
-//     } else {
-//         label = {
-//             "Player 2 label",
-//             AssetManager::getFont("arial"),
-//             {255, 255, 255, 255},
-//             LabelType::PlayerPosition,
-//             "player2Pos"
-//         };
-//     }
-//
-//     TextureManager::loadLabel(label);
-//     playerPosLabel.addComponent<Label>(label);
-//
-//     if (entity.hasComponent<Player1Tag>()) {
-//         playerPosLabel.addComponent<Transform>(Vector2D(10, 10), 0.0f, 1.0f);
-//     } else {
-//         playerPosLabel.addComponent<Transform>(Vector2D(590, 10), 0.0f, 1.0f);
-//     }
-//     return playerPosLabel;
-// }
+    auto& playerLivesLabel(world.createEntity());
+    Label label;
+
+    if (entity.hasComponent<Player1Tag>()) {
+        label = {
+            "Player 1 lives ",
+            AssetManager::getFont("arial"),
+            {255, 255, 255, 255},
+            LabelType::Lives,
+            "player1Lives"
+        };
+
+    } else {
+        label = {
+            "Player 1 lives",
+            AssetManager::getFont("arial"),
+            {255, 255, 255, 255},
+            LabelType::Lives,
+            "player2Lives"
+        };
+    }
+
+    TextureManager::loadLabel(label);
+    playerLivesLabel.addComponent<Label>(label);
+
+    if (entity.hasComponent<Player1Tag>()) {
+        playerLivesLabel.addComponent<Transform>(Vector2D(10, 45), 0.0f, 1.0f);
+    } else {
+        playerLivesLabel.addComponent<Transform>(Vector2D(690, 45), 0.0f, 1.0f);
+
+    }
+
+    return playerLivesLabel;
+
+}
+
+Entity& Scene::createPlayerYarnballsLabel(Entity& entity) {
+
+    auto& playerYarnballsLabelLabel(world.createEntity());
+    Label label;
+
+    return playerYarnballsLabelLabel;
+
+}
+
