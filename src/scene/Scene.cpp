@@ -80,6 +80,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player1Transform.oldPosition = player1Transform.position;
     player1.addComponent<RigidBody>(240.0f, 240.0f);
     player1.addComponent<Health>(Game::gameState.playerHealth);
+    player1.addComponent<Yarnballs>();
 
     Animation anim = AssetManager::getAnimation("player");
     player1.addComponent<Animation>(anim);
@@ -97,6 +98,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player1.addComponent<Player1Tag>();
     createPlayerTitleLabel(player1);
     createPlayerLivesLabel(player1);
+    createPlayerYarnballsLabel(player1);
 
     //Create the player2
     auto &player2(world.createEntity());
@@ -104,6 +106,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player2Transform.oldPosition = player2Transform.position;
     player2.addComponent<RigidBody>(240.0f, 240.0f);
     player2.addComponent<Health>(Game::gameState.playerHealth);
+    player2.addComponent<Yarnballs>();
 
     anim = AssetManager::getAnimation("player");
     player2.addComponent<Animation>(anim);
@@ -121,6 +124,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player2.addComponent<Player2Tag>();
     createPlayerTitleLabel(player2);
     createPlayerLivesLabel(player2);
+    createPlayerYarnballsLabel(player2);
 
     auto &spawner(world.createEntity());
     Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight / 2), 0.0f, 1.0f);
@@ -264,9 +268,7 @@ Entity &Scene::createPlayerTitleLabel(Entity &entity) {
             LabelType::PlayerTitle,
             "player1Title"
         };
-
     } else {
-
         label = {
             "Player 2 title",
             AssetManager::getFont("fira"),
@@ -279,11 +281,13 @@ Entity &Scene::createPlayerTitleLabel(Entity &entity) {
 
     TextureManager::loadLabel(label);
     playerTitleLabel.addComponent<Label>(label);
+
     if (entity.hasComponent<Player1Tag>()) {
         playerTitleLabel.addComponent<Transform>(Vector2D(10, 10), 0.0f, 1.0f);
     } else {
         playerTitleLabel.addComponent<Transform>(Vector2D(690, 10), 0.0f, 1.0f);
     }
+
     return playerTitleLabel;
 
 }
@@ -301,7 +305,6 @@ Entity& Scene::createPlayerLivesLabel(Entity& entity) {
             LabelType::Lives,
             "player1Lives"
         };
-
     } else {
         label = {
             "Player 1 lives",
@@ -319,7 +322,6 @@ Entity& Scene::createPlayerLivesLabel(Entity& entity) {
         playerLivesLabel.addComponent<Transform>(Vector2D(10, 45), 0.0f, 1.0f);
     } else {
         playerLivesLabel.addComponent<Transform>(Vector2D(690, 45), 0.0f, 1.0f);
-
     }
 
     return playerLivesLabel;
@@ -328,10 +330,37 @@ Entity& Scene::createPlayerLivesLabel(Entity& entity) {
 
 Entity& Scene::createPlayerYarnballsLabel(Entity& entity) {
 
-    auto& playerYarnballsLabelLabel(world.createEntity());
+    auto& playerYarnballsLabel(world.createEntity());
     Label label;
 
-    return playerYarnballsLabelLabel;
+    if (entity.hasComponent<Player1Tag>()) {
+        label = {
+            "Player 1 yarnballs ",
+            AssetManager::getFont("arial"),
+            {255, 255, 255, 255},
+            LabelType::Yarnballs,
+            "player1Yarnballs"
+        };
+    } else {
+        label = {
+            "Player 2 yarnballs ",
+            AssetManager::getFont("arial"),
+            {255, 255, 255, 255},
+            LabelType::Yarnballs,
+            "player2Yarnballs"
+        };
+    }
+
+    TextureManager::loadLabel(label);
+    playerYarnballsLabel.addComponent<Label>(label);
+
+    if (entity.hasComponent<Player1Tag>()) {
+        playerYarnballsLabel.addComponent<Transform>(Vector2D(10, 75), 0.0f, 1.0f);
+    } else {
+        playerYarnballsLabel.addComponent<Transform>(Vector2D(690, 75), 0.0f, 1.0f);
+    }
+
+    return playerYarnballsLabel;
 
 }
 
