@@ -88,7 +88,6 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     SDL_FRect p1IconDest{p1IconTransform.position.x, p1IconTransform.position.y, 80, 80};
     p1Icon.addComponent<Sprite>(p1IconTex, p1IconSrc, p1IconDest);
 
-
     // Create player 1's stats
     player1.addComponent<RigidBody>(240.0f, 240.0f);
     player1.addComponent<Health>(Game::gameState.playerHealth);
@@ -119,6 +118,13 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
 
     // Create player 2's portrait
 
+    auto &p2Icon(world.createEntity());
+    auto p2IconTransform = p2Icon.addComponent<Transform>(Vector2D(560, 15), 0.0f, 1.0f);
+
+    SDL_Texture *p2IconTex = TextureManager::load("../asset/ui/player2icon.png");
+    SDL_FRect p2IconSrc{0, 0, 80, 80};
+    SDL_FRect p2IconDest{p2IconTransform.position.x, p2IconTransform.position.y, 80, 80};
+    p2Icon.addComponent<Sprite>(p2IconTex, p2IconSrc, p2IconDest);
 
     // Create player 2's stats
     player2.addComponent<RigidBody>(240.0f, 240.0f);
@@ -302,7 +308,7 @@ Entity &Scene::createPlayerTitleLabel(Entity &entity) {
     if (entity.hasComponent<Player1Tag>()) {
         playerTitleLabel.addComponent<Transform>(Vector2D(105, 10), 0.0f, 1.0f);
     } else {
-        playerTitleLabel.addComponent<Transform>(Vector2D(690, 10), 0.0f, 1.0f);
+        playerTitleLabel.addComponent<Transform>(Vector2D(655, 10), 0.0f, 1.0f);
     }
 
     return playerTitleLabel;
@@ -338,7 +344,7 @@ Entity& Scene::createPlayerLivesLabel(Entity& entity) {
     if (entity.hasComponent<Player1Tag>()) {
         playerLivesLabel.addComponent<Transform>(Vector2D(105, 45), 0.0f, 1.0f);
     } else {
-        playerLivesLabel.addComponent<Transform>(Vector2D(690, 45), 0.0f, 1.0f);
+        playerLivesLabel.addComponent<Transform>(Vector2D(655, 45), 0.0f, 1.0f);
     }
 
     return playerLivesLabel;
@@ -374,7 +380,7 @@ Entity& Scene::createPlayerYarnballsLabel(Entity& entity) {
     if (entity.hasComponent<Player1Tag>()) {
         playerYarnballsLabel.addComponent<Transform>(Vector2D(105, 75), 0.0f, 1.0f);
     } else {
-        playerYarnballsLabel.addComponent<Transform>(Vector2D(690, 75), 0.0f, 1.0f);
+        playerYarnballsLabel.addComponent<Transform>(Vector2D(655, 75), 0.0f, 1.0f);
     }
 
     return playerYarnballsLabel;
