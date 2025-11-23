@@ -78,6 +78,18 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     auto &player1(world.createEntity());
     auto &player1Transform(player1.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f));
     player1Transform.oldPosition = player1Transform.position;
+
+    // Create player 1's portrait
+    auto &p1Icon(world.createEntity());
+    auto p1IconTransform = p1Icon.addComponent<Transform>(Vector2D(10, 15), 0.0f, 1.0f);
+
+    SDL_Texture *p1IconTex = TextureManager::load("../asset/ui/player1icon.png");
+    SDL_FRect p1IconSrc{0, 0, 80, 80};
+    SDL_FRect p1IconDest{p1IconTransform.position.x, p1IconTransform.position.y, 80, 80};
+    p1Icon.addComponent<Sprite>(p1IconTex, p1IconSrc, p1IconDest);
+
+
+    // Create player 1's stats
     player1.addComponent<RigidBody>(240.0f, 240.0f);
     player1.addComponent<Health>(Game::gameState.playerHealth);
     player1.addComponent<Yarnballs>();
@@ -104,6 +116,11 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     auto &player2(world.createEntity());
     auto &player2Transform(player2.addComponent<Transform>(Vector2D(0, 64), 0.0f, 1.0f));
     player2Transform.oldPosition = player2Transform.position;
+
+    // Create player 2's portrait
+
+
+    // Create player 2's stats
     player2.addComponent<RigidBody>(240.0f, 240.0f);
     player2.addComponent<Health>(Game::gameState.playerHealth);
     player2.addComponent<Yarnballs>();
@@ -283,7 +300,7 @@ Entity &Scene::createPlayerTitleLabel(Entity &entity) {
     playerTitleLabel.addComponent<Label>(label);
 
     if (entity.hasComponent<Player1Tag>()) {
-        playerTitleLabel.addComponent<Transform>(Vector2D(10, 10), 0.0f, 1.0f);
+        playerTitleLabel.addComponent<Transform>(Vector2D(105, 10), 0.0f, 1.0f);
     } else {
         playerTitleLabel.addComponent<Transform>(Vector2D(690, 10), 0.0f, 1.0f);
     }
@@ -319,7 +336,7 @@ Entity& Scene::createPlayerLivesLabel(Entity& entity) {
     playerLivesLabel.addComponent<Label>(label);
 
     if (entity.hasComponent<Player1Tag>()) {
-        playerLivesLabel.addComponent<Transform>(Vector2D(10, 45), 0.0f, 1.0f);
+        playerLivesLabel.addComponent<Transform>(Vector2D(105, 45), 0.0f, 1.0f);
     } else {
         playerLivesLabel.addComponent<Transform>(Vector2D(690, 45), 0.0f, 1.0f);
     }
@@ -355,7 +372,7 @@ Entity& Scene::createPlayerYarnballsLabel(Entity& entity) {
     playerYarnballsLabel.addComponent<Label>(label);
 
     if (entity.hasComponent<Player1Tag>()) {
-        playerYarnballsLabel.addComponent<Transform>(Vector2D(10, 75), 0.0f, 1.0f);
+        playerYarnballsLabel.addComponent<Transform>(Vector2D(105, 75), 0.0f, 1.0f);
     } else {
         playerYarnballsLabel.addComponent<Transform>(Vector2D(690, 75), 0.0f, 1.0f);
     }
