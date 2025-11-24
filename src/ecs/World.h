@@ -14,6 +14,7 @@
 #include "DestructionSystem.h"
 #include "Entity.h"
 #include "EventResponseSystem.h"
+#include "HUDSystem.h"
 #include "event/EventManager.h"
 #include "KeyboardInputSystem.h"
 #include "MainMenuSystem.h"
@@ -25,6 +26,7 @@
 #include "event/AudioEventQueue.h"
 #include "scene/SceneType.h"
 #include "PhysicsSystem.h"
+#include "PreRenderSystem.h"
 
 class World {
     Map map;
@@ -45,6 +47,8 @@ class World {
     UIRenderSystem uiRenderSystem;
     MouseInputSystem mouseInputSystem;
     AudioEventQueue audioEventQueue;
+    HUDSystem hudSystem;
+    PreRenderSystem preRenderSystem;
 
 public:
     World() = default;
@@ -61,10 +65,13 @@ public:
             cameraSystem.update(entities);
             spawnTimerSystem.update(entities, deltaTime);
             destructionSystem.update(entities);
+            hudSystem.update(entities);
         }
 
         mouseInputSystem.update(*this, events);
         audioEventQueue.process();
+
+        preRenderSystem.update(entities); // needs to be last before sync and cleanup
 
         synchronizeEntities();
         cleanup();

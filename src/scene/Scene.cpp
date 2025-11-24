@@ -78,8 +78,11 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     auto &player1(world.createEntity());
     auto &player1Transform(player1.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f));
     player1Transform.oldPosition = player1Transform.position;
+
+    // Create player 1's stats
     player1.addComponent<RigidBody>(240.0f, 240.0f);
     player1.addComponent<Health>(Game::gameState.playerHealth);
+    player1.addComponent<Yarnballs>();
 
     Animation anim = AssetManager::getAnimation("player");
     player1.addComponent<Animation>(anim);
@@ -100,8 +103,11 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     auto &player2(world.createEntity());
     auto &player2Transform(player2.addComponent<Transform>(Vector2D(0, 64), 0.0f, 1.0f));
     player2Transform.oldPosition = player2Transform.position;
+
+    // Create player 2's stats
     player2.addComponent<RigidBody>(240.0f, 240.0f);
     player2.addComponent<Health>(Game::gameState.playerHealth);
+    player2.addComponent<Yarnballs>();
 
     anim = AssetManager::getAnimation("player");
     player2.addComponent<Animation>(anim);
@@ -117,6 +123,36 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player2.addComponent<Keybinds>(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT);
 
     player2.addComponent<Player2Tag>();
+
+    // Create player 1's portrait
+    auto &p1Icon(world.createEntity());
+    auto p1IconTransform = p1Icon.addComponent<Transform>(Vector2D(10, 15), 0.0f, 1.0f);
+
+    SDL_Texture *p1IconTex = TextureManager::load("../asset/ui/player1icon.png");
+    SDL_FRect p1IconSrc{0, 0, 80, 80};
+    SDL_FRect p1IconDest{p1IconTransform.position.x, p1IconTransform.position.y, 80, 80};
+    auto& p1IconSpite = p1Icon.addComponent<Sprite>(p1IconTex, p1IconSrc, p1IconDest);
+    p1IconSpite.renderLayer = RenderLayer::UI;
+    p1IconSpite.visible = true;
+
+    createPlayerTitleLabel(player1);
+    createPlayerLivesLabel(player1);
+    createPlayerYarnballsLabel(player1);
+
+    // Create player 2's portrait
+    auto &p2Icon(world.createEntity());
+    auto p2IconTransform = p2Icon.addComponent<Transform>(Vector2D(560, 15), 0.0f, 1.0f);
+
+    SDL_Texture *p2IconTex = TextureManager::load("../asset/ui/player2icon.png");
+    SDL_FRect p2IconSrc{0, 0, 80, 80};
+    SDL_FRect p2IconDest{p2IconTransform.position.x, p2IconTransform.position.y, 80, 80};
+    auto& p2IconSpite = p2Icon.addComponent<Sprite>(p2IconTex, p2IconSrc, p2IconDest);
+    p2IconSpite.renderLayer = RenderLayer::UI;
+    p2IconSpite.visible = true;
+
+    createPlayerTitleLabel(player2);
+    createPlayerLivesLabel(player2);
+    createPlayerYarnballsLabel(player2);
 
     auto &spawner(world.createEntity());
     Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight / 2), 0.0f, 1.0f);
@@ -247,3 +283,112 @@ void Scene::toggleSettingsOverlayVisibility(Entity &overlay) {
         }
     }
 };
+
+Entity &Scene::createPlayerTitleLabel(Entity &entity) {
+    auto& playerTitleLabel(world.createEntity());
+    Label label;
+
+    if (entity.hasComponent<Player1Tag>()) {
+        label = {
+            "Player 1 title",
+            AssetManager::getFont("fira"),
+            {255, 255, 255, 255},
+            LabelType::PlayerTitle,
+            "player1Title"
+        };
+    } else {
+        label = {
+            "Player 2 title",
+            AssetManager::getFont("fira"),
+            {255, 255, 255, 255},
+            LabelType::PlayerTitle,
+            "player2Title"
+        };
+
+    }
+
+    TextureManager::loadLabel(label);
+    playerTitleLabel.addComponent<Label>(label);
+
+    if (entity.hasComponent<Player1Tag>()) {
+        playerTitleLabel.addComponent<Transform>(Vector2D(105, 10), 0.0f, 1.0f);
+    } else {
+        playerTitleLabel.addComponent<Transform>(Vector2D(655, 10), 0.0f, 1.0f);
+    }
+
+    return playerTitleLabel;
+
+}
+
+Entity& Scene::createPlayerLivesLabel(Entity& entity) {
+
+    auto& playerLivesLabel(world.createEntity());
+    Label label;
+
+    if (entity.hasComponent<Player1Tag>()) {
+        label = {
+            "Player 1 lives ",
+            AssetManager::getFont("arial"),
+            {255, 255, 255, 255},
+            LabelType::Lives,
+            "player1Lives"
+        };
+    } else {
+        label = {
+            "Player 1 lives",
+            AssetManager::getFont("arial"),
+            {255, 255, 255, 255},
+            LabelType::Lives,
+            "player2Lives"
+        };
+    }
+
+    TextureManager::loadLabel(label);
+    playerLivesLabel.addComponent<Label>(label);
+
+    if (entity.hasComponent<Player1Tag>()) {
+        playerLivesLabel.addComponent<Transform>(Vector2D(105, 45), 0.0f, 1.0f);
+    } else {
+        playerLivesLabel.addComponent<Transform>(Vector2D(655, 45), 0.0f, 1.0f);
+    }
+
+    return playerLivesLabel;
+
+}
+
+Entity& Scene::createPlayerYarnballsLabel(Entity& entity) {
+
+    auto& playerYarnballsLabel(world.createEntity());
+    Label label;
+
+    if (entity.hasComponent<Player1Tag>()) {
+        label = {
+            "Player 1 yarnballs ",
+            AssetManager::getFont("arial"),
+            {255, 255, 255, 255},
+            LabelType::Yarnballs,
+            "player1Yarnballs"
+        };
+    } else {
+        label = {
+            "Player 2 yarnballs ",
+            AssetManager::getFont("arial"),
+            {255, 255, 255, 255},
+            LabelType::Yarnballs,
+            "player2Yarnballs"
+        };
+    }
+
+    TextureManager::loadLabel(label);
+    playerYarnballsLabel.addComponent<Label>(label);
+
+    if (entity.hasComponent<Player1Tag>()) {
+        playerYarnballsLabel.addComponent<Transform>(Vector2D(105, 75), 0.0f, 1.0f);
+    } else {
+        playerYarnballsLabel.addComponent<Transform>(Vector2D(655, 75), 0.0f, 1.0f);
+    }
+
+    return playerYarnballsLabel;
+
+}
+
