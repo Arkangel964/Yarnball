@@ -79,15 +79,6 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     auto &player1Transform(player1.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f));
     player1Transform.oldPosition = player1Transform.position;
 
-    // Create player 1's portrait
-    auto &p1Icon(world.createEntity());
-    auto p1IconTransform = p1Icon.addComponent<Transform>(Vector2D(10, 15), 0.0f, 1.0f);
-
-    SDL_Texture *p1IconTex = TextureManager::load("../asset/ui/player1icon.png");
-    SDL_FRect p1IconSrc{0, 0, 80, 80};
-    SDL_FRect p1IconDest{p1IconTransform.position.x, p1IconTransform.position.y, 80, 80};
-    p1Icon.addComponent<Sprite>(p1IconTex, p1IconSrc, p1IconDest);
-
     // Create player 1's stats
     player1.addComponent<RigidBody>(240.0f, 240.0f);
     player1.addComponent<Health>(Game::gameState.playerHealth);
@@ -107,24 +98,11 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player1.addComponent<Keybinds>(SDLK_W, SDLK_S, SDLK_A, SDLK_D);
 
     player1.addComponent<Player1Tag>();
-    createPlayerTitleLabel(player1);
-    createPlayerLivesLabel(player1);
-    createPlayerYarnballsLabel(player1);
 
     //Create the player2
     auto &player2(world.createEntity());
     auto &player2Transform(player2.addComponent<Transform>(Vector2D(0, 64), 0.0f, 1.0f));
     player2Transform.oldPosition = player2Transform.position;
-
-    // Create player 2's portrait
-
-    auto &p2Icon(world.createEntity());
-    auto p2IconTransform = p2Icon.addComponent<Transform>(Vector2D(560, 15), 0.0f, 1.0f);
-
-    SDL_Texture *p2IconTex = TextureManager::load("../asset/ui/player2icon.png");
-    SDL_FRect p2IconSrc{0, 0, 80, 80};
-    SDL_FRect p2IconDest{p2IconTransform.position.x, p2IconTransform.position.y, 80, 80};
-    p2Icon.addComponent<Sprite>(p2IconTex, p2IconSrc, p2IconDest);
 
     // Create player 2's stats
     player2.addComponent<RigidBody>(240.0f, 240.0f);
@@ -145,6 +123,29 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player2.addComponent<Keybinds>(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT);
 
     player2.addComponent<Player2Tag>();
+
+    // Create player 1's portrait
+    auto &p1Icon(world.createEntity());
+    auto p1IconTransform = p1Icon.addComponent<Transform>(Vector2D(10, 15), 0.0f, 1.0f);
+
+    SDL_Texture *p1IconTex = TextureManager::load("../asset/ui/player1icon.png");
+    SDL_FRect p1IconSrc{0, 0, 80, 80};
+    SDL_FRect p1IconDest{p1IconTransform.position.x, p1IconTransform.position.y, 80, 80};
+    p1Icon.addComponent<Sprite>(p1IconTex, p1IconSrc, p1IconDest);
+
+    createPlayerTitleLabel(player1);
+    createPlayerLivesLabel(player1);
+    createPlayerYarnballsLabel(player1);
+
+    // Create player 2's portrait
+    auto &p2Icon(world.createEntity());
+    auto p2IconTransform = p2Icon.addComponent<Transform>(Vector2D(560, 15), 0.0f, 1.0f);
+
+    SDL_Texture *p2IconTex = TextureManager::load("../asset/ui/player2icon.png");
+    SDL_FRect p2IconSrc{0, 0, 80, 80};
+    SDL_FRect p2IconDest{p2IconTransform.position.x, p2IconTransform.position.y, 80, 80};
+    p2Icon.addComponent<Sprite>(p2IconTex, p2IconSrc, p2IconDest);
+
     createPlayerTitleLabel(player2);
     createPlayerLivesLabel(player2);
     createPlayerYarnballsLabel(player2);
