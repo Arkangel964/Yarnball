@@ -131,7 +131,9 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     SDL_Texture *p1IconTex = TextureManager::load("../asset/ui/player1icon.png");
     SDL_FRect p1IconSrc{0, 0, 80, 80};
     SDL_FRect p1IconDest{p1IconTransform.position.x, p1IconTransform.position.y, 80, 80};
-    p1Icon.addComponent<Sprite>(p1IconTex, p1IconSrc, p1IconDest);
+    auto& p1IconSpite = p1Icon.addComponent<Sprite>(p1IconTex, p1IconSrc, p1IconDest);
+    p1IconSpite.renderLayer = RenderLayer::UI;
+    p1IconSpite.visible = true;
 
     createPlayerTitleLabel(player1);
     createPlayerLivesLabel(player1);
@@ -144,7 +146,9 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     SDL_Texture *p2IconTex = TextureManager::load("../asset/ui/player2icon.png");
     SDL_FRect p2IconSrc{0, 0, 80, 80};
     SDL_FRect p2IconDest{p2IconTransform.position.x, p2IconTransform.position.y, 80, 80};
-    p2Icon.addComponent<Sprite>(p2IconTex, p2IconSrc, p2IconDest);
+    auto& p2IconSpite = p2Icon.addComponent<Sprite>(p2IconTex, p2IconSrc, p2IconDest);
+    p2IconSpite.renderLayer = RenderLayer::UI;
+    p2IconSpite.visible = true;
 
     createPlayerTitleLabel(player2);
     createPlayerLivesLabel(player2);
