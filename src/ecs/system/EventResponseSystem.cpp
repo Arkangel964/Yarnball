@@ -17,6 +17,7 @@ EventResponseSystem::EventResponseSystem(World &world) {
         onCollision(collision, "player", "wall", world);
         onCollision(collision, "player", "projectile", world);
         onCollision(collision, "player", "player", world);
+        onCollision(collision, "player", "inactiveBall", world);
         onCollision(collision, "projectile", "wall", world);
         onCollision(collision, "projectile", "projectile", world);
     });
@@ -111,6 +112,18 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
             player->destroy();
             Game::onSceneChangeRequest("gameover");
         }
+    } else if (std::string(otherTag) == "inactiveBall") {
+        if (e.state != CollisionState::Enter) return;
+
+        auto& holder = player->getComponent<BallHolder>();
+        if (!holder.holdingBall) {
+            holder.holdingBall = true;
+            cout << "Is player holding ball: " << holder.holdingBall << endl;
+            other->destroy();
+        } else {
+            cout << "Player was already holding ball" << endl;
+        }
+
     }
 }
 

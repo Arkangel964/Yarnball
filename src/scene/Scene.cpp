@@ -33,6 +33,7 @@ void Scene::initMainMenu(int windowWidth, int windowHeight) {
 };
 
 void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight) {
+    srand(time(nullptr));
     //load map
     world.getMap().load(mapPath, TextureManager::load("../asset/spritesheet.png"));
 
@@ -73,6 +74,8 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     camView.h = windowHeight;
     cam.addComponent<Camera>(camView, world.getMap().width * 32, world.getMap().height * 32);
 
+    //reset balls available for spawning
+    Game::gameState.availableBallsForSpawning = 6;
 
     //Create the player1
     auto &player1(world.createEntity());
@@ -80,6 +83,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player1Transform.oldPosition = player1Transform.position;
     player1.addComponent<RigidBody>(240.0f, 240.0f);
     player1.addComponent<Health>(Game::gameState.playerHealth);
+    player1.addComponent<BallHolder>();
 
     Animation anim = AssetManager::getAnimation("player");
     player1.addComponent<Animation>(anim);
@@ -102,6 +106,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player2Transform.oldPosition = player2Transform.position;
     player2.addComponent<RigidBody>(240.0f, 240.0f);
     player2.addComponent<Health>(Game::gameState.playerHealth);
+    player2.addComponent<BallHolder>();
 
     anim = AssetManager::getAnimation("player");
     player2.addComponent<Animation>(anim);
@@ -142,6 +147,33 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
 
         e.addComponent<ProjectileTag>();
         e.addComponent<DestroyOnStop>();
+    });
+
+    //dodgeball spawner
+    auto &ballSpawner(world.createEntity());
+    Transform ballSpawnTransform = ballSpawner.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f);
+    ballSpawner.addComponent<TimedSpawner>(5.0f, [this, ballSpawnTransform, windowWidth, windowHeight] {
+        if (Game::gameState.availableBallsForSpawning > 0) {
+            Game::gameState.availableBallsForSpawning -= 1;
+            //create our projectile (ball)
+            auto &e(world.createDeferredEntity());
+
+            //https://stackoverflow.com/questions/686353/random-float-number-generation
+            float ballTransformX = ballSpawnTransform.position.x + static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(windowWidth -ballSpawnTransform.position.x)));
+            float ballTransformY = ballSpawnTransform.position.y + static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(windowHeight -ballSpawnTransform.position.y)));
+
+            e.addComponent<Transform>(Vector2D(ballTransformX, ballTransformY), 0.0f, 1.0f);
+
+            SDL_Texture *tex = TextureManager::load("../asset/ball.png");
+            SDL_FRect spriteSrc(0, 0, 32, 32);
+            SDL_FRect dest(ballSpawnTransform.position.x, ballSpawnTransform.position.y, 32, 32);
+            e.addComponent<Sprite>(tex, spriteSrc, dest);
+
+            auto &c = e.addComponent<Collider>("inactiveBall");
+            c.rect.w = dest.w;
+            c.rect.h = dest.h;
+        }
+
     });
 
     //add scene state
