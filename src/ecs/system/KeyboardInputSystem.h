@@ -55,6 +55,11 @@ public:
                         playerInput.x = -1;
                     } else if (key == keybinds.right) {
                         playerInput.x = 1;
+                    } else if (key == keybinds.ball) {
+                        if (entity->hasComponent<BallHolder>()) {
+                            auto& ballHolder = entity->getComponent<BallHolder>();
+                            ballHolder.shouldThrowBall = true;
+                        }
                     }
                 }
 

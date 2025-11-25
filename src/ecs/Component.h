@@ -84,6 +84,7 @@ struct Keybinds {
     SDL_Keycode down{};
     SDL_Keycode left{};
     SDL_Keycode right{};
+    SDL_Keycode ball{};
 };
 
 //Game state for the current scene
@@ -112,6 +113,7 @@ struct Children {
 
 struct BallHolder {
     bool holdingBall = false;
+    bool shouldThrowBall = false;
 };
 
 struct Player1Tag{};

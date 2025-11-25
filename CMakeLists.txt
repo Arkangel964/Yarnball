@@ -75,6 +75,8 @@ add_executable(8552Game src/main.cpp
         src/manager/AudioManager.h
         src/manager/AudioManager.cpp
         src/ecs/event/AudioEventQueue.h
+        src/ecs/system/BallSystem.h
+        src/ecs/system/BallSystem.cpp
 )
 
 target_link_libraries(8552Game
