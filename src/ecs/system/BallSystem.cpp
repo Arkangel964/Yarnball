@@ -12,6 +12,7 @@ void BallSystem::update(World &world, float dt) {
             auto& b = entity->getComponent<BallHolder>();
             auto& v = entity->getComponent<Velocity>();
             auto& t = entity->getComponent<Transform>();
+            auto& spr = entity->getComponent<Sprite>();
 
             b.cooldown -= dt;
 
@@ -27,14 +28,17 @@ void BallSystem::update(World &world, float dt) {
                     //create the ball
                     auto &ball(world.createDeferredEntity());
 
-                    ball.addComponent<Transform>(Vector2D(t.position.x+(v.oldDirection.x * ballSpawnDistance), t.position.y+(v.oldDirection.y * ballSpawnDistance)), 0.0f, 1.0f);
-                    ball.addComponent<RigidBody>(500.0f, 3.0f);
-                    PhysicsSystem::addImpulse(ball, Vector2D(v.oldDirection.x, v.oldDirection.y), 500.0f);
-
                     SDL_Texture *tex = TextureManager::load("../asset/ball.png");
                     SDL_FRect animSrc(0, 0, 32, 32);
                     SDL_FRect dest(t.position.x, t.position.y, 32, 32);
                     ball.addComponent<Sprite>(tex, animSrc, dest);
+
+                    float middleX = t.position.x + (spr.dst.w / 2) - (ball.getComponent<Sprite>().dst.w/2);
+                    float middleY = t.position.y + (spr.dst.h / 2) - (ball.getComponent<Sprite>().dst.h/2);
+                    ball.addComponent<Transform>(Vector2D(middleX+(v.oldDirection.x * ballSpawnDistance), middleY+(v.oldDirection.y * ballSpawnDistance)), 0.0f, 1.0f);
+                    ball.addComponent<RigidBody>(500.0f, 3.0f);
+                    PhysicsSystem::addImpulse(ball, Vector2D(v.oldDirection.x, v.oldDirection.y), 500.0f);
+
 
                     auto &c = ball.addComponent<Collider>("projectile");
                     c.rect.w = dest.w;
