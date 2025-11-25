@@ -39,6 +39,11 @@ void BallSystem::update(World &world) {
 
                     ball.addComponent<ProjectileTag>();
                     ball.addComponent<DestroyOnStop>();
+                    if (entity->hasComponent<Player1Tag>()) {
+                        ball.addComponent<Ball>(1);
+                    } else if (entity->hasComponent<Player2Tag>()) {
+                        ball.addComponent<Ball>(2);
+                    }
                 }
             }
         }

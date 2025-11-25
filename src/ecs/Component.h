@@ -116,6 +116,10 @@ struct BallHolder {
     bool shouldThrowBall = false;
 };
 
+struct Ball {
+    int playerNum = 0;
+};
+
 struct Player1Tag{};
 struct Player2Tag{};
 struct ProjectileTag{};
