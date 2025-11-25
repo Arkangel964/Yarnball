@@ -137,6 +137,11 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
                 otherPlayer->destroy();
             }
             player->destroy();
+            
+            std::cout << "winning player: " << Game::gameState.playerWon << std::endl;
+            std::cout << "lives remaining: " << Game::gameState.remainingLives << std::endl;
+            std::cout << "yarnballs: " << Game::gameState.numBallsThrown << std::endl;
+
             Game::onSceneChangeRequest("gameover");
         }
 
