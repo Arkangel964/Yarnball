@@ -73,7 +73,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     camView.y = 0;
     camView.w = windowWidth;
     camView.h = windowHeight;
-    cam.addComponent<Camera>(camView, world.getMap().width * 32, world.getMap().height * 32);
+    cam.addComponent<Camera>(camView, world.getMap().mapProps.width * 32, world.getMap().mapProps.height * 32);
 
     //reset balls available for spawning
     Game::gameState.availableBallsForSpawning = 6;

@@ -10,6 +10,11 @@
 #include <Component.h>
 #include <vector>
 
+struct MapProperties {
+    int width{}, height{};
+    float scale{};
+};
+
 class Map {
     public:
         Map() = default;
@@ -19,8 +24,7 @@ class Map {
         void draw(const Camera& cam);
 
         SDL_Texture* tileset = nullptr;
-        int width{}, height{};
-        float scale{};
+        MapProperties mapProps;
         std::vector<std::vector<int>> tileData;
         std::vector<Collider> wallColliders;
         std::vector<Vector2D> itemPositions;

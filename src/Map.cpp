@@ -17,23 +17,23 @@ void Map::load(const char* path, SDL_Texture* ts) {
 
     //parse width and height
     auto* mapNode = doc.FirstChildElement("map");
-    width = mapNode->IntAttribute("width");
-    height = mapNode->IntAttribute("height");
+    mapProps.width = mapNode->IntAttribute("width");
+    mapProps.height = mapNode->IntAttribute("height");
     // Custom properties
     auto* properties = mapNode->FirstChildElement("properties");
     if (properties) {
         // TODO: Don't assume that the scale is the only custom property
         auto* scaleProp = properties->FirstChildElement("property");
-        scale = scaleProp->FloatAttribute("value");
+        mapProps.scale = scaleProp->FloatAttribute("value");
     }
     //parse terrain data
     auto* layer = mapNode->FirstChildElement("layer");
     auto* data = layer->FirstChildElement("data");
     std::string csv = data->GetText();
     std::stringstream ss(csv);
-    tileData = std::vector(height, std::vector<int>(width));
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
+    tileData = std::vector(mapProps.height, std::vector<int>(mapProps.width));
+    for (int i = 0; i < mapProps.height; i++) {
+        for (int j = 0; j < mapProps.width; j++) {
             std::string val;
             //read chars until comma or EOS
             if (!std::getline(ss, val, ',')) break;
@@ -48,17 +48,17 @@ void Map::load(const char* path, SDL_Texture* ts) {
             //create for loop with initialization, condition, and increment
             for (auto* obj = objectGroup->FirstChildElement("object"); obj != nullptr; obj = obj->NextSiblingElement("object")) {
                 Collider coll;
-                coll.rect.x = obj->FloatAttribute("x") * scale;
-                coll.rect.y = obj->FloatAttribute("y") * scale;
-                coll.rect.w = obj->FloatAttribute("width") * scale;
-                coll.rect.h = obj->FloatAttribute("height") * scale;
+                coll.rect.x = obj->FloatAttribute("x") * mapProps.scale;
+                coll.rect.y = obj->FloatAttribute("y") * mapProps.scale;
+                coll.rect.w = obj->FloatAttribute("width") * mapProps.scale;
+                coll.rect.h = obj->FloatAttribute("height") * mapProps.scale;
                 wallColliders.push_back(coll);
             };
         } else if (strcmp(groupName, "Item Layer") == 0) {
             for (auto* item = objectGroup->FirstChildElement("object"); item != nullptr; item = item->NextSiblingElement("object")) {
                 Vector2D itemPos;
-                itemPos.x = item->FloatAttribute("x") * scale;
-                itemPos.y = item->FloatAttribute("y") * scale;
+                itemPos.x = item->FloatAttribute("x") * mapProps.scale;
+                itemPos.y = item->FloatAttribute("y") * mapProps.scale;
                 itemPositions.push_back(itemPos);
             };
         }
@@ -90,10 +90,10 @@ void Map::load(const char* path, SDL_Texture* ts) {
 
 void Map::draw(const Camera& cam) {
     SDL_FRect src{}, dest{};
-    dest.w = dest.h = 16 * scale;
+    dest.w = dest.h = 16 * mapProps.scale;
 
-    for (int row = 0; row < height; row++) {
-        for (int col = 0; col < width; col++) {
+    for (int row = 0; row < mapProps.height; row++) {
+        for (int col = 0; col < mapProps.width; col++) {
             int type = tileData[row][col];
 
             float worldX =static_cast<float>(col) * dest.w;
