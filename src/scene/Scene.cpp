@@ -3,6 +3,7 @@
 #include "../manager/AssetManager.h"
 #include "Game.h"
 
+#define PLAYER2_UI_Offset 160.0f
 
 Scene::Scene(SceneType sceneType, const char *sceneName, const char *mapPath, const int windowWidth,
              const int windowHeight) : name(sceneName), type(sceneType) {
@@ -138,13 +139,13 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     p1IconSpite.renderLayer = RenderLayer::UI;
     p1IconSpite.visible = true;
 
-    createPlayerTitleLabel(player1);
-    createPlayerLivesLabel(player1);
-    createPlayerYarnballsLabel(player1);
+    createPlayerTitleLabel(player1, windowWidth, windowHeight);
+    createPlayerLivesLabel(player1, windowWidth, windowHeight);
+    createPlayerYarnballsLabel(player1, windowWidth, windowHeight);
 
     // Create player 2's portrait
     auto &p2Icon(world.createEntity());
-    auto p2IconTransform = p2Icon.addComponent<Transform>(Vector2D(560, 15), 0.0f, 1.0f);
+    auto p2IconTransform = p2Icon.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_Offset-80, 15), 0.0f, 1.0f);
 
     SDL_Texture *p2IconTex = TextureManager::load("../asset/ui/player2icon.png");
     SDL_FRect p2IconSrc{0, 0, 80, 80};
@@ -153,9 +154,9 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     p2IconSpite.renderLayer = RenderLayer::UI;
     p2IconSpite.visible = true;
 
-    createPlayerTitleLabel(player2);
-    createPlayerLivesLabel(player2);
-    createPlayerYarnballsLabel(player2);
+    createPlayerTitleLabel(player2, windowWidth, windowHeight);
+    createPlayerLivesLabel(player2, windowWidth, windowHeight);
+    createPlayerYarnballsLabel(player2, windowWidth, windowHeight);
 
     auto &spawner(world.createEntity());
     Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight / 2), 0.0f, 1.0f);
@@ -314,7 +315,7 @@ void Scene::toggleSettingsOverlayVisibility(Entity &overlay) {
     }
 };
 
-Entity &Scene::createPlayerTitleLabel(Entity &entity) {
+Entity &Scene::createPlayerTitleLabel(Entity &entity, int windowWidth, int windowHeight) {
     auto& playerTitleLabel(world.createEntity());
     Label label;
 
@@ -343,14 +344,14 @@ Entity &Scene::createPlayerTitleLabel(Entity &entity) {
     if (entity.hasComponent<Player1Tag>()) {
         playerTitleLabel.addComponent<Transform>(Vector2D(105, 10), 0.0f, 1.0f);
     } else {
-        playerTitleLabel.addComponent<Transform>(Vector2D(655, 10), 0.0f, 1.0f);
+        playerTitleLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_Offset+15, 10), 0.0f, 1.0f);
     }
 
     return playerTitleLabel;
 
 }
 
-Entity& Scene::createPlayerLivesLabel(Entity& entity) {
+Entity& Scene::createPlayerLivesLabel(Entity& entity, int windowWidth, int windowHeight) {
 
     auto& playerLivesLabel(world.createEntity());
     Label label;
@@ -379,14 +380,14 @@ Entity& Scene::createPlayerLivesLabel(Entity& entity) {
     if (entity.hasComponent<Player1Tag>()) {
         playerLivesLabel.addComponent<Transform>(Vector2D(105, 45), 0.0f, 1.0f);
     } else {
-        playerLivesLabel.addComponent<Transform>(Vector2D(655, 45), 0.0f, 1.0f);
+        playerLivesLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_Offset+15, 45), 0.0f, 1.0f);
     }
 
     return playerLivesLabel;
 
 }
 
-Entity& Scene::createPlayerYarnballsLabel(Entity& entity) {
+Entity& Scene::createPlayerYarnballsLabel(Entity& entity, int windowWidth, int windowHeight) {
 
     auto& playerYarnballsLabel(world.createEntity());
     Label label;
@@ -415,7 +416,7 @@ Entity& Scene::createPlayerYarnballsLabel(Entity& entity) {
     if (entity.hasComponent<Player1Tag>()) {
         playerYarnballsLabel.addComponent<Transform>(Vector2D(105, 75), 0.0f, 1.0f);
     } else {
-        playerYarnballsLabel.addComponent<Transform>(Vector2D(655, 75), 0.0f, 1.0f);
+        playerYarnballsLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_Offset+15, 75), 0.0f, 1.0f);
     }
 
     return playerYarnballsLabel;
