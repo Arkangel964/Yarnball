@@ -3,6 +3,7 @@
 #include "../manager/AssetManager.h"
 #include "Game.h"
 
+constexpr int PLAYER_LIVES = 9;
 
 Scene::Scene(SceneType sceneType, const char *sceneName, const char *mapPath, const int windowWidth,
              const int windowHeight) : name(sceneName), type(sceneType) {
@@ -89,7 +90,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
 
     // Create player 1's stats
     player1.addComponent<RigidBody>(240.0f, 240.0f);
-    player1.addComponent<Health>(Game::gameState.playerHealth);
+    player1.addComponent<Health>(PLAYER_LIVES);
     player1.addComponent<BallHolder>();
 
     Animation anim = AssetManager::getAnimation("player");
@@ -114,7 +115,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
 
     // Create player 2's stats
     player2.addComponent<RigidBody>(240.0f, 240.0f);
-    player2.addComponent<Health>(Game::gameState.playerHealth);
+    player2.addComponent<Health>(PLAYER_LIVES);
     player2.addComponent<BallHolder>();
 
     anim = AssetManager::getAnimation("player");

@@ -114,11 +114,8 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
             health.currentHealth--;
         }
 
-        Game::gameState.playerHealth = health.currentHealth;
-
         std::cout << health.currentHealth << std::endl;
         if (health.currentHealth <= 0) {
-            player->destroy();
             if (player->hasComponent<Player1Tag>()) {
                 Game::gameState.playerWon = 2;
 
@@ -137,8 +134,9 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
             if (otherPlayer) {
                 Game::gameState.remainingLives = otherPlayer->getComponent<Health>().currentHealth;
                 Game::gameState.numBallsThrown = otherPlayer->getComponent<BallHolder>().numBallsHeld;
+                otherPlayer->destroy();
             }
-
+            player->destroy();
             Game::onSceneChangeRequest("gameover");
         }
 

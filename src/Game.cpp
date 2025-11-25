@@ -15,7 +15,6 @@
 
 GameState Game::gameState{};
 std::function<void(string)> Game::onSceneChangeRequest;
-constexpr int PLAYER_LIVES = 1;
 
 Game::Game() {
 
@@ -79,9 +78,6 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
     //load assets
     AssetManager::loadAnimation("player", "../asset/animations/cat_animations.xml");
     AssetManager::loadAnimation("enemy", "../asset/animations/bird_animations.xml");
-
-    //init game data/state
-    gameState.playerHealth = PLAYER_LIVES;
 
     //load scenes
     sceneManager.loadScene(SceneType::MainMenu,"mainmenu", nullptr, width, height);
