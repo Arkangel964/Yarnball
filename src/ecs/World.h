@@ -63,7 +63,7 @@ public:
             physicsSystem.update(entities);
             movementSystem.update(entities, deltaTime);
             collisionSystem.update(*this);
-            ballSystem.update(*this);
+            ballSystem.update(*this, deltaTime);
             animationSystem.update(entities, deltaTime);
             cameraSystem.update(entities);
             spawnTimerSystem.update(entities, deltaTime);

@@ -14,7 +14,7 @@ class BallSystem {
     const int ballSpawnDistance = 70.0f;
 public:
 
-    void update(World& world);
+    void update(World& world, float dt);
 };
 
 #endif //INC_8552GAME_BALLTHROWSYSTEM_H

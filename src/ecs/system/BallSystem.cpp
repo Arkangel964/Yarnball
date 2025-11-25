@@ -6,19 +6,22 @@
 #include "World.h"
 #include "Game.h"
 
-void BallSystem::update(World &world) {
+void BallSystem::update(World &world, float dt) {
     for (auto& entity : world.getEntities()) {
         if (entity->hasComponent<BallHolder>() && entity->hasComponent<Velocity>() && entity->hasComponent<Transform>()) {
             auto& b = entity->getComponent<BallHolder>();
             auto& v = entity->getComponent<Velocity>();
             auto& t = entity->getComponent<Transform>();
 
+            b.cooldown -= dt;
+
             if (b.shouldThrowBall == true) {
                 b.shouldThrowBall = false;
                 cout << "Checking if ball can be thrown" << endl;
-                if (b.holdingBall) {
+                if (b.numBallsHeld > 0 && b.cooldown <= 0.0f) {
                     cout << "Throwing ball" << endl;
-                    b.holdingBall = false;
+                    b.numBallsHeld--;
+                    b.cooldown = 0.2f;
                     Game::gameState.availableBallsForSpawning += 1;
 
                     //create the ball

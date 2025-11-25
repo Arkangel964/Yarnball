@@ -97,10 +97,6 @@ struct Health {
     int currentHealth{};
 };
 
-struct Yarnballs {
-    int yarnballs = 0;
-};
-
 struct Clickable {
     std::function<void()> onPressed{};
     std::function<void()> onReleased{};
@@ -117,13 +113,14 @@ struct Children {
 };
 
 struct BallHolder {
-    bool holdingBall = false;
+    int numBallsHeld = 0;
     bool shouldThrowBall = false;
+    float cooldown = 0.2f;
 };
 
 struct Ball {
     int playerNum = 0;
-}
+};
 
 enum class LabelType {
     Lives,

@@ -86,7 +86,6 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player1.addComponent<RigidBody>(240.0f, 240.0f);
     player1.addComponent<Health>(Game::gameState.playerHealth);
     player1.addComponent<BallHolder>();
-    player1.addComponent<Yarnballs>();
 
     Animation anim = AssetManager::getAnimation("player");
     player1.addComponent<Animation>(anim);
@@ -112,7 +111,6 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player2.addComponent<RigidBody>(240.0f, 240.0f);
     player2.addComponent<Health>(Game::gameState.playerHealth);
     player2.addComponent<BallHolder>();
-    player2.addComponent<Yarnballs>();
 
     anim = AssetManager::getAnimation("player");
     player2.addComponent<Animation>(anim);

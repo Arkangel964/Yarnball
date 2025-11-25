@@ -139,12 +139,11 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
         if (e.state != CollisionState::Enter) return;
 
         auto& holder = player->getComponent<BallHolder>();
-        if (!holder.holdingBall) {
-            holder.holdingBall = true;
-            cout << "Is player holding ball: " << holder.holdingBall << endl;
+        if (holder.numBallsHeld < 2) {
+            holder.numBallsHeld++;
             other->destroy();
         } else {
-            cout << "Player was already holding ball" << endl;
+            cout << "Player was already holding too many balls" << endl;
         }
 
     }

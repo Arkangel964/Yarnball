@@ -44,8 +44,8 @@ class HUDSystem {
         auto& player1Health = player1Entity->getComponent<Health>();
         auto& player2Health = player2Entity->getComponent<Health>();
 
-        auto& player1Yarnballs = player1Entity->getComponent<Yarnballs>();
-        auto& player2Yarnballs = player2Entity->getComponent<Yarnballs>();
+        auto& player1Yarnballs = player1Entity->getComponent<BallHolder>();
+        auto& player2Yarnballs = player2Entity->getComponent<BallHolder>();
 
         for (auto& e : entities) {
             if (e->hasComponent<Label>()) {
@@ -78,10 +78,10 @@ class HUDSystem {
 
                 if (label.type == LabelType::Yarnballs) {
                     if (label.textureCacheKey == "player1Yarnballs") {
-                        ss << "Yarnballs: " << player1Yarnballs.yarnballs;
+                        ss << "Yarnballs: " << player1Yarnballs.numBallsHeld;
 
                     } else if (label.textureCacheKey == "player2Yarnballs") {
-                        ss << "Yarnballs: " << player2Yarnballs.yarnballs;
+                        ss << "Yarnballs: " << player2Yarnballs.numBallsHeld;
                     }
 
                     label.text = ss.str();
