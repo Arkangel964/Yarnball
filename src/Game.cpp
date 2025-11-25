@@ -102,13 +102,6 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
             isRunning = false;
             return;
         }
-
-        // if (sceneName == "gameover") {
-        //     std::cout << "Game Over :(" << std::endl;
-        //     isRunning = false;
-        //     return;
-        // }
-
         sceneManager.changeSceneDeferred(sceneName);
     };
 }

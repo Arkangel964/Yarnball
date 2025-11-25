@@ -54,8 +54,8 @@ public:
     World() = default;
 
     void update(float deltaTime, const std::vector<SDL_Event>& events, SceneType sceneType) {
-        if (sceneType == SceneType::MainMenu) {
-            mainMenuSystem.update(events);
+        if (sceneType != SceneType::Gameplay) {
+            mainMenuSystem.update(events, sceneType);
         } else {
             keyboardInputSystem.update(entities, events);
             physicsSystem.update(entities);

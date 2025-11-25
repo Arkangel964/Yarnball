@@ -7,9 +7,11 @@
 #include <vector>
 #include <SDL3/SDL_events.h>
 
+#include "scene/SceneType.h"
+
 class MainMenuSystem {
     public:
-    void update(const std::vector<SDL_Event>& events);
+    void update(const std::vector<SDL_Event>& events, SceneType sceneType);
 
 };
 
