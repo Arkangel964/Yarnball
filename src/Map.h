@@ -20,10 +20,13 @@ class Map {
 
         SDL_Texture* tileset = nullptr;
         int width{}, height{};
+        float scale{};
         std::vector<std::vector<int>> tileData;
         std::vector<Collider> wallColliders;
         std::vector<Vector2D> itemPositions;
 
+private:
+        SDL_FRect indexToSpriteCoords(int index, int tileSize, int tilesetWidth);
 };
 
 #endif //TUTORIAL1_MAP_H

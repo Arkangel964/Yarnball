@@ -19,6 +19,13 @@ void Map::load(const char* path, SDL_Texture* ts) {
     auto* mapNode = doc.FirstChildElement("map");
     width = mapNode->IntAttribute("width");
     height = mapNode->IntAttribute("height");
+    // Custom properties
+    auto* properties = mapNode->FirstChildElement("properties");
+    if (properties) {
+        // TODO: Don't assume that the scale is the only custom property
+        auto* scaleProp = properties->FirstChildElement("property");
+        scale = scaleProp->FloatAttribute("value");
+    }
     //parse terrain data
     auto* layer = mapNode->FirstChildElement("layer");
     auto* data = layer->FirstChildElement("data");
@@ -41,17 +48,17 @@ void Map::load(const char* path, SDL_Texture* ts) {
             //create for loop with initialization, condition, and increment
             for (auto* obj = objectGroup->FirstChildElement("object"); obj != nullptr; obj = obj->NextSiblingElement("object")) {
                 Collider coll;
-                coll.rect.x = obj->FloatAttribute("x");
-                coll.rect.y = obj->FloatAttribute("y");
-                coll.rect.w = obj->FloatAttribute("width");
-                coll.rect.h = obj->FloatAttribute("height");
+                coll.rect.x = obj->FloatAttribute("x") * scale;
+                coll.rect.y = obj->FloatAttribute("y") * scale;
+                coll.rect.w = obj->FloatAttribute("width") * scale;
+                coll.rect.h = obj->FloatAttribute("height") * scale;
                 wallColliders.push_back(coll);
             };
         } else if (strcmp(groupName, "Item Layer") == 0) {
             for (auto* item = objectGroup->FirstChildElement("object"); item != nullptr; item = item->NextSiblingElement("object")) {
                 Vector2D itemPos;
-                itemPos.x = item->FloatAttribute("x");
-                itemPos.y = item->FloatAttribute("y");
+                itemPos.x = item->FloatAttribute("x") * scale;
+                itemPos.y = item->FloatAttribute("y") * scale;
                 itemPositions.push_back(itemPos);
             };
         }
@@ -83,7 +90,7 @@ void Map::load(const char* path, SDL_Texture* ts) {
 
 void Map::draw(const Camera& cam) {
     SDL_FRect src{}, dest{};
-    dest.w = dest.h = 32;
+    dest.w = dest.h = 16 * scale;
 
     for (int row = 0; row < height; row++) {
         for (int col = 0; col < width; col++) {
@@ -96,35 +103,23 @@ void Map::draw(const Camera& cam) {
             dest.x = std::round(worldX - cam.view.x);
             dest.y = std::round(worldY - cam.view.y);
 
-            switch (type) {
-                case 1:
-                    //dirt
-                    src.x = 0;
-                    src.y = 0;
-                    src.w = 32;
-                    src.h = 32;
-                    break;
-                case 2:
-                    //grass
-                    src.x = 32;
-                    src.y = 0;
-                    src.w = 32;
-                    src.h = 32;
-                    break;
-                case 4:
-                    //water
-                    src.x = 32;
-                    src.y = 32;
-                    src.w = 32;
-                    src.h = 32;
-                    break;
-                default:
-                    break;
-            }
+            src = indexToSpriteCoords(type, 16, 8);
 
             TextureManager::draw(tileset, &src, &dest);
         }
     }
+}
+
+SDL_FRect Map::indexToSpriteCoords(int index, int tileSize, int tilesetWidth) {
+    SDL_FRect spriteCoords = SDL_FRect();
+    int tilesetPixelWidth = (tilesetWidth * tileSize);
+    // Get the starting x,y
+    spriteCoords.x = (index - 1) * tileSize % tilesetPixelWidth;
+    spriteCoords.y = static_cast<int>((index - 1) / tilesetWidth) * tileSize;
+    spriteCoords.w = tileSize;
+    spriteCoords.h = tileSize;
+
+    return spriteCoords;
 }
 
 

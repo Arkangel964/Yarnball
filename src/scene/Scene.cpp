@@ -60,10 +60,10 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
         coll.rect.w = collider.rect.w;
         coll.rect.h = collider.rect.h;
 
-        SDL_Texture *tex = TextureManager::load("../asset/spritesheet.png");
-        SDL_FRect colSrc{0, 32, 32, 32};
-        SDL_FRect colDst{coll.rect.x, coll.rect.y, coll.rect.w, coll.rect.h};
-        e.addComponent<Sprite>(tex, colSrc, colDst);
+//        SDL_Texture *tex = TextureManager::load("../asset/spritesheet.png");
+//        SDL_FRect colSrc{0, 32, 32, 32};
+//        SDL_FRect colDst{coll.rect.x, coll.rect.y, coll.rect.w, coll.rect.h};
+//        e.addComponent<Sprite>(tex, colSrc, colDst);
     }
 
     //Load the camera

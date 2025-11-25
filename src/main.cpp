@@ -13,7 +13,7 @@ int main() {
     int actualFrameTime = 0;
 
     game = new Game();
-    game->init("8552 Tutorial Engine", 800, 600, false);
+    game->init("8552 Tutorial Engine", 1056, 640, false);
 
     // !!! -- GAME LOOP -- !!!
     while (game->running()) {
