@@ -105,13 +105,15 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
         auto &health = player->getComponent<Health>();
         if (other->hasComponent<Ball>()) {
             auto& ball = other->getComponent<Ball>();
-            if (player->hasComponent<Player1Tag>() && ball.playerNum != 1) {
+            if ((player->hasComponent<Player1Tag>() && ball.playerNum != 1) || (player->hasComponent<Player2Tag>() && ball.playerNum != 2)) {
                 health.currentHealth--;
-            } else if (player->hasComponent<Player2Tag>() && ball.playerNum != 2) {
-                health.currentHealth--;
+                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("hurt"));
+            } else {
+                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
             }
         } else {
             health.currentHealth--;
+            world.getAudioEventQueue().push(std::make_unique<AudioEvent>("hurt"));
         }
 
         Game::gameState.playerHealth = health.currentHealth;
@@ -140,6 +142,7 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
 
         auto& holder = player->getComponent<BallHolder>();
         if (holder.numBallsHeld < 2) {
+            world.getAudioEventQueue().push(std::make_unique<AudioEvent>("pickup"));
             holder.numBallsHeld++;
             other->destroy();
         } else {
@@ -152,6 +155,7 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
 void EventResponseSystem::onProjectileCollision(const CollisionEvent &e, Entity* projectile, Entity* other, const char *otherTag, World &world) {
     if (std::string(otherTag) == "wall") {
         if (e.state != CollisionState::Stay) return;
+        world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
         // Prevent further movement
         auto &projectileTransform = projectile->getComponent<Transform>();
         auto &projectileCollider = projectile->getComponent<Collider>();
@@ -166,6 +170,7 @@ void EventResponseSystem::onProjectileCollision(const CollisionEvent &e, Entity*
         projectileTransform.position = projectileTransform.oldPosition;
     } else if (std::string(otherTag) == "projectile") {
         if (e.state != CollisionState::Stay) return;
+        world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
         // Prevent further movement
         auto &projectileACollider = projectile->getComponent<Collider>();
         auto &projectileAVelocity = projectile->getComponent<Velocity>();

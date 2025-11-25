@@ -7,13 +7,14 @@
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include "SDL3_mixer/SDL_mixer.h"
 
 class AudioManager {
-    MIX_Mixer *mixer = nullptr;
+    static MIX_Mixer *mixer;
     MIX_Track *musicTrack = nullptr;
-    static MIX_Track *sfxTrack;
+    static std::vector<MIX_Track*> SFXtracks;
     static std::unordered_map<std::string, MIX_Audio*> audio;
     public:
     AudioManager();
