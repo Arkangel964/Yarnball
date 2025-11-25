@@ -85,6 +85,7 @@ struct Keybinds {
     SDL_Keycode down{};
     SDL_Keycode left{};
     SDL_Keycode right{};
+    SDL_Keycode ball{};
 };
 
 //Game state for the current scene
@@ -94,10 +95,6 @@ struct SceneState {
 
 struct Health {
     int currentHealth{};
-};
-
-struct Yarnballs {
-    int yarnballs = 0;
 };
 
 struct Clickable {
@@ -113,6 +110,16 @@ struct Parent {
 
 struct Children {
     std::vector<Entity*> children{};
+};
+
+struct BallHolder {
+    int numBallsHeld = 0;
+    bool shouldThrowBall = false;
+    float cooldown = 0.2f;
+};
+
+struct Ball {
+    int playerNum = 0;
 };
 
 enum class LabelType {

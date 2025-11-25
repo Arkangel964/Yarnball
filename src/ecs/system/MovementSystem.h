@@ -23,8 +23,11 @@ class MovementSystem {
 
                     Vector2D directionVec = v.direction;
                     directionVec.normalize();
+
                     //Vector2D needs an operator function to multiply a float to itself
                     Vector2D velocityVec = directionVec * v.speed;
+
+
 
                     transform.position += {velocityVec * deltaTime};
 

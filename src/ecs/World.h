@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "AnimationSystem.h"
+#include "BallSystem.h"
 #include "CameraSystem.h"
 #include "Map.h"
 #include "CollisionSystem.h"
@@ -47,6 +48,7 @@ class World {
     UIRenderSystem uiRenderSystem;
     MouseInputSystem mouseInputSystem;
     AudioEventQueue audioEventQueue;
+    BallSystem ballSystem;
     HUDSystem hudSystem;
     PreRenderSystem preRenderSystem;
 
@@ -61,6 +63,7 @@ public:
             physicsSystem.update(entities);
             movementSystem.update(entities, deltaTime);
             collisionSystem.update(*this);
+            ballSystem.update(*this, deltaTime);
             animationSystem.update(entities, deltaTime);
             cameraSystem.update(entities);
             spawnTimerSystem.update(entities, deltaTime);

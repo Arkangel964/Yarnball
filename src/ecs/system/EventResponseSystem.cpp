@@ -17,6 +17,7 @@ EventResponseSystem::EventResponseSystem(World &world) {
         onCollision(collision, "player", "wall", world);
         onCollision(collision, "player", "projectile", world);
         onCollision(collision, "player", "player", world);
+        onCollision(collision, "player", "inactiveBall", world);
         onCollision(collision, "projectile", "wall", world);
         onCollision(collision, "projectile", "projectile", world);
     });
@@ -102,7 +103,16 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
         //this logic is simple and direct
         //ideally we would only operate on data in an update function (hinting at transient entities)
         auto &health = player->getComponent<Health>();
-        health.currentHealth--;
+        if (other->hasComponent<Ball>()) {
+            auto& ball = other->getComponent<Ball>();
+            if (player->hasComponent<Player1Tag>() && ball.playerNum != 1) {
+                health.currentHealth--;
+            } else if (player->hasComponent<Player2Tag>() && ball.playerNum != 2) {
+                health.currentHealth--;
+            }
+        } else {
+            health.currentHealth--;
+        }
 
         Game::gameState.playerHealth = health.currentHealth;
 
@@ -111,6 +121,31 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
             player->destroy();
             Game::onSceneChangeRequest("gameover");
         }
+
+        // Prevent further movement
+        auto &projectileTransform = other->getComponent<Transform>();
+        auto &projectileCollider = other->getComponent<Collider>();
+        auto &playerCollider = player->getComponent<Collider>();
+        // Bounce off playerCollider
+        Vector2D normal = Collision::getAABBCollisionNormal(projectileCollider, playerCollider);
+        // Reflections
+        auto &projectileVelocity = other->getComponent<Velocity>();
+        Vector2D reflected = projectileVelocity.direction - 2 * Vector2D::dot(projectileVelocity.direction, normal) * normal;
+        projectileVelocity.oldDirection = projectileVelocity.direction;
+        projectileVelocity.direction = reflected.normalize();
+        projectileTransform.position = projectileTransform.oldPosition;
+
+    } else if (std::string(otherTag) == "inactiveBall") {
+        if (e.state != CollisionState::Enter) return;
+
+        auto& holder = player->getComponent<BallHolder>();
+        if (holder.numBallsHeld < 2) {
+            holder.numBallsHeld++;
+            other->destroy();
+        } else {
+            cout << "Player was already holding too many balls" << endl;
+        }
+
     }
 }
 
