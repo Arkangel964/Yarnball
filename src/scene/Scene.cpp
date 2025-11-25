@@ -98,7 +98,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
 
     SDL_Texture *tex = TextureManager::load("../asset/animations/cat_brown_anim.png");
     SDL_FRect player1Src = anim.clips[anim.currentClip].frameIndices[0];
-    SDL_FRect player1Dst{player1Transform.position.x, player1Transform.position.y, 32, 32};
+    SDL_FRect player1Dst{player1Transform.position.x, player1Transform.position.y, 64, 64};
     player1.addComponent<Sprite>(tex, player1Src, player1Dst);
     auto &player1Collider = player1.addComponent<Collider>("player");
     player1Collider.rect.w = player1Dst.w;
@@ -123,7 +123,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
 
     tex = TextureManager::load("../asset/animations/cat_grey_anim.png");
     SDL_FRect player2Src = anim.clips[anim.currentClip].frameIndices[0];
-    SDL_FRect player2Dst{player2Transform.position.x, player2Transform.position.y, 32, 32};
+    SDL_FRect player2Dst{player2Transform.position.x, player2Transform.position.y, 64, 64};
     player2.addComponent<Sprite>(tex, player2Src, player2Dst);
     auto &player2Collider = player2.addComponent<Collider>("player");
     player2Collider.rect.w = player2Dst.w;
