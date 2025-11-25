@@ -11,6 +11,11 @@ Scene::Scene(SceneType sceneType, const char *sceneName, const char *mapPath, co
         return;
     }
 
+    if (sceneType == SceneType::GameOver) {
+        initGameOver(windowWidth, windowHeight);
+        return;
+    }
+
     initGameplay(mapPath, windowWidth, windowHeight);
 }
 
@@ -184,6 +189,25 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     auto &state(world.createEntity());
     state.addComponent<SceneState>();
 };
+
+void Scene::initGameOver(int windowWidth, int windowHeight) {
+    //camera
+    auto &cam = world.createEntity();
+    cam.addComponent<Camera>();
+
+    // game over
+    auto &gameOver(world.createEntity());
+    auto gameOverTransform = gameOver.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f);
+
+    SDL_Texture *menuTex = TextureManager::load("../asset/gameover.png");
+    SDL_FRect menuSrc{0, 0, 800, 600};
+    SDL_FRect menuDest{gameOverTransform.position.x, gameOverTransform.position.y, (float) windowWidth, (float) windowHeight};
+    gameOver.addComponent<Sprite>(menuTex, menuSrc, menuDest);
+
+    // place text
+
+}
+
 
 Entity &Scene::createSettingsOverlay(int windowWidth, int windowHeight) {
     auto &overlay(world.createEntity());

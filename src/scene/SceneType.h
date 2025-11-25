@@ -5,6 +5,6 @@
 #ifndef TUTORIAL1_SCENETYPE_H
 #define TUTORIAL1_SCENETYPE_H
 
-enum class SceneType { Gameplay, MainMenu };
+enum class SceneType { Gameplay, MainMenu, GameOver };
 
 #endif //TUTORIAL1_SCENETYPE_H
