@@ -6,6 +6,7 @@
 #define TUTORIAL1_COMPONENT_H
 #include <functional>
 #include <SDL3/SDL_render.h>
+#include "SDL3_ttf/SDL_ttf.h"
 #include "../utils/Vector2D.h"
 #include <string>
 #include <unordered_map>
@@ -96,6 +97,10 @@ struct Health {
     int currentHealth{};
 };
 
+struct Yarnballs {
+    int yarnballs = 0;
+};
+
 struct Clickable {
     std::function<void()> onPressed{};
     std::function<void()> onReleased{};
@@ -118,6 +123,24 @@ struct BallHolder {
 
 struct Ball {
     int playerNum = 0;
+}
+
+enum class LabelType {
+    Lives,
+    Yarnballs,
+    PlayerTitle
+};
+
+struct Label {
+    std::string text{};
+    TTF_Font* font = nullptr;
+    SDL_Color color{};
+    LabelType type = LabelType::PlayerTitle;
+    std::string textureCacheKey{};
+    SDL_Texture* texture = nullptr;
+    SDL_FRect dst{};
+    bool visible = true;
+    bool dirty = false;
 };
 
 struct Player1Tag{};

@@ -15,6 +15,7 @@
 
 GameState Game::gameState{};
 std::function<void(string)> Game::onSceneChangeRequest;
+constexpr int PLAYER_LIVES = 9;
 
 Game::Game() {
 
@@ -50,6 +51,11 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
             std::cout << "Renderer could not be created." << std::endl;
             return;
         }
+
+        if (TTF_Init() != 1) {
+            std::cout << "TTF_Init failed." << std::endl;
+        }
+
         isRunning = true;
         //color initialization and randomization seeding
         srand(time(NULL));
@@ -61,6 +67,10 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
         isRunning = false;
     }
 
+    // load fonts
+    AssetManager::loadFont("fira", "../asset/fonts/fira.ttf", HUDSystem::getTitleSize());
+    AssetManager::loadFont("arial", "../asset/fonts/arial.ttf", HUDSystem::getFontSize());
+
     //load audio
     audioManager.loadAudio("theme", "../asset/audio/switch_with_me.ogg");
     audioManager.loadAudio("collect", "../asset/audio/coin.ogg");
@@ -71,7 +81,7 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
     AssetManager::loadAnimation("enemy", "../asset/animations/bird_animations.xml");
 
     //init game data/state
-    gameState.playerHealth = 5;
+    gameState.playerHealth = PLAYER_LIVES;
 
     //load scenes
     sceneManager.loadScene(SceneType::MainMenu,"mainmenu", nullptr, width, height);
@@ -83,7 +93,6 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
 
     //start level 1
     sceneManager.changeSceneDeferred("mainmenu");
-
 
 
     //resolve scene callback
