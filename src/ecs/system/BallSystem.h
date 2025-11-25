@@ -11,7 +11,7 @@
 class World;
 
 class BallSystem {
-    const int ballSpawnDistance = 70.0f;
+    const int ballSpawnDistance = 60.0f;
 public:
 
     void update(World& world, float dt);
