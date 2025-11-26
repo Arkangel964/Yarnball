@@ -372,27 +372,27 @@ void Scene::createPickupSpawner(float interval) {
         while (!spawn && numAttempts <= 2 * pickupSpawns.size()) {
             numAttempts++;
             int index = rand() % pickupSpawns.size();
-            if (!pickupSpawns[index].ballEntity) {
-                pickupSpawns[index].ballEntity = &e;
+            if (!Game::gameState.usedSpawnPoints.contains(&pickupSpawns[index])) {
                 spawn = &pickupSpawns[index];
+                Game::gameState.usedSpawnPoints.emplace(spawn, &e);
             }
         }
         // If we didn't get one, just loop through the list once to make sure we didn't get really unlucky in rng
         if (!spawn) {
-            for (int i = 0; i < pickupSpawns.size(); i++) {
-                if (!pickupSpawns[i].ballEntity) {
-                    pickupSpawns[i].ballEntity = &e;
-                    spawn = &pickupSpawns[i];
+            for (int index = 0; index < pickupSpawns.size(); index++) {
+                if (!Game::gameState.usedSpawnPoints.contains(&pickupSpawns[index])) {
+                    spawn = &pickupSpawns[index];
+                    Game::gameState.usedSpawnPoints.emplace(spawn, &e);
                     break;
                 }
             }
         }
         // If we STILL don't have one, just get any one
         if (!spawn) {
-            for (int i = 0; i < otherPickupSpawns.size(); i++) {
-                if (!otherPickupSpawns[i].ballEntity) {
-                    otherPickupSpawns[i].ballEntity = &e;
-                    spawn = &otherPickupSpawns[i];
+            for (int index = 0; index < otherPickupSpawns.size(); index++) {
+                if (!Game::gameState.usedSpawnPoints.contains(&pickupSpawns[index])) {
+                    spawn = &pickupSpawns[index];
+                    Game::gameState.usedSpawnPoints.emplace(spawn, &e);
                     break;
                 }
             }

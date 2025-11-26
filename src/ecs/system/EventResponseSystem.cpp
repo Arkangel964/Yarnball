@@ -147,22 +147,7 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
         if (holder.numBallsHeld < 2) {
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("pickup"));
             holder.numBallsHeld++;
-            bool found = false;
-            for ( auto& spawn : world.getMap().mapProps.player1PickupSpawns ) {
-                if (spawn.ballEntity == other) {
-                    spawn.ballEntity = nullptr;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                for ( auto& spawn : world.getMap().mapProps.player2PickupSpawns ) {
-                    if (spawn.ballEntity == other) {
-                        spawn.ballEntity = nullptr;
-                        break;
-                    }
-                }
-            }
+            erase_if(Game::gameState.usedSpawnPoints, [&](auto& p){ return p.second == other; });
             other->destroy();
         } else {
             cout << "Player was already holding too many balls" << endl;

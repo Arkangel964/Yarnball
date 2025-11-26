@@ -16,7 +16,6 @@ class Entity;
 struct SpawnPoint {
     Vector2D position;
     Vector2D direction;
-    Entity* ballEntity{nullptr};
 };
 
 struct MapProperties {
