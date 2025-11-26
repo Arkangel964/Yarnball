@@ -7,8 +7,10 @@
 #include <iostream>
 #include <ostream>
 
-MIX_Track* AudioManager::sfxTrack;
 std::unordered_map<std::string, MIX_Audio*> AudioManager::audio;
+
+MIX_Mixer* AudioManager::mixer;
+std::vector<MIX_Track*> AudioManager::SFXtracks;
 
 AudioManager::AudioManager() {
     if (MIX_Init() == 0) {
@@ -17,13 +19,13 @@ AudioManager::AudioManager() {
     }
 
     mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr);
+    SFXtracks = std::vector<MIX_Track*>();
     if (!mixer) {
         std::cout << "MIX_CreateMixerDevice failed" << std::endl;
         return;
     }
 
     musicTrack = MIX_CreateTrack(mixer);
-    sfxTrack = MIX_CreateTrack(mixer);
     MIX_SetTrackGain(musicTrack, 0.8f);
 }
 
@@ -56,6 +58,19 @@ void AudioManager::stopMusic() const {
 }
 
 void AudioManager::playSfx(const std::string &clipName) {
+    // MIX_Track *sfxTrack = MIX_CreateTrack(mixer);
+    MIX_Track *sfxTrack = nullptr;
+    for (auto &track : SFXtracks) {
+        if (MIX_GetTrackRemaining(track) <= 0) {
+            sfxTrack = track;
+        }
+    }
+    if (sfxTrack == nullptr) {
+        std::cout << "No available sfx tracks, creating new..." << std::endl;
+        sfxTrack = MIX_CreateTrack(mixer);
+        SFXtracks.emplace_back(sfxTrack);
+    }
+
     if (MIX_SetTrackAudio(sfxTrack, audio[clipName]) == 0) {
         std::cout << "MIX_SetTrackAudio failed" << std::endl;
         return;

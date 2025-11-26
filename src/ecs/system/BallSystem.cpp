@@ -44,6 +44,7 @@ void BallSystem::update(World &world, float dt) {
                     b.numBallsHeld--;
                     b.cooldown = 0.2f;
                     Game::gameState.availableBallsForSpawning += 1;
+                    world.getAudioEventQueue().push(std::make_unique<AudioEvent>("throw"));
 
                     //create the ball
                     auto &ball(world.createDeferredEntity());
