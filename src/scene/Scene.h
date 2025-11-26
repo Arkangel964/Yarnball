@@ -37,9 +37,9 @@ class Scene {
     void createSettingUIComponents(Entity& overlay);
     void toggleSettingsOverlayVisibility(Entity& overlay);
 
-    Entity& createPlayerTitleLabel(Entity& entity);
-    Entity& createPlayerLivesLabel(Entity& entity);
-    Entity& createPlayerYarnballsLabel(Entity& entity);
+    Entity& createPlayerTitleLabel(Entity& entity, int windowWidth, int windowHeight);
+    Entity& createPlayerLivesLabel(Entity& entity, int windowWidth, int windowHeight);
+    Entity& createPlayerYarnballsLabel(Entity& entity, int windowWidth, int windowHeight);
 
 };
 
