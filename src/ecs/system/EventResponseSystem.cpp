@@ -15,6 +15,7 @@ EventResponseSystem::EventResponseSystem(World &world) {
 
         onCollision(collision, "player", "item", world);
         onCollision(collision, "player", "wall", world);
+        onCollision(collision, "player", "divider", world);
         onCollision(collision, "player", "projectile", world);
         onCollision(collision, "player", "player", world);
         onCollision(collision, "player", "inactiveBall", world);
@@ -84,7 +85,7 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
                 Game::onSceneChangeRequest("level2");
             }
         }
-    } else if (std::string(otherTag) == "wall") {
+    } else if (std::string(otherTag) == "wall" || std::string(otherTag) == "divider") {
         if (e.state != CollisionState::Stay) return;
 
         auto &t = player->getComponent<Transform>();

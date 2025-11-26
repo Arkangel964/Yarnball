@@ -20,7 +20,8 @@ struct MapProperties {
     int width{}, height{};
     float scale{};
     std::unordered_map<std::string, SpawnPoint> playerSpawns;
-//    std::vector<SpawnPoint> ballSpawns;
+    std::vector<SpawnPoint> player1PickupSpawns;
+    std::vector<SpawnPoint> player2PickupSpawns;
 //    std::vector<SpawnPoint> hazardSpawns;
 };
 
@@ -37,6 +38,7 @@ public:
     std::vector<std::vector<int>> tileData;
     std::vector<Collider> wallColliders;
     std::vector<Vector2D> itemPositions;
+    Collider dividerCollider;
 
 private:
     SDL_FRect indexToSpriteCoords(int index, int tileSize, int tilesetWidth);

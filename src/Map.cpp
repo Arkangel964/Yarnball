@@ -54,6 +54,15 @@ void Map::load(const char* path, SDL_Texture* ts) {
                 coll.rect.h = obj->FloatAttribute("height") * mapProps.scale;
                 wallColliders.push_back(coll);
             };
+        } else if (strcmp(groupName, "Divider Collider Layer") == 0) {
+            //create for loop with initialization, condition, and increment
+            auto* obj = objectGroup->FirstChildElement("object");
+            if (obj != nullptr) {
+                dividerCollider.rect.x = obj->FloatAttribute("x") * mapProps.scale;
+                dividerCollider.rect.y = obj->FloatAttribute("y") * mapProps.scale;
+                dividerCollider.rect.w = obj->FloatAttribute("width") * mapProps.scale;
+                dividerCollider.rect.h = obj->FloatAttribute("height") * mapProps.scale;
+            }
         } else if (strcmp(groupName, "Item Layer") == 0) {
             for (auto* item = objectGroup->FirstChildElement("object"); item != nullptr; item = item->NextSiblingElement("object")) {
                 Vector2D itemPos;
@@ -66,10 +75,15 @@ void Map::load(const char* path, SDL_Texture* ts) {
                 SpawnPoint newPoint = parseSpawnPoint(item);
                 // TODO: Spawner logic
             };
-        } else if (strcmp(groupName, "Ball Spawner Layer") == 0) {
+        } else if (strcmp(groupName, "Player1 Pickup Layer") == 0) {
             for (auto* item = objectGroup->FirstChildElement("object"); item != nullptr; item = item->NextSiblingElement("object")) {
                 SpawnPoint newPoint = parseSpawnPoint(item);
-                // TODO: Spawner logic
+                mapProps.player1PickupSpawns.push_back(newPoint);
+            };
+        } else if (strcmp(groupName, "Player2 Pickup Layer") == 0) {
+            for (auto* item = objectGroup->FirstChildElement("object"); item != nullptr; item = item->NextSiblingElement("object")) {
+                SpawnPoint newPoint = parseSpawnPoint(item);
+                mapProps.player2PickupSpawns.push_back(newPoint);
             };
         } else if (strcmp(groupName, "Player Spawn Layer") == 0) {
             for (auto* item = objectGroup->FirstChildElement("object"); item != nullptr; item = item->NextSiblingElement("object")) {
@@ -79,29 +93,6 @@ void Map::load(const char* path, SDL_Texture* ts) {
             };
         }
     }
-    /*
-    //parse collider data
-    auto* objectGroup = layer->NextSiblingElement("objectgroup");
-    //create for loop with initialization, condition, and increment
-    for (auto* obj = objectGroup->FirstChildElement("object"); obj != nullptr; obj = obj->NextSiblingElement("object")) {
-        Collider coll;
-        coll.rect.x = obj->FloatAttribute("x");
-        coll.rect.y = obj->FloatAttribute("y");
-        coll.rect.w = obj->FloatAttribute("width");
-        coll.rect.h = obj->FloatAttribute("height");
-        wallColliders.push_back(coll);
-    };
-
-    //parse item data
-    auto* itemObjectGroup = objectGroup->NextSiblingElement("objectgroup");
-    //create for loop with initialization, condition, and increment
-    for (auto* item = itemObjectGroup->FirstChildElement("object"); item != nullptr; item = item->NextSiblingElement("object")) {
-        Vector2D itemPos;
-        itemPos.x = item->FloatAttribute("x");
-        itemPos.y = item->FloatAttribute("y");
-        itemPositions.push_back(itemPos);
-    };
-    */
 }
 
 void Map::draw(const Camera& cam) {

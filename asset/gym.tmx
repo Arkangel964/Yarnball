@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="33" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="10">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="33" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="25">
  <properties>
   <property name="Scale" type="float" value="2"/>
  </properties>
  <tileset firstgid="1" source="spritesheet_terrain.tsx"/>
- <layer id="1" name="Tile Layer 1" width="33" height="20">
+ <layer id="1" name="Terrain" width="33" height="20">
   <data encoding="csv">
 58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,
 58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,58,
@@ -52,18 +52,51 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="3" name="Collision Layer">
+ <objectgroup id="3" name="Collision Layer" locked="1">
   <object id="1" x="0.333191" y="63.7823" width="528.288" height="16.2424"/>
   <object id="2" x="0.302888" y="304.024" width="527.651" height="16"/>
   <object id="3" x="511.954" y="64.1156" width="16.3031" height="255.333"/>
   <object id="4" x="0.12107" y="63.449" width="16" height="255.667"/>
  </objectgroup>
- <objectgroup id="4" name="Ball Spawner Layer"/>
- <objectgroup id="5" name="Divider Layer">
+ <objectgroup id="4" name="Player2 Pickup Layer" locked="1">
+  <object id="20" x="304" y="113">
+   <point/>
+  </object>
+  <object id="21" x="479.999" y="113.333">
+   <point/>
+  </object>
+  <object id="22" x="479.666" y="273">
+   <point/>
+  </object>
+  <object id="23" x="303" y="272.333">
+   <point/>
+  </object>
+  <object id="24" x="337" y="192.667">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="8" name="Player1 Pickup Layer" locked="1">
+  <object id="10" x="48.3333" y="112">
+   <point/>
+  </object>
+  <object id="11" x="224.333" y="112.333">
+   <point/>
+  </object>
+  <object id="12" x="224" y="272">
+   <point/>
+  </object>
+  <object id="13" x="47.3333" y="271.333">
+   <point/>
+  </object>
+  <object id="14" x="191.667" y="191.667">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="5" name="Divider Collider Layer" locked="1">
   <object id="6" x="256" y="63.8332" width="16" height="255.667"/>
  </objectgroup>
  <objectgroup id="6" name="Hazard Layer"/>
- <objectgroup id="7" name="Player Spawn Layer">
+ <objectgroup id="7" name="Player Spawn Layer" locked="1">
   <object id="7" name="player1" x="136" y="192.5">
    <properties>
     <property name="Rotation" type="float" value="0"/>

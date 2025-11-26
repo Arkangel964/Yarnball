@@ -66,6 +66,16 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
 //        e.addComponent<Sprite>(tex, colSrc, colDst);
     }
 
+    // Create middle divider
+    auto &e = world.createEntity();
+    Collider &dividerCollider = world.getMap().dividerCollider;
+    e.addComponent<Transform>(Vector2D(dividerCollider.rect.x, dividerCollider.rect.y), 0.0f, 1.0f);
+    auto &divider = e.addComponent<Collider>("divider");
+    divider.rect.x = dividerCollider.rect.x;
+    divider.rect.y = dividerCollider.rect.y;
+    divider.rect.w = dividerCollider.rect.w;
+    divider.rect.h = dividerCollider.rect.h;
+
     //Load the camera
     auto &cam = world.createEntity();
     SDL_FRect camView{};
@@ -166,31 +176,31 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     createPlayerLivesLabel(player2, windowWidth, windowHeight);
     createPlayerYarnballsLabel(player2, windowWidth, windowHeight);
 
-    auto &spawner(world.createEntity());
-    Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight / 2), 0.0f, 1.0f);
-    spawner.addComponent<TimedSpawner>(2.0f, [this, t] {
-        //create our projectile (bird)
-        auto &e(world.createDeferredEntity());
-        e.addComponent<Transform>(Vector2D(t.position.x, t.position.y), 0.0f, 1.0f);
-//        e.addComponent<Velocity>(Vector2D(0, -1), Vector2D(0, -1), 100.0f);
-        e.addComponent<RigidBody>(100.0f, 0.25f);
-        PhysicsSystem::addImpulse(e, Vector2D(0, -1), 100.0f);
-
-        Animation anim = AssetManager::getAnimation("enemy");
-        e.addComponent<Animation>(anim);
-
-        SDL_Texture *tex = TextureManager::load("../asset/animations/bird_anim.png");
-        SDL_FRect animSrc(0, 0, 32, 32);
-        SDL_FRect dest(t.position.x, t.position.y, 32, 32);
-        e.addComponent<Sprite>(tex, animSrc, dest);
-
-        auto &c = e.addComponent<Collider>("projectile");
-        c.rect.w = dest.w;
-        c.rect.h = dest.h;
-
-        e.addComponent<ProjectileTag>();
-        e.addComponent<DestroyOnStop>();
-    });
+//    auto &spawner(world.createEntity());
+//    Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight / 2), 0.0f, 1.0f);
+//    spawner.addComponent<TimedSpawner>(2.0f, [this, t] {
+//        //create our projectile (bird)
+//        auto &e(world.createDeferredEntity());
+//        e.addComponent<Transform>(Vector2D(t.position.x, t.position.y), 0.0f, 1.0f);
+////        e.addComponent<Velocity>(Vector2D(0, -1), Vector2D(0, -1), 100.0f);
+//        e.addComponent<RigidBody>(100.0f, 0.25f);
+//        PhysicsSystem::addImpulse(e, Vector2D(0, -1), 100.0f);
+//
+//        Animation anim = AssetManager::getAnimation("enemy");
+//        e.addComponent<Animation>(anim);
+//
+//        SDL_Texture *tex = TextureManager::load("../asset/animations/bird_anim.png");
+//        SDL_FRect animSrc(0, 0, 32, 32);
+//        SDL_FRect dest(t.position.x, t.position.y, 32, 32);
+//        e.addComponent<Sprite>(tex, animSrc, dest);
+//
+//        auto &c = e.addComponent<Collider>("projectile");
+//        c.rect.w = dest.w;
+//        c.rect.h = dest.h;
+//
+//        e.addComponent<ProjectileTag>();
+//        e.addComponent<DestroyOnStop>();
+//    });
 
     //dodgeball spawner
     auto &ballSpawner(world.createEntity());
