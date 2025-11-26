@@ -203,31 +203,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
 //    });
 
     //dodgeball spawner
-    auto &ballSpawner(world.createEntity());
-    Transform ballSpawnTransform = ballSpawner.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f);
-    ballSpawner.addComponent<TimedSpawner>(5.0f, [this, ballSpawnTransform, windowWidth, windowHeight] {
-        if (Game::gameState.availableBallsForSpawning > 0) {
-            Game::gameState.availableBallsForSpawning -= 1;
-            //create our projectile (ball)
-            auto &e(world.createDeferredEntity());
-
-            //https://stackoverflow.com/questions/686353/random-float-number-generation
-            float ballTransformX = ballSpawnTransform.position.x + static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(windowWidth -ballSpawnTransform.position.x)));
-            float ballTransformY = ballSpawnTransform.position.y + static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(windowHeight -ballSpawnTransform.position.y)));
-
-            e.addComponent<Transform>(Vector2D(ballTransformX, ballTransformY), 0.0f, 1.0f);
-
-            SDL_Texture *tex = TextureManager::load("../asset/ball.png");
-            SDL_FRect spriteSrc(0, 0, 32, 32);
-            SDL_FRect dest(ballSpawnTransform.position.x, ballSpawnTransform.position.y, 32, 32);
-            e.addComponent<Sprite>(tex, spriteSrc, dest);
-
-            auto &c = e.addComponent<Collider>("inactiveBall");
-            c.rect.w = dest.w;
-            c.rect.h = dest.h;
-        }
-
-    });
+    createPickupSpawner(windowWidth, windowHeight);
 
     //add scene state
     auto &state(world.createEntity());
@@ -439,5 +415,33 @@ Entity& Scene::createPlayerYarnballsLabel(Entity& entity, int windowWidth, int w
 
     return playerYarnballsLabel;
 
+}
+
+void Scene::createPickupSpawner(int windowWidth, int windowHeight) {
+    auto &ballSpawner(world.createEntity());
+    // TODO: Get positions of spawners on each side and handle logic if they are "used" or not
+    Transform ballSpawnTransform = ballSpawner.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f);
+    ballSpawner.addComponent<TimedSpawner>(5.0f, [this, ballSpawnTransform, windowWidth, windowHeight] {
+        if (Game::gameState.availableBallsForSpawning > 0) {
+            Game::gameState.availableBallsForSpawning -= 1;
+            //create our projectile (ball)
+            auto &e(world.createDeferredEntity());
+
+            //https://stackoverflow.com/questions/686353/random-float-number-generation
+            float ballTransformX = ballSpawnTransform.position.x + static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(windowWidth -ballSpawnTransform.position.x)));
+            float ballTransformY = ballSpawnTransform.position.y + static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(windowHeight -ballSpawnTransform.position.y)));
+
+            e.addComponent<Transform>(Vector2D(ballTransformX, ballTransformY), 0.0f, 1.0f);
+
+            SDL_Texture *tex = TextureManager::load("../asset/ball.png");
+            SDL_FRect spriteSrc(0, 0, 32, 32);
+            SDL_FRect dest(ballSpawnTransform.position.x, ballSpawnTransform.position.y, 32, 32);
+            e.addComponent<Sprite>(tex, spriteSrc, dest);
+
+            auto &c = e.addComponent<Collider>("inactiveBall");
+            c.rect.w = dest.w;
+            c.rect.h = dest.h;
+        }
+    });
 }
 
