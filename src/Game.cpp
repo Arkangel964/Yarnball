@@ -72,9 +72,12 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
     AssetManager::loadFont("arial", "../asset/fonts/arial.ttf", HUDSystem::getFontSize());
 
     //load audio
-    audioManager.loadAudio("theme", "../asset/audio/switch_with_me.ogg");
+    audioManager.loadAudio("theme", "../asset/audio/glitter_blast.ogg");
     audioManager.loadAudio("collect", "../asset/audio/coin.ogg");
-
+    audioManager.loadAudio("bounce", "../asset/audio/bounce.ogg");
+    audioManager.loadAudio("hurt", "../asset/audio/hurt.ogg");
+    audioManager.loadAudio("throw", "../asset/audio/throw.ogg");
+    audioManager.loadAudio("pickup", "../asset/audio/pickup.ogg");
 
     //load assets
     AssetManager::loadAnimation("player", "../asset/animations/cat_animations.xml");
