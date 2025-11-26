@@ -99,8 +99,8 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     createPlayerYarnballsLabel(player2, windowWidth, windowHeight);
 
     //dodgeball spawner
-    createPickupSpawner(5.0f);
-    createHazardSpawner(1.f);
+    createPickupSpawner(3.0f);
+    createHazardSpawner(2.5f);
 
     //add scene state
     auto &state(world.createEntity());
