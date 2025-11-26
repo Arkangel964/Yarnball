@@ -108,12 +108,14 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
             if ((player->hasComponent<Player1Tag>() && ball.playerNum != 1) || (player->hasComponent<Player2Tag>() && ball.playerNum != 2)) {
                 health.currentHealth--;
                 world.getAudioEventQueue().push(std::make_unique<AudioEvent>("hurt"));
+                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
             } else {
                 world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
             }
         } else {
             health.currentHealth--;
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("hurt"));
+            world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
         }
 
         Game::gameState.playerHealth = health.currentHealth;
