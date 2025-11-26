@@ -104,20 +104,20 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
         //this logic is simple and direct
         //ideally we would only operate on data in an update function (hinting at transient entities)
         auto &health = player->getComponent<Health>();
-        if (other->hasComponent<Ball>()) {
-            auto& ball = other->getComponent<Ball>();
-            if ((player->hasComponent<Player1Tag>() && ball.playerNum != 1) || (player->hasComponent<Player2Tag>() && ball.playerNum != 2)) {
-                health.currentHealth--;
-                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("hurt"));
-                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
-            } else {
-                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
-            }
-        } else {
+//        if (other->hasComponent<Ball>()) {
+//            auto& ball = other->getComponent<Ball>();
+//            if ((player->hasComponent<Player1Tag>() && ball.playerNum != 1) || (player->hasComponent<Player2Tag>() && ball.playerNum != 2)) {
+//                health.currentHealth--;
+//                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("hurt"));
+//                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
+//            } else {
+//                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
+//            }
+//        } else {
             health.currentHealth--;
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("hurt"));
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
-        }
+//        }
 
         Game::gameState.playerHealth = health.currentHealth;
 
