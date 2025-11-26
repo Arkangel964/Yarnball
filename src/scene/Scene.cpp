@@ -38,19 +38,6 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     //load map
     world.getMap().load(mapPath, TextureManager::load("../asset/spritesheet.png"));
 
-    //Create all coins
-    for (auto &itemPos: world.getMap().itemPositions) {
-        auto &item(world.createEntity());
-        item.addComponent<Transform>(Vector2D(itemPos.x, itemPos.y), 0.0f, 1.0f);
-        SDL_Texture *itemTex = TextureManager::load("../asset/coin.png");
-        SDL_FRect itemSrc(0, 0, 32, 32);
-        SDL_FRect itemDest(itemPos.x, itemPos.y, 32, 32);
-        item.addComponent<Sprite>(itemTex, itemSrc, itemDest);
-        auto &itemCollider = item.addComponent<Collider>("item");
-        itemCollider.rect.w = itemDest.w;
-        itemCollider.rect.h = itemDest.h;
-    }
-
     for (auto &collider: world.getMap().wallColliders) {
         auto &e = world.createEntity();
         e.addComponent<Transform>(Vector2D(collider.rect.x, collider.rect.y), 0.0f, 1.0f);
@@ -89,118 +76,26 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     Game::gameState.availableBallsForSpawning = 6;
 
     //Create the player1
-    auto &player1(world.createEntity());
-    auto player1SpawnPoint = world.getMap().mapProps.playerSpawns.find("player1")->second;
-    player1SpawnPoint.position.x -= 64.0f / 2.0f;
-    player1SpawnPoint.position.y -= 64.0f / 2.0f;
-    auto &player1Transform(player1.addComponent<Transform>(player1SpawnPoint.position, 0.0f, 1.0f));
-    player1Transform.oldPosition = player1Transform.position;
-
-    // Create player 1's stats
-    player1.addComponent<RigidBody>(240.0f, 240.0f);
-    player1.addComponent<Velocity>(Vector2D(0.0f,0.0f), player1SpawnPoint.direction, 0.0f);
-    player1.addComponent<Health>(Game::gameState.playerHealth);
-    player1.addComponent<BallHolder>();
-
-    Animation anim = AssetManager::getAnimation("player");
-    player1.addComponent<Animation>(anim);
-
-    SDL_Texture *tex = TextureManager::load("../asset/animations/cat_brown_anim.png");
-    SDL_FRect player1Src = anim.clips[anim.currentClip].frameIndices[0];
-    SDL_FRect player1Dst{player1Transform.position.x, player1Transform.position.y, 64, 64};
-    player1.addComponent<Sprite>(tex, player1Src, player1Dst);
-    auto &player1Collider = player1.addComponent<Collider>("player");
-    player1Collider.rect.w = player1Dst.w;
-    player1Collider.rect.h = player1Dst.h;
-
+    auto &player1 = createPlayerEntity("player1", "../asset/animations/cat_brown_anim.png");
     player1.addComponent<Keybinds>(SDLK_W, SDLK_S, SDLK_A, SDLK_D, SDLK_E);
-
     player1.addComponent<Player1Tag>();
 
     //Create the player2
-    auto &player2(world.createEntity());
-    auto player2SpawnPoint = world.getMap().mapProps.playerSpawns.find("player2")->second;
-    player2SpawnPoint.position.x -= 64.0f / 2.0f;
-    player2SpawnPoint.position.y -= 64.0f / 2.0f;
-    auto &player2Transform(player2.addComponent<Transform>(player2SpawnPoint.position, 0.0f, 1.0f));
-    player2Transform.oldPosition = player2Transform.position;
-
-    // Create player 2's stats
-    player2.addComponent<RigidBody>(240.0f, 240.0f);
-    player2.addComponent<Velocity>(Vector2D(0.0f,0.0f), player2SpawnPoint.direction, 0.0f);
-    player2.addComponent<Health>(Game::gameState.playerHealth);
-    player2.addComponent<BallHolder>();
-
-    anim = AssetManager::getAnimation("player");
-    player2.addComponent<Animation>(anim);
-
-    tex = TextureManager::load("../asset/animations/cat_grey_anim.png");
-    SDL_FRect player2Src = anim.clips[anim.currentClip].frameIndices[0];
-    SDL_FRect player2Dst{player2Transform.position.x, player2Transform.position.y, 64, 64};
-    player2.addComponent<Sprite>(tex, player2Src, player2Dst);
-    auto &player2Collider = player2.addComponent<Collider>("player");
-    player2Collider.rect.w = player2Dst.w;
-    player2Collider.rect.h = player2Dst.h;
-
+    auto &player2 = createPlayerEntity("player2", "../asset/animations/cat_grey_anim.png");
     player2.addComponent<Keybinds>(SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_RSHIFT);
-
     player2.addComponent<Player2Tag>();
 
     // Create player 1's portrait
-    auto &p1Icon(world.createEntity());
-    auto p1IconTransform = p1Icon.addComponent<Transform>(Vector2D(10, 15), 0.0f, 1.0f);
-
-    SDL_Texture *p1IconTex = TextureManager::load("../asset/ui/player1icon.png");
-    SDL_FRect p1IconSrc{0, 0, 80, 80};
-    SDL_FRect p1IconDest{p1IconTransform.position.x, p1IconTransform.position.y, 80, 80};
-    auto& p1IconSpite = p1Icon.addComponent<Sprite>(p1IconTex, p1IconSrc, p1IconDest);
-    p1IconSpite.renderLayer = RenderLayer::UI;
-    p1IconSpite.visible = true;
-
+    createPlayerIcon(Vector2D(10, 15), "../asset/ui/player1icon.png");
     createPlayerTitleLabel(player1, windowWidth, windowHeight);
     createPlayerLivesLabel(player1, windowWidth, windowHeight);
     createPlayerYarnballsLabel(player1, windowWidth, windowHeight);
 
     // Create player 2's portrait
-    auto &p2Icon(world.createEntity());
-    auto p2IconTransform = p2Icon.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_Offset-80, 15), 0.0f, 1.0f);
-
-    SDL_Texture *p2IconTex = TextureManager::load("../asset/ui/player2icon.png");
-    SDL_FRect p2IconSrc{0, 0, 80, 80};
-    SDL_FRect p2IconDest{p2IconTransform.position.x, p2IconTransform.position.y, 80, 80};
-    auto& p2IconSpite = p2Icon.addComponent<Sprite>(p2IconTex, p2IconSrc, p2IconDest);
-    p2IconSpite.renderLayer = RenderLayer::UI;
-    p2IconSpite.visible = true;
-
+    createPlayerIcon(Vector2D(windowWidth-PLAYER2_UI_Offset-80, 15), "../asset/ui/player2icon.png");
     createPlayerTitleLabel(player2, windowWidth, windowHeight);
     createPlayerLivesLabel(player2, windowWidth, windowHeight);
     createPlayerYarnballsLabel(player2, windowWidth, windowHeight);
-
-//    auto &spawner(world.createEntity());
-//    Transform t = spawner.addComponent<Transform>(Vector2D(windowWidth / 2, windowHeight / 2), 0.0f, 1.0f);
-//    spawner.addComponent<TimedSpawner>(2.0f, [this, t] {
-//        //create our projectile (bird)
-//        auto &e(world.createDeferredEntity());
-//        e.addComponent<Transform>(Vector2D(t.position.x, t.position.y), 0.0f, 1.0f);
-////        e.addComponent<Velocity>(Vector2D(0, -1), Vector2D(0, -1), 100.0f);
-//        e.addComponent<RigidBody>(100.0f, 0.25f);
-//        PhysicsSystem::addImpulse(e, Vector2D(0, -1), 100.0f);
-//
-//        Animation anim = AssetManager::getAnimation("enemy");
-//        e.addComponent<Animation>(anim);
-//
-//        SDL_Texture *tex = TextureManager::load("../asset/animations/bird_anim.png");
-//        SDL_FRect animSrc(0, 0, 32, 32);
-//        SDL_FRect dest(t.position.x, t.position.y, 32, 32);
-//        e.addComponent<Sprite>(tex, animSrc, dest);
-//
-//        auto &c = e.addComponent<Collider>("projectile");
-//        c.rect.w = dest.w;
-//        c.rect.h = dest.h;
-//
-//        e.addComponent<ProjectileTag>();
-//        e.addComponent<DestroyOnStop>();
-//    });
 
     //dodgeball spawner
     createPickupSpawner(windowWidth, windowHeight);
@@ -308,6 +203,48 @@ void Scene::toggleSettingsOverlayVisibility(Entity &overlay) {
         }
     }
 };
+
+Entity &Scene::createPlayerEntity(const char *spawnLocationName, const char *spritePath) {
+    auto &player(world.createEntity());
+    auto spawnPoint = world.getMap().mapProps.playerSpawns.find(spawnLocationName)->second;
+    spawnPoint.position.x -= 64.0f / 2.0f;
+    spawnPoint.position.y -= 64.0f / 2.0f;
+    auto &playerTransform(player.addComponent<Transform>(spawnPoint.position, 0.0f, 1.0f));
+    playerTransform.oldPosition = playerTransform.position;
+
+    // Create player's stats
+    player.addComponent<RigidBody>(240.0f, 240.0f);
+    player.addComponent<Velocity>(Vector2D(0.0f, 0.0f), spawnPoint.direction, 0.0f);
+    player.addComponent<Health>(Game::gameState.playerHealth);
+    player.addComponent<BallHolder>();
+
+    Animation anim = AssetManager::getAnimation("player");
+    player.addComponent<Animation>(anim);
+
+    SDL_Texture *tex = TextureManager::load(spritePath);
+    SDL_FRect playerSrc = anim.clips[anim.currentClip].frameIndices[0];
+    SDL_FRect playerDst{playerTransform.position.x, playerTransform.position.y, 64, 64};
+    player.addComponent<Sprite>(tex, playerSrc, playerDst);
+    auto &playerCollider = player.addComponent<Collider>("player");
+    playerCollider.rect.w = playerDst.w;
+    playerCollider.rect.h = playerDst.h;
+
+    return player;
+}
+
+Entity &Scene::createPlayerIcon(Vector2D iconPosition, const char *iconPath) {
+    auto &playerIcon(world.createEntity());
+    auto iconTransform = playerIcon.addComponent<Transform>(iconPosition, 0.0f, 1.0f);
+
+    SDL_Texture *iconTex = TextureManager::load(iconPath);
+    SDL_FRect iconSrc{0, 0, 80, 80};
+    SDL_FRect iconDest{iconTransform.position.x, iconTransform.position.y, 80, 80};
+    auto& iconSpite = playerIcon.addComponent<Sprite>(iconTex, iconSrc, iconDest);
+    iconSpite.renderLayer = RenderLayer::UI;
+    iconSpite.visible = true;
+
+    return playerIcon;
+}
 
 Entity &Scene::createPlayerTitleLabel(Entity &entity, int windowWidth, int windowHeight) {
     auto& playerTitleLabel(world.createEntity());
