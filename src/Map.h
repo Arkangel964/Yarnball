@@ -14,6 +14,7 @@
 struct SpawnPoint {
     Vector2D position;
     Vector2D direction;
+    bool isUsed{false};
 };
 
 struct MapProperties {

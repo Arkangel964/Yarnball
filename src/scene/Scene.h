@@ -43,7 +43,7 @@ class Scene {
     Entity& createPlayerLivesLabel(Entity& entity, int windowWidth, int windowHeight);
     Entity& createPlayerYarnballsLabel(Entity& entity, int windowWidth, int windowHeight);
 
-    void createPickupSpawner(int windowWidth, int windowHeight);
+    void createPickupSpawner(float interval);
     void createHazardSpawner(float interval);
 };
 

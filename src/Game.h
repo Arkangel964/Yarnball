@@ -16,6 +16,7 @@ struct GameState {
     int playerHealth;
     int availableBallsForSpawning;
     int availableHazardsForSpawning;
+    bool spawnBallOnPlayer1Side{true};
 };
 
 class Game {

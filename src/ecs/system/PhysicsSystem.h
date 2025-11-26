@@ -18,12 +18,13 @@ public:
             if (!entity->hasComponent<RigidBody>())
                 continue;
             auto& rigidBody = entity->getComponent<RigidBody>();
+            // Ensure this rigidbody has a velocity
+            if (!entity->hasComponent<Velocity>())
+                entity->addComponent<Velocity>(Vector2D(), Vector2D(), 0);
+            auto& velocity = entity->getComponent<Velocity>();
 
             if (!entity->hasComponent<Impulse>()) {
                 // No new impulse, decay normally
-                if (!entity->hasComponent<Velocity>())
-                    continue;
-                auto& velocity = entity->getComponent<Velocity>();
                 if (velocity.speed > 0.0f) {
                     velocity.speed = max(0.0f, velocity.speed - rigidBody.friction);
                     velocity.speed = velocity.speed;
@@ -40,17 +41,7 @@ public:
                 }
             } else {
                 auto& impulse = entity->getComponent<Impulse>();
-                // Verify this rigidbody entity has a velocity
-                if (!entity->hasComponent<Velocity>()) {
-                    // Set direction and speed based on the incoming impulse
-                    float speed = min(impulse.force, rigidBody.maxSpeed);    // Cap speed to maximum allowed value
-                    entity->addComponent<Velocity>(impulse.direction, impulse.direction, speed);
-                    // Remove impulse
-                    entity->removeComponent<Impulse>();
-                    continue;
-                }
                 // Get this entities velocity and merge with impulse
-                auto& velocity = entity->getComponent<Velocity>();
                 velocity.oldDirection = velocity.direction;
 
                 Vector2D velocityVec = velocity.direction * velocity.speed;

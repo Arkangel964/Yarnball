@@ -99,7 +99,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     createPlayerYarnballsLabel(player2, windowWidth, windowHeight);
 
     //dodgeball spawner
-    createPickupSpawner(windowWidth, windowHeight);
+    createPickupSpawner(5.0f);
     createHazardSpawner(1.f);
 
     //add scene state
@@ -356,34 +356,39 @@ Entity& Scene::createPlayerYarnballsLabel(Entity& entity, int windowWidth, int w
 
 }
 
-void Scene::createPickupSpawner(int windowWidth, int windowHeight) {
+void Scene::createPickupSpawner(float interval) {
     auto &ballSpawner(world.createEntity());
-    // TODO: Get positions of spawners on each side and handle logic if they are "used" or not
-    Transform ballSpawnTransform = ballSpawner.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f);
-    ballSpawner.addComponent<TimedSpawner>(5.0f, [this, ballSpawnTransform, windowWidth, windowHeight] {
-        if (Game::gameState.availableBallsForSpawning > 0) {
-            Game::gameState.availableBallsForSpawning -= 1;
-            //create our projectile (ball)
-            auto &e(world.createDeferredEntity());
-
-            //https://stackoverflow.com/questions/686353/random-float-number-generation
-            // TODO: See createHazardSpawner for possible better/cleaner handling of random number gen
-            float ballTransformX = ballSpawnTransform.position.x + static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(windowWidth -ballSpawnTransform.position.x)));
-            float ballTransformY = ballSpawnTransform.position.y + static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(windowHeight -ballSpawnTransform.position.y)));
-
-            e.addComponent<Transform>(Vector2D(ballTransformX, ballTransformY), 0.0f, 1.0f);
-
-            SDL_Texture *tex = TextureManager::load("../asset/yarnball_blue_stationary.png");
-            int spriteSize = 64;
-            int ballSize = 32;
-            SDL_FRect spriteSrc(0, 0, spriteSize, spriteSize);
-            SDL_FRect dest(ballSpawnTransform.position.x, ballSpawnTransform.position.y, ballSize, ballSize);
-            e.addComponent<Sprite>(tex, spriteSrc, dest);
-
-            auto &c = e.addComponent<Collider>("inactiveBall");
-            c.rect.w = dest.w;
-            c.rect.h = dest.h;
+    ballSpawner.addComponent<TimedSpawner>(interval, [this] {
+        if (Game::gameState.availableBallsForSpawning <= 0) return;
+        Game::gameState.availableBallsForSpawning -= 1;
+        auto &e(world.createDeferredEntity());
+        // Get a valid spawn point from the side
+        SpawnPoint *spawn = nullptr;
+        auto &pickupSpawns = Game::gameState.spawnBallOnPlayer1Side ? world.getMap().mapProps.player1PickupSpawns : world.getMap().mapProps.player2PickupSpawns;
+        while (!spawn) {
+            int index = rand() % pickupSpawns.size();
+            if (!pickupSpawns[index].isUsed) {
+                pickupSpawns[index].isUsed = true;
+                spawn = &pickupSpawns[index];
+            }
         }
+        int spriteSize = 64;
+        int ballSize = 32;
+        Vector2D newPosition = spawn->position;
+        newPosition.x -= ballSize / 2.0f;
+        newPosition.y -= ballSize / 2.0f;
+        e.addComponent<Transform>(newPosition, 0.0f, 1.0f);
+        // Sprite setup
+        SDL_Texture *tex = TextureManager::load("../asset/yarnball_blue_stationary.png");
+        SDL_FRect spriteSrc(0, 0, spriteSize, spriteSize);
+        SDL_FRect dest(newPosition.x, newPosition.y, ballSize, ballSize);
+        e.addComponent<Sprite>(tex, spriteSrc, dest);
+        // Collider setup
+        auto &c = e.addComponent<Collider>("inactiveBall");
+        c.rect.w = dest.w;
+        c.rect.h = dest.h;
+        // Flip which side should go next
+        Game::gameState.spawnBallOnPlayer1Side = !Game::gameState.spawnBallOnPlayer1Side;
     });
 }
 
@@ -403,7 +408,7 @@ void Scene::createHazardSpawner(float interval) {
             SpawnPoint spawn = spawnPoints[index];
             spawn.position.x -= ballSize / 2.0f;
             spawn.position.y -= ballSize / 2.0f;
-            e.addComponent<Transform>(Vector2D(spawn.position.x, spawn.position.y), 0.0f, 1.0f);
+            e.addComponent<Transform>(spawn.position, 0.0f, 1.0f);
 
             SDL_Texture *tex = TextureManager::load("../asset/yarnball_pink_moving.png");
             SDL_FRect spriteSrc(0, 0, spriteSize, spriteSize);
