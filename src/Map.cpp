@@ -73,7 +73,7 @@ void Map::load(const char* path, SDL_Texture* ts) {
         } else if (strcmp(groupName, "Hazard Layer") == 0) {
             for (auto* item = objectGroup->FirstChildElement("object"); item != nullptr; item = item->NextSiblingElement("object")) {
                 SpawnPoint newPoint = parseSpawnPoint(item);
-                // TODO: Spawner logic
+                mapProps.hazardSpawns.push_back(newPoint);
             };
         } else if (strcmp(groupName, "Player1 Pickup Layer") == 0) {
             for (auto* item = objectGroup->FirstChildElement("object"); item != nullptr; item = item->NextSiblingElement("object")) {
@@ -138,6 +138,8 @@ SpawnPoint Map::parseSpawnPoint(tinyxml2::XMLElement* item) const {
         auto* propertyElement = pointProperties->FirstChildElement("property");
         float rotation = propertyElement->FloatAttribute("value");
         newPoint.direction = Vector2D(cos(rotation * M_PI / 180.0f), sin(rotation * M_PI / 180.0f));
+    } else {
+        newPoint.direction = Vector2D();
     }
     return newPoint;
 }

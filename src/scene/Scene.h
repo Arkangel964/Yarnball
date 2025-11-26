@@ -44,6 +44,7 @@ class Scene {
     Entity& createPlayerYarnballsLabel(Entity& entity, int windowWidth, int windowHeight);
 
     void createPickupSpawner(int windowWidth, int windowHeight);
+    void createHazardSpawner(float interval);
 };
 
 #endif //TUTORIAL1_SCENE_H

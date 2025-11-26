@@ -15,6 +15,7 @@ using namespace std;
 struct GameState {
     int playerHealth;
     int availableBallsForSpawning;
+    int availableHazardsForSpawning;
 };
 
 class Game {

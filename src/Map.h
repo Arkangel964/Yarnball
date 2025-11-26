@@ -22,7 +22,7 @@ struct MapProperties {
     std::unordered_map<std::string, SpawnPoint> playerSpawns;
     std::vector<SpawnPoint> player1PickupSpawns;
     std::vector<SpawnPoint> player2PickupSpawns;
-//    std::vector<SpawnPoint> hazardSpawns;
+    std::vector<SpawnPoint> hazardSpawns;
 };
 
 class Map {

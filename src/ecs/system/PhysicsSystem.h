@@ -29,6 +29,10 @@ public:
                     velocity.speed = velocity.speed;
                 } else {
                     if (entity->hasComponent<DestroyOnStop>()) {
+                        auto& callbackComponent = entity->getComponent<DestroyOnStop>();
+                        if (callbackComponent.onDestroy) {
+                            callbackComponent.onDestroy();
+                        }
                         entity->destroy();
                     } else {
                         velocity.direction = {0, 0};
