@@ -147,6 +147,22 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
         if (holder.numBallsHeld < 2) {
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("pickup"));
             holder.numBallsHeld++;
+            bool found = false;
+            for ( auto& spawn : world.getMap().mapProps.player1PickupSpawns ) {
+                if (spawn.ballEntity == other) {
+                    spawn.ballEntity = nullptr;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                for ( auto& spawn : world.getMap().mapProps.player2PickupSpawns ) {
+                    if (spawn.ballEntity == other) {
+                        spawn.ballEntity = nullptr;
+                        break;
+                    }
+                }
+            }
             other->destroy();
         } else {
             cout << "Player was already holding too many balls" << endl;
@@ -200,6 +216,7 @@ void EventResponseSystem::onProjectileCollision(const CollisionEvent &e, Entity*
 
 bool EventResponseSystem::getCollisionEntities(const CollisionEvent &e, const char *mainTag, const char *otherTag, Entity *&main, Entity *&other) {
     if (e.entityA == nullptr || e.entityB == nullptr) return false;
+    if (!e.entityA->isActive() || !e.entityB->isActive()) return false;
     if (!(e.entityA->hasComponent<Collider>() && e.entityB->hasComponent<Collider>())) return false;
 
     auto &colA = e.entityA->getComponent<Collider>();

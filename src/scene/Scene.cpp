@@ -3,6 +3,7 @@
 #include "../manager/AssetManager.h"
 #include "Game.h"
 
+#define PLAYER1_UI_Offset 10.0f
 #define PLAYER2_UI_Offset 160.0f
 
 Scene::Scene(SceneType sceneType, const char *sceneName, const char *mapPath, const int windowWidth,
@@ -87,7 +88,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player2.addComponent<Player2Tag>();
 
     // Create player 1's portrait
-    createPlayerIcon(Vector2D(10, 15), "../asset/ui/player1icon.png");
+    createPlayerIcon(Vector2D(PLAYER1_UI_Offset, 15), "../asset/ui/player1icon.png");
     createPlayerTitleLabel(player1, windowWidth, windowHeight);
     createPlayerLivesLabel(player1, windowWidth, windowHeight);
     createPlayerYarnballsLabel(player1, windowWidth, windowHeight);
@@ -275,7 +276,7 @@ Entity &Scene::createPlayerTitleLabel(Entity &entity, int windowWidth, int windo
     playerTitleLabel.addComponent<Label>(label);
 
     if (entity.hasComponent<Player1Tag>()) {
-        playerTitleLabel.addComponent<Transform>(Vector2D(105, 10), 0.0f, 1.0f);
+        playerTitleLabel.addComponent<Transform>(Vector2D(PLAYER1_UI_Offset+80+15, 10), 0.0f, 1.0f);
     } else {
         playerTitleLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_Offset+15, 10), 0.0f, 1.0f);
     }
@@ -311,7 +312,7 @@ Entity& Scene::createPlayerLivesLabel(Entity& entity, int windowWidth, int windo
     playerLivesLabel.addComponent<Label>(label);
 
     if (entity.hasComponent<Player1Tag>()) {
-        playerLivesLabel.addComponent<Transform>(Vector2D(105, 45), 0.0f, 1.0f);
+        playerLivesLabel.addComponent<Transform>(Vector2D(PLAYER1_UI_Offset+80+15, 45), 0.0f, 1.0f);
     } else {
         playerLivesLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_Offset+15, 45), 0.0f, 1.0f);
     }
@@ -347,7 +348,7 @@ Entity& Scene::createPlayerYarnballsLabel(Entity& entity, int windowWidth, int w
     playerYarnballsLabel.addComponent<Label>(label);
 
     if (entity.hasComponent<Player1Tag>()) {
-        playerYarnballsLabel.addComponent<Transform>(Vector2D(105, 75), 0.0f, 1.0f);
+        playerYarnballsLabel.addComponent<Transform>(Vector2D(PLAYER1_UI_Offset+80+15, 75), 0.0f, 1.0f);
     } else {
         playerYarnballsLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_Offset+15, 75), 0.0f, 1.0f);
     }
@@ -365,11 +366,35 @@ void Scene::createPickupSpawner(float interval) {
         // Get a valid spawn point from the side
         SpawnPoint *spawn = nullptr;
         auto &pickupSpawns = Game::gameState.spawnBallOnPlayer1Side ? world.getMap().mapProps.player1PickupSpawns : world.getMap().mapProps.player2PickupSpawns;
-        while (!spawn) {
+        auto &otherPickupSpawns = !Game::gameState.spawnBallOnPlayer1Side ? world.getMap().mapProps.player1PickupSpawns : world.getMap().mapProps.player2PickupSpawns;
+        // First try to get a free spawn point on the correct side 2 * pickupSpawns.size()
+        int numAttempts = 0;
+        while (!spawn && numAttempts <= 2 * pickupSpawns.size()) {
+            numAttempts++;
             int index = rand() % pickupSpawns.size();
-            if (!pickupSpawns[index].isUsed) {
-                pickupSpawns[index].isUsed = true;
+            if (!pickupSpawns[index].ballEntity) {
+                pickupSpawns[index].ballEntity = &e;
                 spawn = &pickupSpawns[index];
+            }
+        }
+        // If we didn't get one, just loop through the list once to make sure we didn't get really unlucky in rng
+        if (!spawn) {
+            for (int i = 0; i < pickupSpawns.size(); i++) {
+                if (!pickupSpawns[i].ballEntity) {
+                    pickupSpawns[i].ballEntity = &e;
+                    spawn = &pickupSpawns[i];
+                    break;
+                }
+            }
+        }
+        // If we STILL don't have one, just get any one
+        if (!spawn) {
+            for (int i = 0; i < otherPickupSpawns.size(); i++) {
+                if (!otherPickupSpawns[i].ballEntity) {
+                    otherPickupSpawns[i].ballEntity = &e;
+                    spawn = &otherPickupSpawns[i];
+                    break;
+                }
             }
         }
         int spriteSize = 64;

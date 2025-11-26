@@ -11,10 +11,12 @@
 #include <vector>
 #include "tinyxml2.h"
 
+class Entity;
+
 struct SpawnPoint {
     Vector2D position;
     Vector2D direction;
-    bool isUsed{false};
+    Entity* ballEntity{nullptr};
 };
 
 struct MapProperties {
