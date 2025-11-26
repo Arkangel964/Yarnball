@@ -36,7 +36,7 @@ public:
 
     SDL_Texture* tileset = nullptr;
     MapProperties mapProps;
-    std::vector<std::vector<int>> tileData;
+    std::vector<std::vector<std::vector<int>>> layeredTileData;
     std::vector<Collider> wallColliders;
     std::vector<Vector2D> itemPositions;
     Collider dividerCollider;

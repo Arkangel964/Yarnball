@@ -27,21 +27,24 @@ void Map::load(const char* path, SDL_Texture* ts) {
         mapProps.scale = scaleProp->FloatAttribute("value");
     }
     //parse terrain data
-    auto* layer = mapNode->FirstChildElement("layer");
-    auto* data = layer->FirstChildElement("data");
-    std::string csv = data->GetText();
-    std::stringstream ss(csv);
-    tileData = std::vector(mapProps.height, std::vector<int>(mapProps.width));
-    for (int i = 0; i < mapProps.height; i++) {
-        for (int j = 0; j < mapProps.width; j++) {
-            std::string val;
-            //read chars until comma or EOS
-            if (!std::getline(ss, val, ',')) break;
-            tileData[i][j] = std::stoi(val); //string to int
+    int layerIndex = 0;
+    for (auto* layer = mapNode->FirstChildElement("layer"); layer != nullptr; layer = layer->NextSiblingElement("layer")) {
+        auto *data = layer->FirstChildElement("data");
+        std::string csv = data->GetText();
+        std::stringstream ss(csv);
+        layeredTileData.push_back(std::vector(mapProps.height, std::vector<int>(mapProps.width)));
+        for (int i = 0; i < mapProps.height; i++) {
+            for (int j = 0; j < mapProps.width; j++) {
+                std::string val;
+                //read chars until comma or EOS
+                if (!std::getline(ss, val, ',')) break;
+                layeredTileData[layerIndex][i][j] = std::stoi(val); //string to int
+            }
         }
+        layerIndex++;
     }
 
-    for (auto* objectGroup = layer->NextSiblingElement("objectgroup"); objectGroup != nullptr; objectGroup = objectGroup->NextSiblingElement("objectgroup")) {
+    for (auto* objectGroup = mapNode->FirstChildElement("objectgroup"); objectGroup != nullptr; objectGroup = objectGroup->NextSiblingElement("objectgroup")) {
         const char* groupName = objectGroup->Attribute("name");
         //wall collisions
         if (strcmp(groupName, "Collision Layer") == 0) {
@@ -99,20 +102,24 @@ void Map::draw(const Camera& cam) {
     SDL_FRect src{}, dest{};
     dest.w = dest.h = 16 * mapProps.scale;
 
-    for (int row = 0; row < mapProps.height; row++) {
-        for (int col = 0; col < mapProps.width; col++) {
-            int type = tileData[row][col];
+    for (int layerIndex = 0; layerIndex < layeredTileData.size(); layerIndex++){
+        for (int row = 0; row < mapProps.height; row++) {
+            for (int col = 0; col < mapProps.width; col++) {
+                int type = layeredTileData[layerIndex][row][col];
+                if (type == 0)
+                    continue;
 
-            float worldX =static_cast<float>(col) * dest.w;
-            float worldY = static_cast<float>(row) * dest.h;
+                float worldX =static_cast<float>(col) * dest.w;
+                float worldY = static_cast<float>(row) * dest.h;
 
-            //converting from world space to screen space
-            dest.x = std::round(worldX - cam.view.x);
-            dest.y = std::round(worldY - cam.view.y);
+                //converting from world space to screen space
+                dest.x = std::round(worldX - cam.view.x);
+                dest.y = std::round(worldY - cam.view.y);
 
-            src = indexToSpriteCoords(type, 16, 8);
+                src = indexToSpriteCoords(type, 16, 8);
 
-            TextureManager::draw(tileset, &src, &dest);
+                TextureManager::draw(tileset, &src, &dest);
+            }
         }
     }
 }
