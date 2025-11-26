@@ -61,6 +61,22 @@ void Map::load(const char* path, SDL_Texture* ts) {
                 itemPos.y = item->FloatAttribute("y") * mapProps.scale;
                 itemPositions.push_back(itemPos);
             };
+        } else if (strcmp(groupName, "Hazard Layer") == 0) {
+            for (auto* item = objectGroup->FirstChildElement("object"); item != nullptr; item = item->NextSiblingElement("object")) {
+                SpawnPoint newPoint = parseSpawnPoint(item);
+                // TODO: Spawner logic
+            };
+        } else if (strcmp(groupName, "Ball Spawner Layer") == 0) {
+            for (auto* item = objectGroup->FirstChildElement("object"); item != nullptr; item = item->NextSiblingElement("object")) {
+                SpawnPoint newPoint = parseSpawnPoint(item);
+                // TODO: Spawner logic
+            };
+        } else if (strcmp(groupName, "Player Spawn Layer") == 0) {
+            for (auto* item = objectGroup->FirstChildElement("object"); item != nullptr; item = item->NextSiblingElement("object")) {
+                SpawnPoint newPoint = parseSpawnPoint(item);
+                std::string name = item->Attribute("name");
+                mapProps.playerSpawns.emplace(name, newPoint);
+            };
         }
     }
     /*
@@ -122,4 +138,15 @@ SDL_FRect Map::indexToSpriteCoords(int index, int tileSize, int tilesetWidth) {
     return spriteCoords;
 }
 
-
+SpawnPoint Map::parseSpawnPoint(tinyxml2::XMLElement* item) const {
+    SpawnPoint newPoint;
+    newPoint.position.x = item->FloatAttribute("x") * mapProps.scale;
+    newPoint.position.y = item->FloatAttribute("y") * mapProps.scale;
+    auto* pointProperties = item->FirstChildElement("properties");
+    if (pointProperties) {
+        auto* propertyElement = pointProperties->FirstChildElement("property");
+        float rotation = propertyElement->FloatAttribute("value");
+        newPoint.direction = Vector2D(cos(rotation * M_PI / 180.0f), sin(rotation * M_PI / 180.0f));
+    }
+    return newPoint;
+}

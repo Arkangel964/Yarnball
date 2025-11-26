@@ -80,11 +80,15 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
 
     //Create the player1
     auto &player1(world.createEntity());
-    auto &player1Transform(player1.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f));
+    auto player1SpawnPoint = world.getMap().mapProps.playerSpawns.find("player1")->second;
+    player1SpawnPoint.position.x -= 64.0f / 2.0f;
+    player1SpawnPoint.position.y -= 64.0f / 2.0f;
+    auto &player1Transform(player1.addComponent<Transform>(player1SpawnPoint.position, 0.0f, 1.0f));
     player1Transform.oldPosition = player1Transform.position;
 
     // Create player 1's stats
     player1.addComponent<RigidBody>(240.0f, 240.0f);
+    player1.addComponent<Velocity>(Vector2D(0.0f,0.0f), player1SpawnPoint.direction, 0.0f);
     player1.addComponent<Health>(Game::gameState.playerHealth);
     player1.addComponent<BallHolder>();
 
@@ -105,11 +109,15 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
 
     //Create the player2
     auto &player2(world.createEntity());
-    auto &player2Transform(player2.addComponent<Transform>(Vector2D(0, 64), 0.0f, 1.0f));
+    auto player2SpawnPoint = world.getMap().mapProps.playerSpawns.find("player2")->second;
+    player2SpawnPoint.position.x -= 64.0f / 2.0f;
+    player2SpawnPoint.position.y -= 64.0f / 2.0f;
+    auto &player2Transform(player2.addComponent<Transform>(player2SpawnPoint.position, 0.0f, 1.0f));
     player2Transform.oldPosition = player2Transform.position;
 
     // Create player 2's stats
     player2.addComponent<RigidBody>(240.0f, 240.0f);
+    player2.addComponent<Velocity>(Vector2D(0.0f,0.0f), player2SpawnPoint.direction, 0.0f);
     player2.addComponent<Health>(Game::gameState.playerHealth);
     player2.addComponent<BallHolder>();
 
