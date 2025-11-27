@@ -15,6 +15,7 @@ EventResponseSystem::EventResponseSystem(World &world) {
 
         onCollision(collision, "player", "item", world);
         onCollision(collision, "player", "wall", world);
+        onCollision(collision, "player", "divider", world);
         onCollision(collision, "player", "projectile", world);
         onCollision(collision, "player", "player", world);
         onCollision(collision, "player", "inactiveBall", world);
@@ -84,7 +85,7 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
                 Game::onSceneChangeRequest("level2");
             }
         }
-    } else if (std::string(otherTag) == "wall") {
+    } else if (std::string(otherTag) == "wall" || std::string(otherTag) == "divider") {
         if (e.state != CollisionState::Stay) return;
 
         auto &t = player->getComponent<Transform>();
@@ -103,20 +104,20 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
         //this logic is simple and direct
         //ideally we would only operate on data in an update function (hinting at transient entities)
         auto &health = player->getComponent<Health>();
-        if (other->hasComponent<Ball>()) {
-            auto& ball = other->getComponent<Ball>();
-            if ((player->hasComponent<Player1Tag>() && ball.playerNum != 1) || (player->hasComponent<Player2Tag>() && ball.playerNum != 2)) {
-                health.currentHealth--;
-                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("hurt"));
-                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
-            } else {
-                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
-            }
-        } else {
+//        if (other->hasComponent<Ball>()) {
+//            auto& ball = other->getComponent<Ball>();
+//            if ((player->hasComponent<Player1Tag>() && ball.playerNum != 1) || (player->hasComponent<Player2Tag>() && ball.playerNum != 2)) {
+//                health.currentHealth--;
+//                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("hurt"));
+//                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
+//            } else {
+//                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
+//            }
+//        } else {
             health.currentHealth--;
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("hurt"));
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
-        }
+//        }
 
         std::cout << health.currentHealth << std::endl;
         if (health.currentHealth <= 0) {
@@ -169,6 +170,7 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
         if (holder.numBallsHeld < 2) {
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("pickup"));
             holder.numBallsHeld++;
+            erase_if(Game::gameState.usedSpawnPoints, [&](auto& p){ return p.second == other; });
             other->destroy();
         } else {
             cout << "Player was already holding too many balls" << endl;
@@ -222,6 +224,7 @@ void EventResponseSystem::onProjectileCollision(const CollisionEvent &e, Entity*
 
 bool EventResponseSystem::getCollisionEntities(const CollisionEvent &e, const char *mainTag, const char *otherTag, Entity *&main, Entity *&other) {
     if (e.entityA == nullptr || e.entityB == nullptr) return false;
+    if (!e.entityA->isActive() || !e.entityB->isActive()) return false;
     if (!(e.entityA->hasComponent<Collider>() && e.entityB->hasComponent<Collider>())) return false;
 
     auto &colA = e.entityA->getComponent<Collider>();

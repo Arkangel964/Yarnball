@@ -40,6 +40,10 @@ struct RigidBody {
     float friction{};   // Apply decay per frame to slow entities down
 };
 
+struct DestroyOnStop{
+    std::function<void()> onDestroy{};
+};
+
 // UI rendering
 enum class RenderLayer {
     World,
@@ -143,6 +147,5 @@ struct Label {
 struct Player1Tag{};
 struct Player2Tag{};
 struct ProjectileTag{};
-struct DestroyOnStop{};
 
 #endif //TUTORIAL1_COMPONENT_H
