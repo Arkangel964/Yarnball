@@ -32,12 +32,10 @@ void Scene::initMainMenu(int windowWidth, int windowHeight) {
     auto menuTransform = menu.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f);
 
     SDL_Texture *menuTex = TextureManager::load("../asset/menu.png");
-    SDL_FRect menuSrc{0, 0, 800, 600};
-    SDL_FRect menuDest{menuTransform.position.x, menuTransform.position.y, (float) windowWidth, (float) windowHeight};
+    SDL_FRect menuSrc{0, 0, static_cast<float>(windowWidth), static_cast<float>(windowHeight)};
+    SDL_FRect menuDest{menuTransform.position.x, menuTransform.position.y, static_cast<float>(windowWidth),
+        static_cast<float>(windowHeight)};
     menu.addComponent<Sprite>(menuTex, menuSrc, menuDest);
-
-    auto &settingsOverlay = createSettingsOverlay(windowWidth, windowHeight);
-    createCogButton(windowWidth, windowHeight, settingsOverlay);
 };
 
 void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight) {
@@ -53,11 +51,6 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
         coll.rect.y = collider.rect.y;
         coll.rect.w = collider.rect.w;
         coll.rect.h = collider.rect.h;
-
-//        SDL_Texture *tex = TextureManager::load("../asset/spritesheet.png");
-//        SDL_FRect colSrc{0, 32, 32, 32};
-//        SDL_FRect colDst{coll.rect.x, coll.rect.y, coll.rect.w, coll.rect.h};
-//        e.addComponent<Sprite>(tex, colSrc, colDst);
     }
 
     // Create middle divider
@@ -123,12 +116,11 @@ void Scene::initGameOver(int windowWidth, int windowHeight) {
     auto &gameOver(world.createEntity());
     auto gameOverTransform = gameOver.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f);
 
-    SDL_Texture *menuTex = TextureManager::load("../asset/gameover.png");
-    SDL_FRect menuSrc{0, 0, 800, 600};
+    SDL_Texture *menuTex = TextureManager::load(Game::gameState.playerWon == 1 ?
+        "../asset/gameover1.png" : "../asset/gameover2.png");
+    SDL_FRect menuSrc{0, 0, static_cast<float>(windowWidth), static_cast<float>(windowHeight)};
     SDL_FRect menuDest{gameOverTransform.position.x, gameOverTransform.position.y, (float) windowWidth, (float) windowHeight};
     gameOver.addComponent<Sprite>(menuTex, menuSrc, menuDest);
-
-    // place text
 
 }
 
