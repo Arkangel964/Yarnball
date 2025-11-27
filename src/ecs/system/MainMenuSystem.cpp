@@ -6,12 +6,12 @@
 
 #include "Game.h"
 
-void MainMenuSystem::update(const std::vector<SDL_Event>& events, SceneType sceneType) {
+void MainMenuSystem::update(const std::vector<SDL_Event>& events) {
     for (const auto& event: events) {
         if (event.type == SDL_EVENT_KEY_DOWN) {
             switch (event.key.key) {
                 case SDLK_SPACE:
-                    Game::onSceneChangeRequest(sceneType == SceneType::MainMenu ? "level1" : "mainmenu");
+                    Game::onSceneChangeRequest("level1");
                     break;
             }
         }

@@ -11,7 +11,7 @@
 
 class MainMenuSystem {
     public:
-    void update(const std::vector<SDL_Event>& events, SceneType sceneType);
+    void update(const std::vector<SDL_Event>& events);
 
 };
 
