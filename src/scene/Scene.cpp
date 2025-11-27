@@ -5,11 +5,17 @@
 
 #define PLAYER1_UI_Offset 10.0f
 #define PLAYER2_UI_Offset 160.0f
+constexpr int PLAYER_LIVES = 9;
 
 Scene::Scene(SceneType sceneType, const char *sceneName, const char *mapPath, const int windowWidth,
              const int windowHeight) : name(sceneName), type(sceneType) {
     if (sceneType == SceneType::MainMenu) {
         initMainMenu(windowWidth, windowHeight);
+        return;
+    }
+
+    if (sceneType == SceneType::GameOver) {
+        initGameOver(windowWidth, windowHeight);
         return;
     }
 
@@ -107,6 +113,25 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     auto &state(world.createEntity());
     state.addComponent<SceneState>();
 };
+
+void Scene::initGameOver(int windowWidth, int windowHeight) {
+    //camera
+    auto &cam = world.createEntity();
+    cam.addComponent<Camera>();
+
+    // game over
+    auto &gameOver(world.createEntity());
+    auto gameOverTransform = gameOver.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f);
+
+    SDL_Texture *menuTex = TextureManager::load("../asset/gameover.png");
+    SDL_FRect menuSrc{0, 0, 800, 600};
+    SDL_FRect menuDest{gameOverTransform.position.x, gameOverTransform.position.y, (float) windowWidth, (float) windowHeight};
+    gameOver.addComponent<Sprite>(menuTex, menuSrc, menuDest);
+
+    // place text
+
+}
+
 
 Entity &Scene::createSettingsOverlay(int windowWidth, int windowHeight) {
     auto &overlay(world.createEntity());
@@ -218,7 +243,7 @@ Entity &Scene::createPlayerEntity(const char *spawnLocationName, const char *spr
     // Create player's stats
     player.addComponent<RigidBody>(240.0f, 240.0f);
     player.addComponent<Velocity>(Vector2D(0.0f, 0.0f), spawnPoint.direction, 0.0f);
-    player.addComponent<Health>(Game::gameState.playerHealth);
+    player.addComponent<Health>(PLAYER_LIVES);
     player.addComponent<BallHolder>();
 
     Animation anim = AssetManager::getAnimation("player");

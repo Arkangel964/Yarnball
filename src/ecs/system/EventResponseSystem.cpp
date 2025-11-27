@@ -119,11 +119,34 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
 //        }
 
-        Game::gameState.playerHealth = health.currentHealth;
-
         std::cout << health.currentHealth << std::endl;
         if (health.currentHealth <= 0) {
+            if (player->hasComponent<Player1Tag>()) {
+                Game::gameState.playerWon = 2;
+
+            } else {
+                Game::gameState.playerWon = 1;
+            }
+
+            Entity* otherPlayer = nullptr;
+
+            for (auto &entity: world.getEntities()) {
+                if ((player->hasComponent<Player1Tag>() && entity->hasComponent<Player2Tag>()) || (player->hasComponent<Player2Tag>() && entity->hasComponent<Player1Tag>())) {
+                    otherPlayer = entity.get();
+                }
+            }
+
+            if (otherPlayer) {
+                Game::gameState.remainingLives = otherPlayer->getComponent<Health>().currentHealth;
+                Game::gameState.numBallsThrown = otherPlayer->getComponent<BallHolder>().numBallsHeld;
+                otherPlayer->destroy();
+            }
             player->destroy();
+            
+            std::cout << "winning player: " << Game::gameState.playerWon << std::endl;
+            std::cout << "lives remaining: " << Game::gameState.remainingLives << std::endl;
+            std::cout << "yarnballs: " << Game::gameState.numBallsThrown << std::endl;
+
             Game::onSceneChangeRequest("gameover");
         }
 

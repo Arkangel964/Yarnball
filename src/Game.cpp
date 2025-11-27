@@ -15,7 +15,6 @@
 
 GameState Game::gameState{};
 std::function<void(string)> Game::onSceneChangeRequest;
-constexpr int PLAYER_LIVES = 9;
 
 Game::Game() {
 
@@ -83,21 +82,18 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
     AssetManager::loadAnimation("player", "../asset/animations/cat_animations.xml");
     AssetManager::loadAnimation("enemy", "../asset/animations/bird_animations.xml");
 
-    //init game data/state
-    gameState.playerHealth = PLAYER_LIVES;
-
     //load scenes
     sceneManager.loadScene(SceneType::MainMenu,"mainmenu", nullptr, width, height);
     sceneManager.loadScene(SceneType::Gameplay,"level1", "../asset/gym.tmx", width, height);
     // TODO: Remove once safe
     sceneManager.loadScene(SceneType::Gameplay,"level2", "../asset/gym.tmx", width, height);
+    sceneManager.loadScene(SceneType::GameOver, "gameover", nullptr, width, height);
 
     //start music
     audioManager.playMusic("theme");
 
     //start level 1
     sceneManager.changeSceneDeferred("mainmenu");
-
 
     //resolve scene callback
     onSceneChangeRequest = [&](string sceneName) {
@@ -106,13 +102,6 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
             isRunning = false;
             return;
         }
-
-        if (sceneName == "gameover") {
-            std::cout << "Game Over :(" << std::endl;
-            isRunning = false;
-            return;
-        }
-
         sceneManager.changeSceneDeferred(sceneName);
     };
 }
