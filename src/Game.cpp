@@ -85,8 +85,6 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
     //load scenes
     sceneManager.loadScene(SceneType::MainMenu,"mainmenu", nullptr, width, height);
     sceneManager.loadScene(SceneType::Gameplay,"level1", "../asset/gym.tmx", width, height);
-    // TODO: Remove once safe
-    sceneManager.loadScene(SceneType::Gameplay,"level2", "../asset/gym.tmx", width, height);
     sceneManager.loadScene(SceneType::GameOver, "gameover", nullptr, width, height);
 
     //start music
@@ -97,11 +95,6 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
 
     //resolve scene callback
     onSceneChangeRequest = [&](string sceneName) {
-        if (sceneManager.currentScene->getName() == "level2" && sceneName == "level2"){
-            std::cout << "You win!" << std::endl;
-            isRunning = false;
-            return;
-        }
         sceneManager.changeSceneDeferred(sceneName);
     };
 }
