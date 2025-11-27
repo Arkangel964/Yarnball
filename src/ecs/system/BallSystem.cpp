@@ -22,7 +22,7 @@ void BallSystem::update(World &world, float dt) {
                 b.shouldThrowBall = false;
                 cout << "Checking if ball can be thrown" << endl;
                 if (b.numBallsHeld > 0 && b.cooldown <= 0.0f) {
-                    float ballSprSize = 32;
+                    float ballSprSize = 25;
                     float middleX = t.position.x + (spr.dst.w / 2) - (ballSprSize/2);
                     float middleY = t.position.y + (spr.dst.h / 2) - (ballSprSize/2);
 
@@ -48,8 +48,8 @@ void BallSystem::update(World &world, float dt) {
 
                     //create the ball
                     auto &ball(world.createDeferredEntity());
-                    SDL_Texture *tex = TextureManager::load("../asset/ball.png");
-                    SDL_FRect animSrc(0, 0, 32, 32);
+                    SDL_Texture *tex = TextureManager::load("../asset/yarnball_blue_moving.png");
+                    SDL_FRect animSrc(0, 0, 50, 50);
 
                     ball.addComponent<Sprite>(tex, animSrc, dest);
 

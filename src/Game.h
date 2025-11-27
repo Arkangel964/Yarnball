@@ -13,8 +13,13 @@
 using namespace std;
 
 struct GameState {
-    int playerHealth;
     int availableBallsForSpawning;
+    int availableHazardsForSpawning;
+    bool spawnBallOnPlayer1Side{true};
+    std::unordered_map<SpawnPoint*, Entity*> usedSpawnPoints;
+    int playerWon = 1;
+    int remainingLives = 0;
+    int numBallsThrown = 0;
 };
 
 class Game {

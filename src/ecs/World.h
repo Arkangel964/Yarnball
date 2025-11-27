@@ -56,7 +56,7 @@ public:
     World() = default;
 
     void update(float deltaTime, const std::vector<SDL_Event>& events, SceneType sceneType) {
-        if (sceneType == SceneType::MainMenu) {
+        if (sceneType != SceneType::Gameplay) {
             mainMenuSystem.update(events);
         } else {
             keyboardInputSystem.update(entities, events);
