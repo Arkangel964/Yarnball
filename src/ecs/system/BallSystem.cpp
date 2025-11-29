@@ -22,9 +22,9 @@ void BallSystem::update(World &world, float dt) {
                 b.shouldThrowBall = false;
                 cout << "Checking if ball can be thrown" << endl;
                 if (b.numBallsHeld > 0 && b.cooldown <= 0.0f) {
-                    float ballSprSize = 25;
-                    float middleX = t.position.x + (spr.dst.w / 2) - (ballSprSize/2);
-                    float middleY = t.position.y + (spr.dst.h / 2) - (ballSprSize/2);
+                    float ballSprSize = 25.0f;
+                    float middleX = t.position.x + (spr.dst.w / 2.0f) - (ballSprSize/2.0f);
+                    float middleY = t.position.y + (spr.dst.h / 2.0f) - (ballSprSize/2.0f);
 
                     SDL_FRect dest(middleX + (v.oldDirection.x * ballSpawnDistance), middleY+(v.oldDirection.y * ballSpawnDistance), ballSprSize, ballSprSize );
 
