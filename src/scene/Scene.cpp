@@ -3,8 +3,13 @@
 #include "../manager/AssetManager.h"
 #include "Game.h"
 
-#define PLAYER1_UI_Offset 10.0f
-#define PLAYER2_UI_Offset 160.0f
+#define PLAYER_DST_SPRITE_SIZE 64.0f
+
+#define PLAYER_ICON_SPRITE_SIZE 80.0f
+
+#define PLAYER1_UI_OFFSET 10.0f
+#define PLAYER2_UI_OFFSET 160.0f
+
 constexpr int PLAYER_LIVES = 9;
 
 Scene::Scene(SceneType sceneType, const char *sceneName, const char *mapPath, const int windowWidth,
@@ -87,13 +92,13 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     player2.addComponent<Player2Tag>();
 
     // Create player 1's portrait
-    createPlayerIcon(Vector2D(PLAYER1_UI_Offset, 15), "../asset/ui/player1icon.png");
+    createPlayerIcon(Vector2D(PLAYER1_UI_OFFSET, 15), "../asset/ui/player1icon.png");
     createPlayerTitleLabel(player1, windowWidth, windowHeight);
     createPlayerLivesLabel(player1, windowWidth, windowHeight);
     createPlayerYarnballsLabel(player1, windowWidth, windowHeight);
 
     // Create player 2's portrait
-    createPlayerIcon(Vector2D(windowWidth-PLAYER2_UI_Offset-80, 15), "../asset/ui/player2icon.png");
+    createPlayerIcon(Vector2D(windowWidth-PLAYER2_UI_OFFSET-PLAYER_ICON_SPRITE_SIZE, 15), "../asset/ui/player2icon.png");
     createPlayerTitleLabel(player2, windowWidth, windowHeight);
     createPlayerLivesLabel(player2, windowWidth, windowHeight);
     createPlayerYarnballsLabel(player2, windowWidth, windowHeight);
@@ -227,8 +232,8 @@ void Scene::toggleSettingsOverlayVisibility(Entity &overlay) {
 Entity &Scene::createPlayerEntity(const char *spawnLocationName, const char *spritePath) {
     auto &player(world.createEntity());
     auto spawnPoint = world.getMap().mapProps.playerSpawns.find(spawnLocationName)->second;
-    spawnPoint.position.x -= 64.0f / 2.0f;
-    spawnPoint.position.y -= 64.0f / 2.0f;
+    spawnPoint.position.x -= PLAYER_DST_SPRITE_SIZE / 2.0f;
+    spawnPoint.position.y -= PLAYER_DST_SPRITE_SIZE / 2.0f;
     auto &playerTransform(player.addComponent<Transform>(spawnPoint.position, 0.0f, 1.0f));
     playerTransform.oldPosition = playerTransform.position;
 
@@ -243,7 +248,7 @@ Entity &Scene::createPlayerEntity(const char *spawnLocationName, const char *spr
 
     SDL_Texture *tex = TextureManager::load(spritePath);
     SDL_FRect playerSrc = anim.clips[anim.currentClip].frameIndices[0];
-    SDL_FRect playerDst{playerTransform.position.x, playerTransform.position.y, 64, 64};
+    SDL_FRect playerDst{playerTransform.position.x, playerTransform.position.y, PLAYER_DST_SPRITE_SIZE, PLAYER_DST_SPRITE_SIZE};
     player.addComponent<Sprite>(tex, playerSrc, playerDst);
     auto &playerCollider = player.addComponent<Collider>("player");
     playerCollider.rect.w = playerDst.w;
@@ -257,8 +262,8 @@ Entity &Scene::createPlayerIcon(Vector2D iconPosition, const char *iconPath) {
     auto iconTransform = playerIcon.addComponent<Transform>(iconPosition, 0.0f, 1.0f);
 
     SDL_Texture *iconTex = TextureManager::load(iconPath);
-    SDL_FRect iconSrc{0, 0, 80, 80};
-    SDL_FRect iconDest{iconTransform.position.x, iconTransform.position.y, 80, 80};
+    SDL_FRect iconSrc{0, 0, PLAYER_ICON_SPRITE_SIZE, PLAYER_ICON_SPRITE_SIZE};
+    SDL_FRect iconDest{iconTransform.position.x, iconTransform.position.y, PLAYER_ICON_SPRITE_SIZE, PLAYER_ICON_SPRITE_SIZE};
     auto& iconSpite = playerIcon.addComponent<Sprite>(iconTex, iconSrc, iconDest);
     iconSpite.renderLayer = RenderLayer::UI;
     iconSpite.visible = true;
@@ -293,9 +298,9 @@ Entity &Scene::createPlayerTitleLabel(Entity &entity, int windowWidth, int windo
     playerTitleLabel.addComponent<Label>(label);
 
     if (entity.hasComponent<Player1Tag>()) {
-        playerTitleLabel.addComponent<Transform>(Vector2D(PLAYER1_UI_Offset+80+15, 10), 0.0f, 1.0f);
+        playerTitleLabel.addComponent<Transform>(Vector2D(PLAYER1_UI_OFFSET+PLAYER_ICON_SPRITE_SIZE+15, 10), 0.0f, 1.0f);
     } else {
-        playerTitleLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_Offset+15, 10), 0.0f, 1.0f);
+        playerTitleLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_OFFSET+15, 10), 0.0f, 1.0f);
     }
 
     return playerTitleLabel;
@@ -329,9 +334,9 @@ Entity& Scene::createPlayerLivesLabel(Entity& entity, int windowWidth, int windo
     playerLivesLabel.addComponent<Label>(label);
 
     if (entity.hasComponent<Player1Tag>()) {
-        playerLivesLabel.addComponent<Transform>(Vector2D(PLAYER1_UI_Offset+80+15, 45), 0.0f, 1.0f);
+        playerLivesLabel.addComponent<Transform>(Vector2D(PLAYER1_UI_OFFSET+PLAYER_ICON_SPRITE_SIZE+15, 45), 0.0f, 1.0f);
     } else {
-        playerLivesLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_Offset+15, 45), 0.0f, 1.0f);
+        playerLivesLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_OFFSET+15, 45), 0.0f, 1.0f);
     }
 
     return playerLivesLabel;
@@ -365,9 +370,9 @@ Entity& Scene::createPlayerYarnballsLabel(Entity& entity, int windowWidth, int w
     playerYarnballsLabel.addComponent<Label>(label);
 
     if (entity.hasComponent<Player1Tag>()) {
-        playerYarnballsLabel.addComponent<Transform>(Vector2D(PLAYER1_UI_Offset+80+15, 75), 0.0f, 1.0f);
+        playerYarnballsLabel.addComponent<Transform>(Vector2D(PLAYER1_UI_OFFSET+PLAYER_ICON_SPRITE_SIZE+15, 75), 0.0f, 1.0f);
     } else {
-        playerYarnballsLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_Offset+15, 75), 0.0f, 1.0f);
+        playerYarnballsLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_OFFSET+15, 75), 0.0f, 1.0f);
     }
 
     return playerYarnballsLabel;
