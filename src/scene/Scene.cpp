@@ -93,15 +93,11 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
 
     // Create player 1's portrait
     createPlayerIcon(Vector2D(PLAYER1_UI_OFFSET, 15), "../asset/ui/player1icon.png");
-    createPlayerTitleLabel(player1, windowWidth, windowHeight);
-    createPlayerLivesLabel(player1, windowWidth, windowHeight);
-    createPlayerYarnballsLabel(player1, windowWidth, windowHeight);
+    createPlayerLabels("Player 1 ", "player1", PLAYER1_UI_OFFSET+PLAYER_ICON_SPRITE_SIZE+15);
 
     // Create player 2's portrait
     createPlayerIcon(Vector2D(windowWidth-PLAYER2_UI_OFFSET-PLAYER_ICON_SPRITE_SIZE, 15), "../asset/ui/player2icon.png");
-    createPlayerTitleLabel(player2, windowWidth, windowHeight);
-    createPlayerLivesLabel(player2, windowWidth, windowHeight);
-    createPlayerYarnballsLabel(player2, windowWidth, windowHeight);
+    createPlayerLabels("Player 2 ", "player2", windowWidth-PLAYER2_UI_OFFSET+15);
 
     //dodgeball spawner
     createPickupSpawner(3.0f);
@@ -124,7 +120,7 @@ void Scene::initGameOver(int windowWidth, int windowHeight) {
     SDL_Texture *menuTex = TextureManager::load(Game::gameState.playerWon == 1 ?
         "../asset/gameover1.png" : "../asset/gameover2.png");
     SDL_FRect menuSrc{0, 0, static_cast<float>(windowWidth), static_cast<float>(windowHeight)};
-    SDL_FRect menuDest{gameOverTransform.position.x, gameOverTransform.position.y, (float) windowWidth, (float) windowHeight};
+    SDL_FRect menuDest{gameOverTransform.position.x, gameOverTransform.position.y, static_cast<float>(windowWidth), static_cast<float>(windowHeight)};
     gameOver.addComponent<Sprite>(menuTex, menuSrc, menuDest);
 
 }
@@ -133,9 +129,9 @@ void Scene::initGameOver(int windowWidth, int windowHeight) {
 Entity &Scene::createSettingsOverlay(int windowWidth, int windowHeight) {
     auto &overlay(world.createEntity());
     SDL_Texture *overlayTex = TextureManager::load("../asset/ui/settings.jpg");
-    SDL_FRect overlaySrc{0, 0, (float) windowWidth * 0.85f, (float) windowHeight * 0.85f};
+    SDL_FRect overlaySrc{0, 0, static_cast<float>(windowWidth) * 0.85f, static_cast<float>(windowHeight) * 0.85f};
     SDL_FRect overlayDest{
-        (float) windowWidth / 2 - overlaySrc.w / 2, (float) windowHeight / 2 - overlaySrc.h / 2, overlaySrc.w,
+        static_cast<float>(windowWidth) / 2.9f - overlaySrc.w / 2.0f, static_cast<float>(windowHeight) / 2.0f - overlaySrc.h / 2.0f, overlaySrc.w,
         overlaySrc.h
     };
     overlay.addComponent<Transform>(Vector2D(overlayDest.x, overlayDest.y), 0.0f, 1.0f);
@@ -271,112 +267,35 @@ Entity &Scene::createPlayerIcon(Vector2D iconPosition, const char *iconPath) {
     return playerIcon;
 }
 
-Entity &Scene::createPlayerTitleLabel(Entity &entity, int windowWidth, int windowHeight) {
-    auto& playerTitleLabel(world.createEntity());
-    Label label;
-
-    if (entity.hasComponent<Player1Tag>()) {
-        label = {
-            "Player 1 title",
-            AssetManager::getFont("fira"),
-            {255, 255, 255, 255},
-            LabelType::PlayerTitle,
-            "player1Title"
-        };
-    } else {
-        label = {
-            "Player 2 title",
-            AssetManager::getFont("fira"),
-            {255, 255, 255, 255},
-            LabelType::PlayerTitle,
-            "player2Title"
-        };
-
-    }
-
+Entity &Scene::createLabel(const std::string& text, const std::string &font, LabelType type, const std::string& cacheKey, Vector2D position) {
+    auto& e(world.createEntity());
+    Label label = {
+        text,
+        AssetManager::getFont(font),
+        {255, 255, 255, 255},
+        type,
+        cacheKey
+    };
     TextureManager::loadLabel(label);
-    playerTitleLabel.addComponent<Label>(label);
-
-    if (entity.hasComponent<Player1Tag>()) {
-        playerTitleLabel.addComponent<Transform>(Vector2D(PLAYER1_UI_OFFSET+PLAYER_ICON_SPRITE_SIZE+15, 10), 0.0f, 1.0f);
-    } else {
-        playerTitleLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_OFFSET+15, 10), 0.0f, 1.0f);
-    }
-
-    return playerTitleLabel;
-
+    e.addComponent<Label>(label);
+    e.addComponent<Transform>(position, 0.0f, 1.0f);
+    return e;
 }
 
-Entity& Scene::createPlayerLivesLabel(Entity& entity, int windowWidth, int windowHeight) {
+void Scene::createPlayerLabels(std::string textPrefix, std::string cacheKeyPrefix, float xOffset) {
+    std::string text = textPrefix+"title";
+    std::string font = "fira";
+    std::string cacheKey = cacheKeyPrefix+"Title";
+    createLabel(text, font, LabelType::PlayerTitle, cacheKey, Vector2D(xOffset, 10.0f));
 
-    auto& playerLivesLabel(world.createEntity());
-    Label label;
+    text = textPrefix+"lives";
+    font = "arial";
+    cacheKey = cacheKeyPrefix+"Lives";
+    createLabel(text, font, LabelType::Lives, cacheKey, Vector2D(xOffset, 45.0f));
 
-    if (entity.hasComponent<Player1Tag>()) {
-        label = {
-            "Player 1 lives ",
-            AssetManager::getFont("arial"),
-            {255, 255, 255, 255},
-            LabelType::Lives,
-            "player1Lives"
-        };
-    } else {
-        label = {
-            "Player 1 lives",
-            AssetManager::getFont("arial"),
-            {255, 255, 255, 255},
-            LabelType::Lives,
-            "player2Lives"
-        };
-    }
-
-    TextureManager::loadLabel(label);
-    playerLivesLabel.addComponent<Label>(label);
-
-    if (entity.hasComponent<Player1Tag>()) {
-        playerLivesLabel.addComponent<Transform>(Vector2D(PLAYER1_UI_OFFSET+PLAYER_ICON_SPRITE_SIZE+15, 45), 0.0f, 1.0f);
-    } else {
-        playerLivesLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_OFFSET+15, 45), 0.0f, 1.0f);
-    }
-
-    return playerLivesLabel;
-
-}
-
-Entity& Scene::createPlayerYarnballsLabel(Entity& entity, int windowWidth, int windowHeight) {
-
-    auto& playerYarnballsLabel(world.createEntity());
-    Label label;
-
-    if (entity.hasComponent<Player1Tag>()) {
-        label = {
-            "Player 1 yarnballs ",
-            AssetManager::getFont("arial"),
-            {255, 255, 255, 255},
-            LabelType::Yarnballs,
-            "player1Yarnballs"
-        };
-    } else {
-        label = {
-            "Player 2 yarnballs ",
-            AssetManager::getFont("arial"),
-            {255, 255, 255, 255},
-            LabelType::Yarnballs,
-            "player2Yarnballs"
-        };
-    }
-
-    TextureManager::loadLabel(label);
-    playerYarnballsLabel.addComponent<Label>(label);
-
-    if (entity.hasComponent<Player1Tag>()) {
-        playerYarnballsLabel.addComponent<Transform>(Vector2D(PLAYER1_UI_OFFSET+PLAYER_ICON_SPRITE_SIZE+15, 75), 0.0f, 1.0f);
-    } else {
-        playerYarnballsLabel.addComponent<Transform>(Vector2D(windowWidth-PLAYER2_UI_OFFSET+15, 75), 0.0f, 1.0f);
-    }
-
-    return playerYarnballsLabel;
-
+    text = textPrefix+"yarnballs";
+    cacheKey = cacheKeyPrefix+"Yarnballs";
+    createLabel(text, font, LabelType::Yarnballs, cacheKey, Vector2D(xOffset, 75.0f));
 }
 
 void Scene::createPickupSpawner(float interval) {

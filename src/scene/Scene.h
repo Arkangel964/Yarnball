@@ -39,9 +39,9 @@ class Scene {
 
     Entity &createPlayerEntity(const char *spawnLocationName, const char *spritePath);
     Entity &createPlayerIcon(Vector2D iconPosition, const char *iconPath);
-    Entity& createPlayerTitleLabel(Entity& entity, int windowWidth, int windowHeight);
-    Entity& createPlayerLivesLabel(Entity& entity, int windowWidth, int windowHeight);
-    Entity& createPlayerYarnballsLabel(Entity& entity, int windowWidth, int windowHeight);
+
+    Entity &createLabel(const std::string &text, const std::string &font, LabelType type, const std::string &cacheKey, Vector2D position);
+    void createPlayerLabels(std::string textPrefix, std::string cacheKeyPrefix, float xOffset);
 
     void createPickupSpawner(float interval);
     void createHazardSpawner(float interval);
