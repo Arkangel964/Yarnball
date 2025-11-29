@@ -44,13 +44,19 @@ void EventResponseSystem::onMouseInteraction(const MouseInteractionEvent &e) {
 
     switch (e.state) {
         case MouseInteractionState::Pressed:
-            clickable.onPressed();
+            if (clickable.onPressed) {
+                clickable.onPressed();
+            }
             break;
         case MouseInteractionState::Released:
-            clickable.onReleased();
+            if (clickable.onReleased) {
+                clickable.onReleased();
+            }
             break;
         case MouseInteractionState::Cancel:
-            clickable.onCancel();
+            if (clickable.onCancel) {
+                clickable.onCancel();
+            }
             break;
         default:
             break;

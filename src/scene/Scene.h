@@ -32,11 +32,6 @@ class Scene {
     void initGameplay(const char* mapPath, int windowWidth, int windowHeight);
     void initGameOver(int windowWidth, int windowHeight);
 
-    Entity& createSettingsOverlay(int windowWidth, int windowHeight);
-    Entity& createCogButton(int windowWidth, int windowHeight, Entity& overlay);
-    void createSettingUIComponents(Entity& overlay);
-    void toggleSettingsOverlayVisibility(Entity& overlay);
-
     Entity &createPlayerEntity(const char *spawnLocationName, const char *spritePath);
     Entity &createPlayerIcon(Vector2D iconPosition, const char *iconPath);
 

@@ -41,6 +41,13 @@ void Scene::initMainMenu(int windowWidth, int windowHeight) {
     SDL_FRect menuDest{menuTransform.position.x, menuTransform.position.y, static_cast<float>(windowWidth),
         static_cast<float>(windowHeight)};
     menu.addComponent<Sprite>(menuTex, menuSrc, menuDest);
+
+    menu.addComponent<Collider>("ui", menuDest);
+
+    auto& clickable = menu.addComponent<Clickable>();
+    clickable.onReleased = [] {
+        Game::onSceneChangeRequest("level1");
+    };
 };
 
 void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight) {
@@ -73,8 +80,8 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     SDL_FRect camView{};
     camView.x = 0;
     camView.y = 0;
-    camView.w = windowWidth;
-    camView.h = windowHeight;
+    camView.w = static_cast<float>(windowWidth);
+    camView.h = static_cast<float>(windowHeight);
     cam.addComponent<Camera>(camView, world.getMap().mapProps.width * 32, world.getMap().mapProps.height * 32);
 
     //reset balls available for spawning
@@ -96,8 +103,9 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     createPlayerLabels("Player 1 ", "player1", PLAYER1_UI_OFFSET+PLAYER_ICON_SPRITE_SIZE+15);
 
     // Create player 2's portrait
-    createPlayerIcon(Vector2D(windowWidth-PLAYER2_UI_OFFSET-PLAYER_ICON_SPRITE_SIZE, 15), "../asset/ui/player2icon.png");
-    createPlayerLabels("Player 2 ", "player2", windowWidth-PLAYER2_UI_OFFSET+15);
+    createPlayerIcon(Vector2D(static_cast<float>(windowWidth)-PLAYER2_UI_OFFSET-PLAYER_ICON_SPRITE_SIZE, 15),
+        "../asset/ui/player2icon.png");
+    createPlayerLabels("Player 2 ", "player2", static_cast<float>(windowWidth)-PLAYER2_UI_OFFSET+15);
 
     //dodgeball spawner
     createPickupSpawner(3.0f);
@@ -120,110 +128,18 @@ void Scene::initGameOver(int windowWidth, int windowHeight) {
     SDL_Texture *menuTex = TextureManager::load(Game::gameState.playerWon == 1 ?
         "../asset/gameover1.png" : "../asset/gameover2.png");
     SDL_FRect menuSrc{0, 0, static_cast<float>(windowWidth), static_cast<float>(windowHeight)};
-    SDL_FRect menuDest{gameOverTransform.position.x, gameOverTransform.position.y, static_cast<float>(windowWidth), static_cast<float>(windowHeight)};
+    SDL_FRect menuDest{gameOverTransform.position.x, gameOverTransform.position.y,
+        static_cast<float>(windowWidth), static_cast<float>(windowHeight)};
     gameOver.addComponent<Sprite>(menuTex, menuSrc, menuDest);
 
+    gameOver.addComponent<Collider>("ui", menuDest);
+
+    auto& clickable = gameOver.addComponent<Clickable>();
+    clickable.onReleased = [] {
+        Game::onSceneChangeRequest("level1");
+    };
+
 }
-
-
-Entity &Scene::createSettingsOverlay(int windowWidth, int windowHeight) {
-    auto &overlay(world.createEntity());
-    SDL_Texture *overlayTex = TextureManager::load("../asset/ui/settings.jpg");
-    SDL_FRect overlaySrc{0, 0, static_cast<float>(windowWidth) * 0.85f, static_cast<float>(windowHeight) * 0.85f};
-    SDL_FRect overlayDest{
-        static_cast<float>(windowWidth) / 2.9f - overlaySrc.w / 2.0f, static_cast<float>(windowHeight) / 2.0f - overlaySrc.h / 2.0f, overlaySrc.w,
-        overlaySrc.h
-    };
-    overlay.addComponent<Transform>(Vector2D(overlayDest.x, overlayDest.y), 0.0f, 1.0f);
-    overlay.addComponent<Sprite>(overlayTex, overlaySrc, overlayDest, RenderLayer::UI, false);
-    createSettingUIComponents(overlay);
-    return overlay;
-};
-
-Entity &Scene::createCogButton(int windowWidth, int windowHeight, Entity &overlay) {
-    auto &cog(world.createEntity());
-    auto &cogTransform = cog.addComponent<Transform>(Vector2D((float) windowWidth - 50, (float) windowHeight - 50),
-                                                     0.0f, 1.0f);
-    SDL_Texture *text = TextureManager::load("../asset/ui/cog.png");
-    SDL_FRect cogSrc{0, 0, 32, 32};
-    SDL_FRect cogDest{cogTransform.position.x, cogTransform.position.y, cogSrc.w, cogSrc.h};
-    cog.addComponent<Sprite>(text, cogSrc, cogDest, RenderLayer::UI, true);
-    cog.addComponent<Collider>("ui", cogDest);
-
-    auto& clickable = cog.addComponent<Clickable>();
-    clickable.onPressed = [&cogTransform] {
-        cogTransform.scale = 0.5f;
-    };
-    clickable.onReleased = [this, &cogTransform, &overlay] {
-        cogTransform.scale = 1.0f;
-        toggleSettingsOverlayVisibility(overlay);
-    };
-    clickable.onCancel = [&cogTransform] {
-        cogTransform.scale = 1.0f;
-    };
-    return cog;
-
-};
-
-void Scene::createSettingUIComponents(Entity &overlay) {
-    if (!overlay.hasComponent<Children>()) {
-        overlay.addComponent<Children>();
-    }
-
-    auto &overlayTransform = overlay.getComponent<Transform>();
-    auto &overlaySprite = overlay.getComponent<Sprite>();
-
-    float baseX = overlayTransform.position.x;
-    float baseY = overlayTransform.position.y;
-
-    auto &closeButton = world.createEntity();
-    auto &closeTransform = closeButton.addComponent<Transform>(Vector2D(baseX + overlaySprite.dst.w - 40, baseY + 10),
-                                                               0.0f, 1.0f);
-
-    SDL_Texture *text = TextureManager::load("../asset/ui/close.png");
-    SDL_FRect closeSrc{0, 0, 32, 32};
-    SDL_FRect closeDest{closeTransform.position.x, closeTransform.position.y, closeSrc.w, closeSrc.h};
-    closeButton.addComponent<Sprite>(text, closeSrc, closeDest, RenderLayer::UI, false);
-    closeButton.addComponent<Collider>("ui", closeDest);
-
-    auto &clickable = closeButton.addComponent<Clickable>();
-
-    clickable.onPressed = [&closeTransform] {
-        closeTransform.scale = 0.5f; // explicitly type float?
-    };
-
-    clickable.onReleased = [this, &overlay, &closeTransform] {
-        closeTransform.scale = 1.0f;
-        toggleSettingsOverlayVisibility(overlay);
-    };
-
-    clickable.onCancel = [&closeTransform] {
-        closeTransform.scale = 1.0f;
-    };
-
-    closeButton.addComponent<Parent>(&overlay);
-    auto &parentChildren = overlay.getComponent<Children>();
-    parentChildren.children.push_back(&closeButton);
-};
-
-void Scene::toggleSettingsOverlayVisibility(Entity &overlay) {
-    auto &sprite = overlay.getComponent<Sprite>();
-    bool newVisibility = !sprite.visible;
-    sprite.visible = newVisibility;
-
-    if (overlay.hasComponent<Children>()) {
-        auto &c = overlay.getComponent<Children>();
-
-        for (auto &child: c.children) {
-            if (child && child->hasComponent<Sprite>()) {
-                child->getComponent<Sprite>().visible = newVisibility;
-            }
-            if (child && child->hasComponent<Collider>()) {
-                child->getComponent<Collider>().enabled = newVisibility;
-            }
-        }
-    }
-};
 
 Entity &Scene::createPlayerEntity(const char *spawnLocationName, const char *spritePath) {
     auto &player(world.createEntity());
