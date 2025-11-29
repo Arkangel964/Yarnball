@@ -412,15 +412,15 @@ void Scene::createPickupSpawner(float interval) {
         // If we STILL don't have one, just get any one
         if (!spawn) {
             for (int index = 0; index < otherPickupSpawns.size(); index++) {
-                if (!Game::gameState.usedSpawnPoints.contains(&pickupSpawns[index])) {
-                    spawn = &pickupSpawns[index];
+                if (!Game::gameState.usedSpawnPoints.contains(&otherPickupSpawns[index])) {
+                    spawn = &otherPickupSpawns[index];
                     Game::gameState.usedSpawnPoints.emplace(spawn, &e);
                     break;
                 }
             }
         }
-        int spriteSize = 64;
-        int ballSize = 32;
+        float spriteSize = 64.0f;
+        float ballSize = 32.0f;
         Vector2D newPosition = spawn->position;
         newPosition.x -= ballSize / 2.0f;
         newPosition.y -= ballSize / 2.0f;
@@ -447,8 +447,8 @@ void Scene::createHazardSpawner(float interval) {
     spawner.addComponent<TimedSpawner>(interval, [this, spawnPoints] {
         if (Game::gameState.availableHazardsForSpawning > 0) {
             Game::gameState.availableHazardsForSpawning -= 1;
-            int spriteSize = 50;
-            int ballSize = 25;
+            float spriteSize = 50.0f;
+            float ballSize = 25.0f;
             // create our projectile (ball)
             auto &e(world.createDeferredEntity());
             float index = rand() % spawnPoints.size();
