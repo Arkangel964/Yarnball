@@ -199,8 +199,10 @@ void Scene::createPickupSpawner(float interval) {
         auto &e(world.createDeferredEntity());
         // Get a valid spawn point from the side
         SpawnPoint *spawn = nullptr;
-        auto &pickupSpawns = Game::gameState.spawnBallOnPlayer1Side ? world.getMap().mapProps.player1PickupSpawns : world.getMap().mapProps.player2PickupSpawns;
-        auto &otherPickupSpawns = !Game::gameState.spawnBallOnPlayer1Side ? world.getMap().mapProps.player1PickupSpawns : world.getMap().mapProps.player2PickupSpawns;
+        auto &pickupSpawns = Game::gameState.spawnBallOnPlayer1Side
+            ? world.getMap().mapProps.player1PickupSpawns : world.getMap().mapProps.player2PickupSpawns;
+        auto &otherPickupSpawns = !Game::gameState.spawnBallOnPlayer1Side
+            ? world.getMap().mapProps.player1PickupSpawns : world.getMap().mapProps.player2PickupSpawns;
         // First try to get a free spawn point on the correct side 2 * pickupSpawns.size()
         int numAttempts = 0;
         while (!spawn && numAttempts <= 2 * pickupSpawns.size()) {
@@ -221,7 +223,7 @@ void Scene::createPickupSpawner(float interval) {
                 }
             }
         }
-        // If we STILL don't have one, just get any one
+        // If we STILL don't have one, get one from the opposite side
         if (!spawn) {
             for (int index = 0; index < otherPickupSpawns.size(); index++) {
                 if (!Game::gameState.usedSpawnPoints.contains(&otherPickupSpawns[index])) {
