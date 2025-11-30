@@ -3,7 +3,7 @@
 #include "../manager/AssetManager.h"
 #include "Game.h"
 
-#define PLAYER_DST_SPRITE_SIZE 64.0f
+#define PLAYER_DST_SPRITE_SIZE 48.0f
 
 #define PLAYER_ICON_SPRITE_SIZE 80.0f
 
