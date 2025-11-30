@@ -13,6 +13,9 @@ void MainMenuSystem::update(const std::vector<SDL_Event>& events) {
                 case SDLK_SPACE:
                     Game::onSceneChangeRequest("level1");
                     break;
+                case SDLK_ESCAPE:
+                    Game::onSceneChangeRequest("exit");
+                    break;
             }
         }
     }

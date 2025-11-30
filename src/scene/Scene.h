@@ -28,9 +28,8 @@ class Scene {
     std::string name;
     SceneType type;
 
-    void initMainMenu(int windowWidth, int windowHeight);
+    void initStaticScene(int windowWidth, int windowHeight, const char *texturePath);
     void initGameplay(const char* mapPath, int windowWidth, int windowHeight);
-    void initGameOver(int windowWidth, int windowHeight);
 
     Entity &createPlayerEntity(const char *spawnLocationName, const char *spritePath);
     Entity &createPlayerIcon(Vector2D iconPosition, const char *iconPath);

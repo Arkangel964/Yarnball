@@ -95,6 +95,12 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
 
     //resolve scene callback
     onSceneChangeRequest = [&](string sceneName) {
+        if(sceneName == "exit") {
+            std::cout << "Exiting" << std::endl;
+            isRunning = false;
+            return;
+        }
+
         sceneManager.changeSceneDeferred(sceneName);
     };
 }

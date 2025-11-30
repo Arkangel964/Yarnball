@@ -15,19 +15,21 @@ constexpr int PLAYER_LIVES = 9;
 Scene::Scene(SceneType sceneType, const char *sceneName, const char *mapPath, const int windowWidth,
              const int windowHeight) : name(sceneName), type(sceneType) {
     if (sceneType == SceneType::MainMenu) {
-        initMainMenu(windowWidth, windowHeight);
+        initStaticScene(windowWidth, windowHeight, "../asset/menu.png");
         return;
     }
 
     if (sceneType == SceneType::GameOver) {
-        initGameOver(windowWidth, windowHeight);
+        const char *path = Game::gameState.playerWon == 1 ?
+        "../asset/gameover1.png" : "../asset/gameover2.png";
+        initStaticScene(windowWidth, windowHeight, path);
         return;
     }
 
     initGameplay(mapPath, windowWidth, windowHeight);
 }
 
-void Scene::initMainMenu(int windowWidth, int windowHeight) {
+void Scene::initStaticScene(int windowWidth, int windowHeight, const char *texturePath) {
     //camera
     auto &cam = world.createEntity();
     cam.addComponent<Camera>();
@@ -36,7 +38,7 @@ void Scene::initMainMenu(int windowWidth, int windowHeight) {
     auto &menu(world.createEntity());
     auto menuTransform = menu.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f);
 
-    SDL_Texture *menuTex = TextureManager::load("../asset/menu.png");
+    SDL_Texture *menuTex = TextureManager::load(texturePath);
     SDL_FRect menuSrc{0, 0, static_cast<float>(windowWidth), static_cast<float>(windowHeight)};
     SDL_FRect menuDest{menuTransform.position.x, menuTransform.position.y, static_cast<float>(windowWidth),
         static_cast<float>(windowHeight)};
@@ -115,31 +117,6 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     auto &state(world.createEntity());
     state.addComponent<SceneState>();
 };
-
-void Scene::initGameOver(int windowWidth, int windowHeight) {
-    //camera
-    auto &cam = world.createEntity();
-    cam.addComponent<Camera>();
-
-    // game over
-    auto &gameOver(world.createEntity());
-    auto gameOverTransform = gameOver.addComponent<Transform>(Vector2D(0, 0), 0.0f, 1.0f);
-
-    SDL_Texture *menuTex = TextureManager::load(Game::gameState.playerWon == 1 ?
-        "../asset/gameover1.png" : "../asset/gameover2.png");
-    SDL_FRect menuSrc{0, 0, static_cast<float>(windowWidth), static_cast<float>(windowHeight)};
-    SDL_FRect menuDest{gameOverTransform.position.x, gameOverTransform.position.y,
-        static_cast<float>(windowWidth), static_cast<float>(windowHeight)};
-    gameOver.addComponent<Sprite>(menuTex, menuSrc, menuDest);
-
-    gameOver.addComponent<Collider>("ui", menuDest);
-
-    auto& clickable = gameOver.addComponent<Clickable>();
-    clickable.onReleased = [] {
-        Game::onSceneChangeRequest("level1");
-    };
-
-}
 
 Entity &Scene::createPlayerEntity(const char *spawnLocationName, const char *spritePath) {
     auto &player(world.createEntity());
