@@ -15,6 +15,7 @@ using namespace std;
 struct GameState {
     int availableBallsForSpawning;
     int availableHazardsForSpawning;
+    int availablePowerupsForSpawning;
     bool spawnBallOnPlayer1Side{true};
     std::unordered_map<SpawnPoint*, Entity*> usedSpawnPoints;
     int playerWon = 1;

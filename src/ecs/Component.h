@@ -125,6 +125,12 @@ struct Invincibility {
     bool flash = false;
 };
 
+struct SpeedBoost {
+    float speedMultiplier{};
+    float duration{};
+    float timeElapsedCurrent = 0;
+};
+
 struct BallHolder {
     int numBallsHeld = 0;
     bool shouldThrowBall = false;

@@ -19,6 +19,7 @@ EventResponseSystem::EventResponseSystem(World &world) {
         onCollision(collision, "player", "projectile", world);
         onCollision(collision, "player", "player", world);
         onCollision(collision, "player", "inactiveBall", world);
+        onCollision(collision, "player", "powerup", world);
         onCollision(collision, "projectile", "wall", world);
         onCollision(collision, "projectile", "projectile", world);
     });
@@ -116,7 +117,7 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("hurt"));
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
 
-            std::cout << health.currentHealth << std::endl;
+            // std::cout << health.currentHealth << std::endl;
             if (health.currentHealth <= 0) {
                 if (player->hasComponent<Player1Tag>()) {
                     Game::gameState.playerWon = 2;
@@ -170,11 +171,36 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("pickup"));
             holder.numBallsHeld++;
             erase_if(Game::gameState.usedSpawnPoints, [&](auto& p){ return p.second == other; });
+            Game::gameState.availableBallsForSpawning += 1;
             other->destroy();
         } else {
             cout << "Player was already holding too many balls" << endl;
         }
 
+    } else if (std::string(otherTag) == "powerup") {
+        if (e.state != CollisionState::Enter) return;
+
+        Game::gameState.availablePowerupsForSpawning += 1;
+
+        if (player -> hasComponent<Invincibility>()) {
+            auto& invincible = player->getComponent<Invincibility>();
+            invincible.timeElapsedCurrent = 0;
+            invincible.duration = 5.0f;
+        } else {
+            player->addComponent<Invincibility>(5.0f, 0.1f);
+        }
+
+        if (player -> hasComponent<SpeedBoost>()) {
+            auto& speedBoost = player->getComponent<SpeedBoost>();
+            speedBoost.timeElapsedCurrent = 0;
+            speedBoost.duration = 5.0f;
+        } else {
+            player->addComponent<SpeedBoost>(2.0f, 5.0f);
+        }
+
+        world.getAudioEventQueue().push(std::make_unique<AudioEvent>("powerup"));
+        erase_if(Game::gameState.usedSpawnPoints, [&](auto& p){ return p.second == other; });
+        other->destroy();
     }
 }
 

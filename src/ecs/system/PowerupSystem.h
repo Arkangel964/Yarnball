@@ -8,7 +8,7 @@
 
 #include "Component.h"
 
-class InvincibilitySystem {
+class PowerupSystem {
 public:
     void update(std::vector<unique_ptr<Entity>>& entities, float deltaTime) {
         for (auto& entity : entities) {
@@ -21,8 +21,17 @@ public:
                     invincibility.flash = !invincibility.flash;
                 }
                 if (invincibility.timeElapsedCurrent >= invincibility.duration) {
-                    cout << "Removing invincibility" << endl;
+                    // cout << "Removing invincibility" << endl;
                     entity->removeComponent<Invincibility>();
+                }
+            }
+
+            if (entity->hasComponent<SpeedBoost>()) {
+                auto& speedBoost = entity->getComponent<SpeedBoost>();
+                speedBoost.timeElapsedCurrent += deltaTime;
+                if (speedBoost.timeElapsedCurrent >= speedBoost.duration) {
+                    // cout << "Removing speed boost" << endl;
+                    entity->removeComponent<SpeedBoost>();
                 }
             }
         }

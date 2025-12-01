@@ -77,6 +77,7 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
     audioManager.loadAudio("hurt", "../asset/audio/hurt.ogg");
     audioManager.loadAudio("throw", "../asset/audio/throw.ogg");
     audioManager.loadAudio("pickup", "../asset/audio/pickup.ogg");
+    audioManager.loadAudio("powerup", "../asset/audio/powerup.ogg");
 
     //load assets
     AssetManager::loadAnimation("player", "../asset/animations/cat_animations.xml");

@@ -16,7 +16,7 @@
 #include "Entity.h"
 #include "EventResponseSystem.h"
 #include "HUDSystem.h"
-#include "InvincibilitySystem.h"
+#include "PowerupSystem.h"
 #include "event/EventManager.h"
 #include "KeyboardInputSystem.h"
 #include "MainMenuSystem.h"
@@ -52,7 +52,7 @@ class World {
     BallSystem ballSystem;
     HUDSystem hudSystem;
     PreRenderSystem preRenderSystem;
-    InvincibilitySystem invincibilitySystem;
+    PowerupSystem invincibilitySystem;
 
 public:
     World() = default;
