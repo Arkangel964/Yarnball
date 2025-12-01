@@ -109,65 +109,58 @@ void EventResponseSystem::onPlayerCollision(const CollisionEvent &e, Entity* pla
 
         //this logic is simple and direct
         //ideally we would only operate on data in an update function (hinting at transient entities)
-        auto &health = player->getComponent<Health>();
-//        if (other->hasComponent<Ball>()) {
-//            auto& ball = other->getComponent<Ball>();
-//            if ((player->hasComponent<Player1Tag>() && ball.playerNum != 1) || (player->hasComponent<Player2Tag>() && ball.playerNum != 2)) {
-//                health.currentHealth--;
-//                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("hurt"));
-//                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
-//            } else {
-//                world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
-//            }
-//        } else {
+        if (!player->hasComponent<Invincibility>()) {
+            auto &health = player->getComponent<Health>();
+            player->addComponent<Invincibility>(1.6f, 0.1f);
             health.currentHealth--;
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("hurt"));
             world.getAudioEventQueue().push(std::make_unique<AudioEvent>("bounce"));
-//        }
 
-        std::cout << health.currentHealth << std::endl;
-        if (health.currentHealth <= 0) {
-            if (player->hasComponent<Player1Tag>()) {
-                Game::gameState.playerWon = 2;
-
-            } else {
-                Game::gameState.playerWon = 1;
-            }
-
-            Entity* otherPlayer = nullptr;
-
-            for (auto &entity: world.getEntities()) {
-                if ((player->hasComponent<Player1Tag>() && entity->hasComponent<Player2Tag>()) || (player->hasComponent<Player2Tag>() && entity->hasComponent<Player1Tag>())) {
-                    otherPlayer = entity.get();
+            std::cout << health.currentHealth << std::endl;
+            if (health.currentHealth <= 0) {
+                if (player->hasComponent<Player1Tag>()) {
+                    Game::gameState.playerWon = 2;
+                } else {
+                    Game::gameState.playerWon = 1;
                 }
+
+                Entity *otherPlayer = nullptr;
+
+                for (auto &entity: world.getEntities()) {
+                    if ((player->hasComponent<Player1Tag>() && entity->hasComponent<Player2Tag>()) || (
+                            player->hasComponent<Player2Tag>() && entity->hasComponent<Player1Tag>())) {
+                        otherPlayer = entity.get();
+                    }
+                }
+
+                if (otherPlayer) {
+                    Game::gameState.remainingLives = otherPlayer->getComponent<Health>().currentHealth;
+                    Game::gameState.numBallsThrown = otherPlayer->getComponent<BallHolder>().numBallsHeld;
+                    otherPlayer->destroy();
+                }
+                player->destroy();
+
+                std::cout << "winning player: " << Game::gameState.playerWon << std::endl;
+                std::cout << "lives remaining: " << Game::gameState.remainingLives << std::endl;
+                std::cout << "yarnballs: " << Game::gameState.numBallsThrown << std::endl;
+
+                Game::onSceneChangeRequest("gameover");
             }
 
-            if (otherPlayer) {
-                Game::gameState.remainingLives = otherPlayer->getComponent<Health>().currentHealth;
-                Game::gameState.numBallsThrown = otherPlayer->getComponent<BallHolder>().numBallsHeld;
-                otherPlayer->destroy();
-            }
-            player->destroy();
-            
-            std::cout << "winning player: " << Game::gameState.playerWon << std::endl;
-            std::cout << "lives remaining: " << Game::gameState.remainingLives << std::endl;
-            std::cout << "yarnballs: " << Game::gameState.numBallsThrown << std::endl;
-
-            Game::onSceneChangeRequest("gameover");
+            // Prevent further movement
+            auto &projectileTransform = other->getComponent<Transform>();
+            auto &projectileCollider = other->getComponent<Collider>();
+            auto &playerCollider = player->getComponent<Collider>();
+            // Bounce off playerCollider
+            Vector2D normal = Collision::getAABBCollisionNormal(projectileCollider, playerCollider);
+            // Reflections
+            auto &projectileVelocity = other->getComponent<Velocity>();
+            Vector2D reflected = projectileVelocity.direction - 2 * Vector2D::dot(projectileVelocity.direction, normal)
+                                 * normal;
+            projectileVelocity.oldDirection = projectileVelocity.direction;
+            projectileVelocity.direction = reflected.normalize();
+            projectileTransform.position = projectileTransform.oldPosition;
         }
-
-        // Prevent further movement
-        auto &projectileTransform = other->getComponent<Transform>();
-        auto &projectileCollider = other->getComponent<Collider>();
-        auto &playerCollider = player->getComponent<Collider>();
-        // Bounce off playerCollider
-        Vector2D normal = Collision::getAABBCollisionNormal(projectileCollider, playerCollider);
-        // Reflections
-        auto &projectileVelocity = other->getComponent<Velocity>();
-        Vector2D reflected = projectileVelocity.direction - 2 * Vector2D::dot(projectileVelocity.direction, normal) * normal;
-        projectileVelocity.oldDirection = projectileVelocity.direction;
-        projectileVelocity.direction = reflected.normalize();
-        projectileTransform.position = projectileTransform.oldPosition;
 
     } else if (std::string(otherTag) == "inactiveBall") {
         if (e.state != CollisionState::Enter) return;

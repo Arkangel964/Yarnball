@@ -79,6 +79,7 @@ add_executable(8552Game src/main.cpp
         src/ecs/system/BallSystem.cpp
         src/ecs/system/HUDSystem.h
         src/ecs/system/PreRenderSystem.h
+        src/ecs/system/InvincibilitySystem.h
 )
 
 target_link_libraries(8552Game

@@ -116,6 +116,15 @@ struct Children {
     std::vector<Entity*> children{};
 };
 
+struct Invincibility {
+    float duration{};
+    //the interval at which the sprite should flash while invincible
+    float flashInterval{};
+    float timeElapsedCurrent = 0;
+    float flashTimeElapsedCurrent = 0;
+    bool flash = false;
+};
+
 struct BallHolder {
     int numBallsHeld = 0;
     bool shouldThrowBall = false;

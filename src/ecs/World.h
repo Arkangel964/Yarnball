@@ -16,6 +16,7 @@
 #include "Entity.h"
 #include "EventResponseSystem.h"
 #include "HUDSystem.h"
+#include "InvincibilitySystem.h"
 #include "event/EventManager.h"
 #include "KeyboardInputSystem.h"
 #include "MainMenuSystem.h"
@@ -51,6 +52,7 @@ class World {
     BallSystem ballSystem;
     HUDSystem hudSystem;
     PreRenderSystem preRenderSystem;
+    InvincibilitySystem invincibilitySystem;
 
 public:
     World() = default;
@@ -69,6 +71,7 @@ public:
             spawnTimerSystem.update(entities, deltaTime);
             destructionSystem.update(entities);
             hudSystem.update(entities);
+            invincibilitySystem.update(entities, deltaTime);
         }
 
         mouseInputSystem.update(*this, events);
