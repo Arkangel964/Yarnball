@@ -20,7 +20,7 @@ void BallSystem::update(World &world, float dt) {
 
             if (b.shouldThrowBall == true) {
                 b.shouldThrowBall = false;
-                cout << "Checking if ball can be thrown" << endl;
+                // cout << "Checking if ball can be thrown" << endl;
                 if (b.numBallsHeld > 0 && b.cooldown <= 0.0f) {
                     float ballSprSize = 25.0f;
                     float middleX = t.position.x + (spr.dst.w / 2.0f) - (ballSprSize/2.0f);
@@ -33,17 +33,16 @@ void BallSystem::update(World &world, float dt) {
                             auto& coll = entity->getComponent<Collider>();
                             if (coll.tag == "player" || coll.tag == "projectile" || coll.tag == "wall") {
                                 if (Collision::AABB(dest, entity->getComponent<Collider>().rect)) {
-                                    cout << "Too close to other collider" << endl;
+                                    // cout << "Too close to other collider" << endl;
                                     return;
                                 }
                             }
                         }
                     }
 
-                    cout << "Throwing ball" << endl;
+                    // cout << "Throwing ball" << endl;
                     b.numBallsHeld--;
                     b.cooldown = 0.2f;
-                    Game::gameState.availableBallsForSpawning += 1;
                     world.getAudioEventQueue().push(std::make_unique<AudioEvent>("throw"));
 
                     //create the ball

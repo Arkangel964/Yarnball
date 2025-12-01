@@ -10,6 +10,8 @@
 #define PLAYER1_UI_OFFSET 10.0f
 #define PLAYER2_UI_OFFSET 160.0f
 
+#define POWERUP_CHANCE_PERCENT 5;
+
 constexpr int PLAYER_LIVES = 9;
 
 Scene::Scene(SceneType sceneType, const char *sceneName, const char *mapPath, const int windowWidth,
@@ -89,6 +91,7 @@ void Scene::initGameplay(const char *mapPath, int windowWidth, int windowHeight)
     //reset balls available for spawning
     Game::gameState.availableBallsForSpawning = 6;
     Game::gameState.availableHazardsForSpawning = 4;
+    Game::gameState.availablePowerupsForSpawning = 1;
 
     //Create the player1
     auto &player1 = createPlayerEntity("player1", "../asset/animations/cat_brown_anim.png");
@@ -195,7 +198,6 @@ void Scene::createPickupSpawner(float interval) {
     auto &ballSpawner(world.createEntity());
     ballSpawner.addComponent<TimedSpawner>(interval, [this] {
         if (Game::gameState.availableBallsForSpawning <= 0) return;
-        Game::gameState.availableBallsForSpawning -= 1;
         auto &e(world.createDeferredEntity());
         // Get a valid spawn point from the side
         SpawnPoint *spawn = nullptr;
@@ -233,21 +235,53 @@ void Scene::createPickupSpawner(float interval) {
                 }
             }
         }
-        float spriteSize = 64.0f;
-        float ballSize = 32.0f;
-        Vector2D newPosition = spawn->position;
-        newPosition.x -= ballSize / 2.0f;
-        newPosition.y -= ballSize / 2.0f;
-        e.addComponent<Transform>(newPosition, 0.0f, 1.0f);
-        // Sprite setup
-        SDL_Texture *tex = TextureManager::load("../asset/yarnball_blue_stationary.png");
-        SDL_FRect spriteSrc(0, 0, spriteSize, spriteSize);
-        SDL_FRect dest(newPosition.x, newPosition.y, ballSize, ballSize);
-        e.addComponent<Sprite>(tex, spriteSrc, dest);
-        // Collider setup
-        auto &c = e.addComponent<Collider>("inactiveBall");
-        c.rect.w = dest.w;
-        c.rect.h = dest.h;
+
+        int randomValForPowerup = rand() % 100;
+        int chance = POWERUP_CHANCE_PERCENT;
+        //guarantee that we spawn a ball if we can't spawn a powerup
+        if (Game::gameState.availablePowerupsForSpawning <= 0) {
+            randomValForPowerup = 100;
+        }
+
+        if (randomValForPowerup >= chance) {
+            //Spawn a ball
+            Game::gameState.availableBallsForSpawning -= 1;
+            float spriteSize = 64.0f;
+            float ballSize = 32.0f;
+            Vector2D newPosition = spawn->position;
+            newPosition.x -= ballSize / 2.0f;
+            newPosition.y -= ballSize / 2.0f;
+            e.addComponent<Transform>(newPosition, 0.0f, 1.0f);
+            // Sprite setup
+            SDL_Texture *tex = TextureManager::load("../asset/yarnball_blue_stationary.png");
+            SDL_FRect spriteSrc(0, 0, spriteSize, spriteSize);
+            SDL_FRect dest(newPosition.x, newPosition.y, ballSize, ballSize);
+            e.addComponent<Sprite>(tex, spriteSrc, dest);
+            // Collider setup
+            auto &c = e.addComponent<Collider>("inactiveBall");
+            c.rect.w = dest.w;
+            c.rect.h = dest.h;
+        } else {
+            //Spawn a powerup instead
+            if (Game::gameState.availablePowerupsForSpawning <= 0) return;
+            Game::gameState.availablePowerupsForSpawning -= 1;
+            float spriteSize = 31.0f;
+            float starSize = 31.0f;
+            Vector2D newPosition = spawn->position;
+            newPosition.x -= starSize / 2.0f;
+            newPosition.y -= starSize / 2.0f;
+            e.addComponent<Transform>(newPosition, 0.0f, 1.0f);
+            // Sprite setup
+            SDL_Texture *tex = TextureManager::load("../asset/star.png");
+            SDL_FRect spriteSrc(0, 0, spriteSize, spriteSize);
+            SDL_FRect dest(newPosition.x, newPosition.y, starSize, starSize);
+            e.addComponent<Sprite>(tex, spriteSrc, dest);
+            // Collider setup
+            auto &c = e.addComponent<Collider>("powerup");
+            c.rect.w = dest.w;
+            c.rect.h = dest.h;
+        }
+
         // Flip which side should go next
         Game::gameState.spawnBallOnPlayer1Side = !Game::gameState.spawnBallOnPlayer1Side;
     });

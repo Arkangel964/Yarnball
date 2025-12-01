@@ -24,8 +24,13 @@ class MovementSystem {
                     Vector2D directionVec = v.direction;
                     directionVec.normalize();
 
+                    float speedMult = 1;
+                    if (entity->hasComponent<SpeedBoost>()) {
+                        speedMult = entity->getComponent<SpeedBoost>().speedMultiplier;
+                    }
+
                     //Vector2D needs an operator function to multiply a float to itself
-                    Vector2D velocityVec = directionVec * v.speed;
+                    Vector2D velocityVec = directionVec * v.speed * speedMult;
 
 
 

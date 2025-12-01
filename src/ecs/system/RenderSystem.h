@@ -41,6 +41,8 @@ public:
                     sprite.src = anim.clips[anim.currentClip].frameIndices[anim.currentFrame];
                 }
 
+                if (entity->hasComponent<Invincibility>() && entity->getComponent<Invincibility>().flash) continue;
+
                 TextureManager::draw(sprite.texture, &sprite.src, &sprite.dst);
             }
         }

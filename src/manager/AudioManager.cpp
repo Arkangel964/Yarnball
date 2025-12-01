@@ -49,8 +49,10 @@ void AudioManager::playMusic(const std::string& clipName) const {
         return;
     }
 
-    MIX_PlayTrack(musicTrack, -1); //-1 means loop endlessly
-    std::cout << "Playing Music" << std::endl;
+    SDL_PropertiesID props = SDL_CreateProperties();
+    SDL_SetNumberProperty(props, MIX_PROP_PLAY_LOOPS_NUMBER, -1);
+    MIX_PlayTrack(musicTrack, props); //-1 means loop endlessly
+    // std::cout << "Playing Music" << std::endl;
 }
 
 void AudioManager::stopMusic() const {
@@ -58,7 +60,6 @@ void AudioManager::stopMusic() const {
 }
 
 void AudioManager::playSfx(const std::string &clipName) {
-    // MIX_Track *sfxTrack = MIX_CreateTrack(mixer);
     MIX_Track *sfxTrack = nullptr;
     for (auto &track : SFXtracks) {
         if (MIX_GetTrackRemaining(track) <= 0) {
@@ -77,6 +78,6 @@ void AudioManager::playSfx(const std::string &clipName) {
     }
 
     MIX_PlayTrack(sfxTrack, 0); //no loop
-    std::cout << "Playing SFX" << std::endl;
+    // std::cout << "Playing SFX" << std::endl;
 }
 
